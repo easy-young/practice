@@ -2,7 +2,7 @@
 
 <div align="center">
   
-<img width="600" alt="image" src="https://user-images.githubusercontent.com/96761523/157682228-00961fbf-185d-44b9-b98d-da2c48833267.png">
+<img width="600" alt="image" src="https://user-images.githubusercontent.com/96761523/157682757-079d4134-f87b-4115-8acb-8ed7c8555369.png">
 
 # 👫 Team Goal 👫
 
