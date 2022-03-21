@@ -1,5 +1,15 @@
+const { pool } = require("../../db")
+const multer = require('multer')
+
+
 exports.list = (req,res)=>{
-    res.redirect('/')
+    try {
+        pool.query('SELECT * FROM board').then((data)=>{
+            res.status(200).json({ reqName: 'main get', status: true, data:data[0] })
+        })
+    } catch (error) {
+        res.status(200).json({ reqName: 'main get', status: false })
+    }
 }
 
 exports.view = (req,res)=>{
@@ -7,8 +17,29 @@ exports.view = (req,res)=>{
 }
 
 exports.write = (req,res)=>{
-    console.log(req.body.subject)
-    res.send('샌드 ㄱㄱ') 
+
+    
+
+
+    try {
+        const content =req.body
+        const user= req.headers.authorization
+        
+        console.log(content)
+        res.status(200).json({ reqName: 'write', status: true })
+
+
+
+        // pool.query('INSERT  ').then(()=>{            
+        //     res.status(200).json({ reqName: 'write', status: true })
+        // }).catch((err)=>{
+        //     res.status(200).json({ reqName: 'main get', status: false,error:err,errorMessage:'query error!' })
+        // })
+    } catch (error) {
+        res.status(200).json({ reqName: 'main get', status: false })
+    }
+
+
 }
 
 exports.modify = (req,res)=>{
@@ -18,3 +49,5 @@ exports.modify = (req,res)=>{
 exports.delete = (req,res)=>{
     res.redirect('/')
 }
+
+

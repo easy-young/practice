@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 </head>
 <body>
     <h1>
@@ -13,5 +14,54 @@
     <h2>
         유져 로그인 페이지 입니다.
     </h2>
+    <form method="post" action="http://localhost:3000/user/login" id="login_frm">
+        <ul>
+            <li>
+                <strong>아이디</strong>
+                <input type="text" name="userid" id="userid">
+            </li>
+            <li>
+                <strong>비밀번호</strong>
+                <input type="password" name="userpw" id="userpw">
+            </li>
+        </ul>
+        <input type="submit" value="Login">
+    </form>
+
+    <script type="text/javascript">
+        const frm = document.querySelector('#login_frm')
+        frm.addEventListener('submit',async (e)=>{
+            e.preventDefault()
+            const userid = document.querySelector('#userid').value
+            const userpw = document.querySelector('#userpw').value
+
+            const body = {
+                userid,
+                userpw
+            }
+
+            const option = {
+                'Content-type':'application/json',
+                withCredentials:true,
+            }
+
+            try {
+                const response = await axios.post('http://localhost:3000/user/login',body,option)
+            
+                if(response.data.errno !==0) throw new Error('로그인 에러!')
+                alert(`
+                    아이디는 ${response.data.result[0].userid}
+                    닉네임은 ${response.data.result[0].nickname}
+                    이름은 ${response.data.result[0].name}
+                    레벨은 ${response.data.result[0].level}
+                    현재 포인트는 ${response.data.result[0].point} 점 입니다.
+                `)
+                location.href = 'http://localhost:3001'
+            } catch (e) {
+                alert('아이디나 비밀번호를 다시 확인해보세욜')
+            }
+            
+        })
+    </script>
 </body>
 </html>

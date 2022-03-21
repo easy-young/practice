@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+   
     
 </head>
 <body>
@@ -16,12 +17,22 @@
     <h2>
         글 작성 페이지 입니다.
     </h2>
+
+    <form method="post" action="/board/upload" enctype="multipart/form-data">  
+        <input type="file" name="upload">   
+        <input type="submit" value="전송">
+    </form>
+
+
     <form method="post" action="/board/write" id="frm_write">
         <ul>
             <li>
                 <strong>제목 : </strong>
                 <input type="text" name="subject" id="subject">
             </li>
+
+          
+
             <li>
                 <strong>내용 : </strong>
                 <input type="text" name="content" id="content">
@@ -32,25 +43,32 @@
     <a href="/board/list">목록 보기</a>
 
     <script type="text/javascript">
-        const frm = document.querySelector('#frm_write')
-        frm.addEventListener('submit',async (e)=>{
-            e.preventDefault()
-            const subject = document.querySelector('#subject')
-            const content = document.querySelector('#content')
 
-            const body = {
-                subject:subject.value,
-                content:content.value 
-            }
-           
-            const option = {
-                "Content-type":"application/json",
-                withCredentials:true
-            }
 
-            const response = await axios.post('http://localhost:3000/board/write',body,option)
-            console.log(response)
-        })
+
+
+
+    const frm = document.querySelector('#frm_write')
+    frm.addEventListener('submit',async (e)=>{
+        e.preventDefault()
+        const subject = document.querySelector('#subject')
+        const content = document.querySelector('#content')
+        const file = document.querySelector('#upload').files[0];
+        const body = {
+            subject:subject.value,
+            content:content.value,
+        }
+        const option = {
+                    "Content-type":"application/json",
+                    withCredentials:true,
+                    // Authorization:'',// user Token?
+                }
+
+
+        await axios.post('http://localhost:3000/board/write',body,option)
+     
+
+    })
     </script>
 </body>
 </html>
