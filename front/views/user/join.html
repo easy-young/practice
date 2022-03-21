@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 </head>
 <body>
     <h1>
@@ -13,42 +14,110 @@
     <h2>
         회원가입 페이지 입니다.
     </h2>
-    <form method="post" action="/user/join">
+    <form method="post" action="/user/join" id="login_frm">
         <ul>
             <li>
-                <strong>이름</strong>
-                <input type="text" name="name">
-            </li>
-            <li>
-                <strong>닉네임</strong>
-                <input type="text" name="nickname">
-            </li>
-            <li>
                 <strong>아이디</strong>
-                <input type="text" name="userid">
+                <input type="text" name="userid" id="userid">
             </li>
             <li>
                 <strong>비밀번호</strong>
-                <input type="text" name="userpw">
+                <input type="text" name="userpw" id="userpw">
+            </li>
+            <li>
+                <strong>사진</strong>
+                <input type="text" name="userimage" id="userimage">
+            </li>
+            <li>
+                <strong>이름</strong>
+                <input type="text" name="name" id="name">
+            </li>
+            <li>
+                <strong>닉네임</strong>
+                <input type="text" name="nickname" id="nickname">
             </li>
             <li>
                 <strong>생년월일</strong>
-                <input type="text" name="birth">
+                <input type="text" name="birth" id="birth">
+            </li>
+            <li>
+                <strong>주소</strong>
+                <input type="text" name="address" id="address">
             </li>
             <li>
                 <strong>성별</strong>
-                <input type="text" name="gender">
+                <input type="text" name="gender" id="gender">
             </li>
             <li>
                 <strong>집전화번호</strong>
-                <input type="text" name="tel">
+                <input type="text" name="tel" id="tel">
             </li>
             <li>
                 <strong>휴대폰번호</strong>
-                <input type="text" name="mobile">
+                <input type="text" name="phone" id="phone">
+            </li>
+            <li>
+                <strong>E-mail</strong>
+                <input type="text" name="email" id="email">
+            </li>
+            <li>
+                <strong>소개글</strong>
+                <input type="text" name="intro" id="intro">
             </li>
         </ul>
         <input type="submit" value="회원가입하기">
     </form>
+
+    <script type="text/javascript">
+        const frm = document.querySelector('#login_frm')
+        frm.addEventListener('submit',async (e)=>{
+            e.preventDefault()
+            const userid = document.querySelector('#userid').value
+            const userpw = document.querySelector('#userpw').value
+            const userimage = document.querySelector('#userimage').value
+            const name = document.querySelector('#name').value
+            const nickname = document.querySelector('#nickname').value
+            const birth = document.querySelector('#birth').value
+            const address = document.querySelector('#address').value
+            const gender = document.querySelector('#gender').value
+            const tel = document.querySelector('#tel').value
+            const phone = document.querySelector('#phone').value
+            const email = document.querySelector('#email').value
+            const intro = document.querySelector('#intro').value
+
+            const body = {
+                userid,
+                userpw,
+                userimage,
+                name,
+                nickname,
+                birth,
+                address,
+                gender,
+                tel,
+                phone,
+                email,
+                intro
+            }
+
+            const option = {
+                'Content-type':'application/json',
+                withCredentials:true,
+            }
+
+            try {
+                const response = await axios.post('http://localhost:3000/user/join',body,option)
+                console.log(response.data)
+                if(response.data.errno !==0) throw new Error('Error')
+                alert(`
+                    아이디는 ${response.data.result.userid}
+                    닉네임은 ${response.data.result.nickname}
+                `)
+                location.href='http://localhost:3001'
+            } catch (e) {
+                alert('회원가입 ㄴㄴ')
+            }
+        })
+    </script>
 </body>
 </html>
