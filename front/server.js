@@ -13,7 +13,7 @@ nunjucks.configure('views',{
 
 
 app.use(cookieParser())
-
+app.use(express.static('public'));
 app.get('/',(req,res)=>{
     res.render('main.html')
 })

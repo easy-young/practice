@@ -5,15 +5,85 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+   
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script type="text/javascript">
+     
+        document.addEventListener('DOMContentLoaded',async ()=>{
+            // 요청에대한 코드를 작성해서 결과물을 받아와야합니다.
+            const response = await axios.post('http://localhost:3000/board/list',{
+                withCredentials:true,
+            }).then((res)=>{
+                return res
+            }).catch((err)=>{
+                return err
+            })
+            const _list = document.getElementById('list')
+            let innerData =''
+            if(response.data.status){
+                let list= response.data.data
+                list.map((item)=>{
+                    innerData+=`<div class="post-wrapper">
+                        <div class="subject">${item.subject}</div>
+                        <div class="content">${item.content}</div>
+                        <div class="nickname">${item.nickname}</div>
+                        <div class="hit">${item.hit}</div>
+                        <div class="good">${item.good}</div>
+                        <div class="date">${item.date}</div>
+                        </div>`
+                })
+             
+            }else{
+                innerData+=`<div class="post-wrapper">데이터가 없습니다. 첫번째 글을 작성해주세요</div>`
+            }
+            _list.innerHTML=innerData
+        })
+    </script>
+<style>
+    /* css 담당이 하시겠징..ㅋㅋ */
+    #list{
+        width:100%;
+        padding:20px 20px;
+      
+    }
+    .post-wrapper{
+        width:400px;
+        float: left;
+        border: 1px solid #999999;
+        padding:20px 20px;
+        margin:5px 5px;
+        border-radius: 8px;
+    }
+    .post-wrapper .subject{}
+    .post-wrapper .content{}
+    .post-wrapper .nickname{}
+    .post-wrapper .hit{}
+    .post-wrapper .good{}
+    .post-wrapper .date{}
+</style>
+
+ 
 </head>
 <body>
-    <h1>
-        <a href="/">Logo</a>
-    </h1>
-    <h2>
-        메인 페이지 입니다.
-    </h2>
-    <a href="/user/login">로그인</a>
-    <a href="/board/list">게시판가기</a>
+    
+    <div>
+        <h1>
+            <a href="/">Logo</a>    
+        </h1>
+        <a href="/user/login">로그인</a>
+    </div>
+
+
+    <div id="list"></div>
+
+
+
+ 
+
+
+
+
+
 </body>
 </html>
