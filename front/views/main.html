@@ -4,16 +4,82 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>52마켓</title>
+    <script type="text/javascript" src="https://unpkg.com/axios@0.26.0/dist/axios.min.js"></script>
+    <style>
+        #container {
+            background-color: aqua;
+        }
+        .board {
+            display: inline-block;
+            background-color: aliceblue;
+        }
+    </style>
+    <script type="text/javascript">
+        document.addEventListener('DOMContentLoaded', ()=>{
+            const board = document.querySelector('#board');
+            const option = {
+                withCredentials:true,
+            };
+            const response = await axios.post('http://localhost:3000/api/board/list', option);
+        });
+    </script>
 </head>
 <body>
     <h1>
         <a href="/">Logo</a>
     </h1>
     <h2>
-        메인 페이지 입니다.
+        오이마켓 입니다!
     </h2>
     <a href="/user/login">로그인</a>
-    <a href="/board/list">게시판가기</a>
+
+    <div id="container">
+        <span class="board">
+            <div class="image">image</div>
+            <div class="subject"><strong>subject</strong></div>
+            <div class="content">content</div>
+            <div class="date">2022-03-20</div>
+            <div class="nickname">nickname</div>
+        </span>
+        <span class="board">
+            <div class="image">image</div>
+            <div class="subject"><strong>subject</strong></div>
+            <div class="content">content</div>
+            <div class="date">2022-03-20</div>
+            <div class="nickname">nickname</div>
+        </span>
+        <span class="board">
+            <div class="image">image</div>
+            <div class="subject"><strong>subject</strong></div>
+            <div class="content">content</div>
+            <div class="date">2022-03-20</div>
+            <div class="nickname">nickname</div>
+        </span>
+        <span class="board">
+            <div class="image">image</div>
+            <div class="subject"><strong>subject</strong></div>
+            <div class="content">content</div>
+            <div class="date">2022-03-20</div>
+            <div class="nickname">nickname</div>
+        </span>
+        <span class="board">
+            <div class="image">image</div>
+            <div class="subject"><strong>subject</strong></div>
+            <div class="content">content</div>
+            <div class="date">2022-03-20</div>
+            <div class="nickname">nickname</div>
+        </span>
+    </div>
+
+    <!-- <div id="container">
+        <template id="board">
+            <div id="image">image</div>
+            <div id="subject"><strong>subject</strong></div>
+            <div id="content">content</div>
+            <div id="date">2022-03-20</div>
+            <div id="nickname">nickname</div>
+        </template>
+    </div> -->
 </body>
 </html>

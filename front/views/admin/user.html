@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin</title>
+    <script type="text/javascript" src="https://unpkg.com/axios@0.26.0/dist/axios.min.js"></script>
+    <style>
+        table {
+            width: 100%;
+        }
+        tbody > td, tbody > th {
+            padding: 7px 14px;
+            border-bottom: 1px solid #eee;
+            text-align: center;
+        }
+    </style>
+    <script type="text/javascript">
+        document.addEventListener('DOMContentLoaded', async ()=>{
+            const users = document.querySelector('#users');
+            const user = document.querySelector('#user').innerHTML;
+            const response = await axios.post('http://localhost:3000/api/admin/user', {
+                withCredentials:true,
+            });
+            let template = '';
+            response.data.forEach(v=>{
+                template += user.replace('{level}', v.level)
+                                .replace('{userid}', v.userid)
+                                .replace('{name}', v.name)
+                                .replace('{nickname}', v.nickname)
+                                .replace('{birth}', v.birth.split('T')[0])
+                                .replace('{address}', v.address)
+                                .replace('{gender}', v.gender)
+                                .replace('{tel}', v.tel.substring(0,3)+'-'+v.tel.substring(3,6)+'-'+v.tel.substring(6,10))
+                                .replace('{phone}', v.phone.substring(0,3)+'-'+v.phone.substring(3,7)+'-'+v.phone.substring(7,11))
+                                .replace('{email}', v.email)
+                                .replace('{intro}', v.intro)
+                                .replace('{point}', v.point)
+                                .replace('{active}', v.active)
+                                .replace('{date}', v.date.split('T')[0]);
+            });
+            users.innerHTML = template;
+        });
+    </script>
+</head>
+<body>
+    <h1>Users</h1>
+    <a href="/admin">Back</a>
+    <form method="post" action="/">
+        <table cellspacing="0" cellpadding="0">
+            <thead>
+                <tr>
+                    <th>Level</th>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Nickname</th>
+                    <th>Birth</th>
+                    <th>Address</th>
+                    <th>Gender</th>
+                    <th>Tel</th>
+                    <th>Phone</th>
+                    <th>Email</th>
+                    <th>Intro</th>
+                    <th>Point</th>
+                    <th>Active</th>
+                    <th>Date</th>
+                    <th>Ban</th>
+                </tr>
+            </thead>
+            <tbody id="users"></tbody>
+        </table>
+        <input type="submit" value="Modify">
+    </form>
+
+    <template id="user">
+        <tr>
+            <td>{level}</td>
+            <td>{userid}</td>
+            <td>{name}</td>
+            <td>{nickname}</td>
+            <td>{birth}</td>
+            <td>{address}</td>
+            <td>{gender}</td>
+            <td>{tel}</td>
+            <td>{phone}</td>
+            <td>{email}</td>
+            <td>{intro}</td>
+            <td>{point}</td>
+            <td>{active}</td>
+            <td>{date}</td>
+            <td><input type="checkbox" name="del"></td>
+        </tr>
+    </template>
+</body>
+</html>

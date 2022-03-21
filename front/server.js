@@ -9,6 +9,7 @@ const cookieParser = require('cookie-parser')
 app.set('view engine','html')
 nunjucks.configure('views',{
     express:app,
+    watch:true
 })
 
 
