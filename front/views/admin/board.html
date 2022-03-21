@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin</title>
+    <script type="text/javascript" src="https://unpkg.com/axios@0.26.0/dist/axios.min.js"></script>
+    <style>
+        table {
+            width: 40%;
+        }
+    </style>
+    <script type="text/javascript">
+        document.addEventListener('DOMContentLoaded', async ()=>{
+            const boards =document.querySelector('#boards');
+            const board = document.querySelector('#board').innerHTML;
+            const aElement = document.createElement('a');
+            const response = await axios.post('http://localhost:3000/api/admin/board', {
+                withCredentials:true,
+            });
+            let template = '';
+            response.data.forEach(v=>{
+                template += board.replace('{idx}', v.idx)
+                                .replace('{subject}', v.subject)
+                                .replace('{nickname}', v.nickname)
+                                .replace('{date}', v.date.split('T')[0])
+                                .replace('{hit}', v.hit)
+                                .replace('{good}', v.good);
+                aElement.href = '/admin/board/view/'+v.idx;
+                aElement.innerHTML = v.subject;
+            });
+            boards.innerHTML = template;
+            const subject = document.querySelectorAll('.subject');
+            response.data.forEach(v=>{
+                subject[v.idx-1].appendChild(aElement);
+            });
+        });
+    </script>
+</head>
+<body>
+    <h1>Board</h1>
+    <a href="/admin">Back</a>
+    <table cellspacing="0" cellpadding="0">
+        <thead>
+            <tr>
+                <th>No.</th>
+                <th>Subject</th>
+                <th>Nickname</th>
+                <th>Date</th>
+                <th>Hit</th>
+                <th>Good</th>
+            </tr>
+        </thead>
+        <tbody id="boards"></tbody>
+    </table>
+
+    <template id="board">
+        <tr>
+            <td>{idx}</td>
+            <td class="subject">{subject}</td>
+            <td>{nickname}</td>
+            <td>{date}</td>
+            <td>{hit}</td>
+            <td>{good}</td>
+        </tr>
+    </template>
+</body>
+</html>
