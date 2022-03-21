@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    
+</head>
+<body>
+    
+    <h1>
+        <a href="/">Logo</a>
+    </h1>
+    <h2>
+        글 작성 페이지 입니다.
+    </h2>
+    <form method="post" action="/board/write" id="frm_write">
+        <ul>
+            <li>
+                <strong>제목 : </strong>
+                <input type="text" name="subject" id="subject">
+            </li>
+            <li>
+                <strong>내용 : </strong>
+                <input type="text" name="content" id="content">
+            </li>
+        </ul>
+        <input type="submit" value="글 게시하기">
+    </form>
+    <a href="/board/list">목록 보기</a>
+
+    <script type="text/javascript">
+        const frm = document.querySelector('#frm_write')
+        frm.addEventListener('submit',async (e)=>{
+            e.preventDefault()
+            const subject = document.querySelector('#subject')
+            const content = document.querySelector('#content')
+
+            const body = {
+                subject:subject.value,
+                content:content.value 
+            }
+           
+            const option = {
+                "Content-type":"application/json",
+                withCredentials:true
+            }
+
+            const response = await axios.post('http://localhost:3000/board/write',body,option)
+            console.log(response)
+        })
+    </script>
+</body>
+</html>
