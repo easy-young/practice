@@ -16,7 +16,15 @@ nunjucks.configure('views',{
 app.use(cookieParser())
 app.use(express.static('public'));
 app.get('/',(req,res)=>{
-    res.render('main.html')
+    try {
+        const userData = JSON.parse(req.cookies.CURRENT_USER)
+        console.log(userData)
+        res.render('main.html', { userData: userData })
+    } catch (error) {
+        res.render('main.html')
+    }
+ 
+    
 })
 
 app.use(router)
