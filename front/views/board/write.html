@@ -18,24 +18,24 @@
         글 작성 페이지 입니다.
     </h2>
 
-    <form method="post" action="/board/upload" enctype="multipart/form-data">  
-        <input type="file" name="upload">   
-        <input type="submit" value="전송">
-    </form>
+
 
 
     <form method="post" action="/board/write" id="frm_write">
         <ul>
             <li>
                 <strong>제목 : </strong>
-                <input type="text" name="subject" id="subject">
+                <input type="text" name="subject" id="subject" required>
             </li>
 
-          
+            <li>
+                <strong>image : </strong>
+                <input type="file" name="upload" id="upload" required >   
+            </li>
 
             <li>
                 <strong>내용 : </strong>
-                <input type="text" name="content" id="content">
+                <input type="text" name="content" id="content" required>
             </li>
         </ul>
         <input type="submit" value="글 게시하기">
@@ -45,28 +45,44 @@
     <script type="text/javascript">
 
 
+var getCookie = function(name) {
+var value = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
+return value? value[2] : null;
+};
+
 
 
 
     const frm = document.querySelector('#frm_write')
     frm.addEventListener('submit',async (e)=>{
         e.preventDefault()
-        const subject = document.querySelector('#subject')
-        const content = document.querySelector('#content')
+        const subject = document.querySelector('#subject').value
+        const content = document.querySelector('#content').value
         const file = document.querySelector('#upload').files[0];
-        const body = {
-            subject:subject.value,
-            content:content.value,
-        }
+        const formData = new FormData()
+        formData.append('subject',subject)
+        formData.append('content',content)
+        formData.append('upload',file)
+        // const body = {
+        //     subject:subject.value,
+        //     content:content.value,
+        // }
         const option = {
                     "Content-type":"application/json",
                     withCredentials:true,
-                    // Authorization:'',// user Token?
+                    Authorization:'',// user Token?
                 }
 
+               const response =  await axios.post('http://localhost:3000/board/write',formData,option)
+               if(response.data.status === true){
+                   alert ("글쓰기가 성공하였씁니다 ㅎㅎ")
+                   location.href="/"
+               } else {
+                   alert ("글쓰기가 실패하였습니다 관리자에게 문의해주세요")
+               }
 
-        await axios.post('http://localhost:3000/board/write',body,option)
-     
+   
+            
 
     })
     </script>

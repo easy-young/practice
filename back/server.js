@@ -3,11 +3,13 @@ const app = express()
 const router = require('./routes/index.js')
 const cors = require('cors')
 const cookieparser = require('cookie-parser')
+const { Auth } = require('./middlewares/auth')
+
 
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))
 app.use(cookieparser())
-
+app.use(Auth)
 
 app.use(express.static('public'));
 

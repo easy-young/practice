@@ -49,6 +49,7 @@
                 const response = await axios.post('http://localhost:3000/user/login',body,option)
             
                 if(response.data.errno !==0) throw new Error('로그인 에러!')
+           
                 alert(`
                     아이디는 ${response.data.result[0].userid}
                     닉네임은 ${response.data.result[0].nickname}

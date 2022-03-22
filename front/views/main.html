@@ -5,11 +5,24 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+
+
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
    
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    
+    <script src="https://momentjs.com/downloads/moment.min.js"></script>
     <script type="text/javascript">
-     
+  
+
+
+
+        const moveHandler=(idx,hit)=>{
+            location.href="/board/view/"+idx
+        }
+
+
         document.addEventListener('DOMContentLoaded',async ()=>{
             // 요청에대한 코드를 작성해서 결과물을 받아와야합니다.
             const response = await axios.post('http://localhost:3000/board/list',{
@@ -24,13 +37,25 @@
             if(response.data.status){
                 let list= response.data.data
                 list.map((item)=>{
-                    innerData+=`<div class="post-wrapper">
-                        <div class="subject">${item.subject}</div>
-                        <div class="content">${item.content}</div>
-                        <div class="nickname">${item.nickname}</div>
+                    // <img src="http://localhost:3000/uploades/${item.imageName}" alt="post image"/>
+                    const url=`http://localhost:3000/uploades/${item.imageName}`
+                    innerData+=`<div class="col-sm-12 col-md-6 col-lg-4 col-xl-3">
+                        <div class="card post-wrapper" onclick="moveHandler(${item.idx} , ${item.hit})">
+                        ${item.filename!==null?`<div class="image"><img src="http://localhost:3000/uploades/${item.imageName}" alt="post image"/></div>`:''}
+                        <div class="card-header subject">${item.subject.substr(0,20)}</div>
+                        
+                        <div class=" card-body content">${item.content.length>20? `${item.content.substr(0,20)}...`:item.content}</div>
+                        <hr/>
+                        <div class="card-footer">
+                            <div class="date"> ${moment(item.date).format('YYYY MM-DD hh:mm:s')}</div>
                         <div class="hit">${item.hit}</div>
                         <div class="good">${item.good}</div>
-                        <div class="date">${item.date}</div>
+                       
+
+                        <div class="nickname">${item.nickname}</div>
+                        </div>
+                        
+                        </div>
                         </div>`
                 })
              
@@ -41,19 +66,25 @@
         })
     </script>
 <style>
-    /* css 담당이 하시겠징..ㅋㅋ */
+    /* 프론트 보고싶다...*/
     #list{
         width:100%;
         padding:20px 20px;
       
     }
     .post-wrapper{
+        cursor: pointer;
         width:400px;
         float: left;
         border: 1px solid #999999;
         padding:20px 20px;
         margin:5px 5px;
         border-radius: 8px;
+    }
+    .post-wrapper .image img{
+        width:100%;
+        height:200px;
+        object-fit: cover;
     }
     .post-wrapper .subject{}
     .post-wrapper .content{}
@@ -66,16 +97,64 @@
  
 </head>
 <body>
-    
     <div>
         <h1>
             <a href="/">Logo</a>    
         </h1>
+        {% if userData %}
+        <!-- {{userData.userid}} -->
+    
+        <a href="/board/write">글쓰기</a>
+
+        {% else %}
+    
         <a href="/user/login">로그인</a>
+
+        {% endif %}
+  
+        
+   
     </div>
 
+<nav class="navbar navbar-expand-md navbar-light bg-light">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">Navbar</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        {% if userData %}
+        <li class="nav-item">
+            <a class="nav-link" href="/board/write">글쓰기</a>
+          </li>
 
-    <div id="list"></div>
+        {% else %}
+    
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Dropdown
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <li><a class="dropdown-item"  href="/user/login">로그인</a></li>
+              <li><a class="dropdown-item" href="#">Another action</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="#">Something else here</a></li>
+            </ul>
+          </li>
+        {% endif %}
+      </ul>
+    
+    </div>
+  </div>
+</nav>
 
+
+    <div id="list" class="row"></div>
+
+
+
+    <!-- JavaScript Bundle with Popper -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 </body>
 </html>

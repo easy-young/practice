@@ -6,8 +6,7 @@ CREATE TABLE board(
     content TEXT NOT NULL,
     hit INT DEFAULT 0 NOT NULL,
     good INT DEFAULT 0 NOT NULL,
+    imageName TEXT DEFAULT 0 NOT NULL,
+    clickUsers JSON DEFAULT 0 NOT NULL,
     PRIMARY KEY(idx)
 );
-
--- INSERT INTO board(subject,nickname,content)
--- SELECT subject,nickname,content FROM board;
