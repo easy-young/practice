@@ -5,12 +5,17 @@ const axios = require('axios')
 const router = require('./routes/index.js')
 const cookieParser = require('cookie-parser')
 // const axios = require('axios')
+const cors = require('cors')
 
 app.set('view engine','html')
 nunjucks.configure('views',{
     express:app,
 })
 
+app.use(cors({
+    origin:true,
+    credentials:true,
+}))
 
 app.use(cookieParser())
 
