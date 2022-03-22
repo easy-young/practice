@@ -3,7 +3,11 @@ exports.list = (req,res)=>{
 }
 
 exports.view = (req,res)=>{
-    res.render('./board/view.html')
+  
+
+
+
+    res.render('./board/view.html',{idx:req.params.idx})
 }
 
 exports.write = (req,res)=>{

@@ -18,12 +18,3 @@ CREATE TABLE user(
     PRIMARY KEY(userid),
     UNIQUE KEY(nickname)
 );
-
-
-INSERT INTO user (
-    level, userid, userpw, userimage, name, nickname, birth,
-    address, gender, tel, phone, email, intro, point, active, date
-) VALUES (
-    3, 'seungju', '1234', 'kek4mf', '승주', '경두싹빨', 930429, '천호동', 'M',
-    '7621823', '01065681053', '5454', 'hhhh', 0, 0, 940202
-    );

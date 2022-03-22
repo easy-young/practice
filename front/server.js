@@ -5,22 +5,26 @@ const axios = require('axios')
 const router = require('./routes/index.js')
 const cookieParser = require('cookie-parser')
 // const axios = require('axios')
-const cors = require('cors')
 
 app.set('view engine','html')
 nunjucks.configure('views',{
     express:app,
+    watch:true
 })
 
-app.use(cors({
-    origin:true,
-    credentials:true,
-}))
 
 app.use(cookieParser())
-
+app.use(express.static('public'));
 app.get('/',(req,res)=>{
-    res.render('main.html')
+    try {
+        const userData = JSON.parse(req.cookies.CURRENT_USER)
+        console.log(userData)
+        res.render('main.html', { userData: userData })
+    } catch (error) {
+        res.render('main.html')
+    }
+ 
+    
 })
 
 app.use(router)

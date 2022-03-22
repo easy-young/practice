@@ -58,6 +58,9 @@ exports.join = async (req,res)=>{
 }
 
 exports.login = async (req,res)=>{
+
+ 
+
     const {userid, userpw} = req.body
     const sql = `
                 SELECT userid, userpw, name, level, point, nickname 
@@ -68,12 +71,24 @@ exports.login = async (req,res)=>{
 
     try {
         const [result] = await pool.execute(sql,prepare)
-        // console.log(result)
+  
 
         if(result.length == 0) throw Error('등록된회원이 아닙니다.')
-        const jwt = createToken({...result[0]})
+     
 
+
+
+        const jwt = createToken({...result[0]})
+        
         res.cookie('token',jwt,{
+            path:'/',
+            httpOnly:true,
+            secure:true,
+            domain:'localhost'
+        })
+        delete result[0].userpw
+        res.cookie('CURRENT_USER',JSON.stringify(result[0]),
+        {
             path:'/',
             httpOnly:true,
             secure:true,
@@ -96,14 +111,4 @@ exports.login = async (req,res)=>{
         }
         res.json(response)
     }
-}
-
-exports.profile = async (req,res) => {
-    const {userid,userpw} = req.user
-
-    const sql = `SELECT * FROM user WHERE userid=? and userpw=?`
-    const prepare = [userid, userpw]
-    const [[result]] = await pool.execute(sql,prepare)
-    
-    res.json(result)
 }
