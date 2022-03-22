@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+    <script type="text/javascript">
+        document.addEventListener('DOMContentLoaded', async ()=>{
+            const profiles = document.querySelector('#profiles');
+            const profile = document.querySelector('#profile').innerHTML;
+            
+            // const body = {
+            //     profile:'asdf'
+            // }
+
+            const option = {
+                "Content-type":"application/json",
+                withCredentials:true,
+            }
+
+            const response = await axios.post('http://localhost:3000/user/profile',null,option);
+            const { level, userid, userpw, userimage, name, nickname,
+                    birth, address, gender, tel, phone, email, intro,
+                    point, active, date } = response.data
+            
+            let template = '';
+            template = profile.replace('{userid}',userid)
+                              .replace('{userimage}',userimage)
+                              .replace('{name}',name)
+                              .replace('{nickname}',nickname)
+                              .replace('{birth}',birth)
+                              .replace('{address}',address)
+                              .replace('{gender}',gender)
+                              .replace('{tel}',tel)
+                              .replace('{phone}',phone)
+                              .replace('{email}',email)
+                              .replace('{intro}',intro)
+                              .replace('{point}',point)
+                              .replace('{active}',active)
+                              .replace('{date}',date)
+                              
+            profiles.innerHTML = template
+        });
+    </script>
+</head>
+<body>
+    <h1>
+        <a href="/">Logo</a>
+    </h1>
+    <h2>
+        My Profile 임다
+    </h2>
+    <div id="profiles"></div>
+    <template id="profile">
+        <ul>
+            <li>{userid}</li>
+            <li>{userimage}</li>
+            <li>{name}</li>
+            <li>{nickname}</li>
+            <li>{birth}</li>
+            <li>{address}</li>
+            <li>{gender}</li>
+            <li>{tel}</li>
+            <li>{phone}</li>
+            <li>{email}</li>
+            <li>{intro}</li>
+            <li>{point}</li>
+            <li>{active}</li>
+            <li>{date}</li>
+        </ul>
+    </template>
+    
+</body>
+</html>
