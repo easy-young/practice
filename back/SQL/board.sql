@@ -10,4 +10,3 @@ CREATE TABLE board(
     clickUsers JSON DEFAULT 0 NOT NULL,
     PRIMARY KEY(idx)
 );
-

@@ -20,6 +20,11 @@
         document.addEventListener('DOMContentLoaded', async ()=>{
             const users = document.querySelector('#users');
             const user = document.querySelector('#user').innerHTML;
+            const userModify = document.querySelector('#userModify');
+            const title = document.querySelector('#title');
+            const ban = document.querySelector('#ban');
+            const submit = document.querySelector('#submit');
+            submit.style.display = 'none';
             const response = await axios.post('http://localhost:3000/api/admin/user', {
                 withCredentials:true,
             });
@@ -41,16 +46,92 @@
                                 .replace('{date}', v.date.split('T')[0]);
             });
             users.innerHTML = template;
+
+            const button = document.querySelector('button');
+            button.addEventListener('click', async ()=>{
+                submit.style.display = 'block';
+                const response = await axios.post('http://localhost:3000/api/admin/user', {
+                    withCredentials:true,
+                });
+                let template = '';
+                response.data.forEach(v=>{
+                    template += userModify.innerHTML.replaceAll('{level}', v.level)
+                                .replaceAll('{userid}', v.userid)
+                                .replace('{name}', v.name)
+                                .replace('{nickname}', v.nickname)
+                                .replace('{birth}', v.birth.split('T')[0])
+                                .replace('{address}', v.address)
+                                .replace('{gender}', v.gender)
+                                .replace('{tel}', v.tel.substring(0,3)+'-'+v.tel.substring(3,6)+'-'+v.tel.substring(6,10))
+                                .replace('{phone}', v.phone.substring(0,3)+'-'+v.phone.substring(3,7)+'-'+v.phone.substring(7,11))
+                                .replace('{email}', v.email)
+                                .replace('{intro}', v.intro)
+                                .replace('{point}', v.point)
+                                .replace('{active}', v.active)
+                                .replace('{date}', v.date.split('T')[0]);
+                });
+                users.innerHTML = template;
+                title.innerHTML += ban.innerHTML;
+                button.style.visibility = 'hidden';
+                response.data.forEach(v=>{
+                    const level = document.querySelector(`#${v.userid}_level`);
+                    const useridLevel1 = document.querySelector(`#${v.userid}_level1`);
+                    const useridLevel2 = document.querySelector(`#${v.userid}_level2`);
+                    const useridLevel3 = document.querySelector(`#${v.userid}_level3`);
+                    if (level.value == 1) useridLevel1.checked = true;
+                    else if (level.value == 2) useridLevel2.checked = true;
+                    else useridLevel3.checked = true;
+
+                    const active = document.querySelector(`#${v.userid}_active`);
+                    const useridActive1 = document.querySelector(`#${v.userid}_active1`);
+                    const useridActive0 = document.querySelector(`#${v.userid}_active0`);
+                    if (active.value == 1) useridActive1.checked = true;
+                    else useridActive0.checked = true;
+                });
+            });
+            let mydata = response.data;
+
+            const form = document.querySelector('form');
+            form.addEventListener('submit', async ()=>{
+                let body = {};
+                body.level = [];
+                body.active = [];
+                mydata.forEach(v=>{
+                    const level = document.querySelector(`#${v.userid}_level`);
+                    const useridLevel1 = document.querySelector(`#${v.userid}_level1`);
+                    const useridLevel2 = document.querySelector(`#${v.userid}_level2`);
+                    const useridLevel3 = document.querySelector(`#${v.userid}_level3`);
+                    if (useridLevel1.checked === true) level.value = 1;
+                    else if (useridLevel2.checked === true) level.value = 2;
+                    else level.value = 3;
+
+                    body.level.push(level.value);
+
+                    const active = document.querySelector(`#${v.userid}_active`);
+                    const useridActive1 = document.querySelector(`#${v.userid}_active1`);
+                    const useridActive0 = document.querySelector(`#${v.userid}_active0`);
+                    if (useridActive1.checked === true) active.value = 1;
+                    else active.value = 0;
+
+                    body.active.push(active.value);
+                });
+                const response = await axios.post('http://localhost:3000/api/admin/userModify', body, {
+                    withCredentials:true,
+                });
+            });
         });
     </script>
 </head>
 <body>
     <h1>Users</h1>
-    <a href="/admin">Back</a>
-    <form method="post" action="/">
+    <a href="/admin">Home</a>
+    <a href="/admin/user">User</a>
+    <button>Modify</button>
+    <form method="get" action="/admin/user">
+        <input type="submit" id="submit" value="Submit">
         <table cellspacing="0" cellpadding="0">
             <thead>
-                <tr>
+                <tr id="title">
                     <th>Level</th>
                     <th>ID</th>
                     <th>Name</th>
@@ -65,12 +146,11 @@
                     <th>Point</th>
                     <th>Active</th>
                     <th>Date</th>
-                    <th>Ban</th>
+                    <template id="ban"><th>Ban</th></template>
                 </tr>
             </thead>
             <tbody id="users"></tbody>
         </table>
-        <input type="submit" value="Modify">
     </form>
 
     <template id="user">
@@ -89,7 +169,35 @@
             <td>{point}</td>
             <td>{active}</td>
             <td>{date}</td>
-            <td><input type="checkbox" name="del"></td>
+        </tr>
+    </template>
+
+    <template id="userModify">
+        <tr>
+            <td>
+                <input type="hidden" name="level" id="{userid}_level" value="{level}">
+                <input type="radio" name="{userid}_level" id="{userid}_level1" value="1"><label for="{userid}_level1">1</label>
+                <input type="radio" name="{userid}_level" id="{userid}_level2" value="2"><label for="{userid}_level2">2</label>
+                <input type="radio" name="{userid}_level" id="{userid}_level3" value="3"><label for="{userid}_level3">3</label>
+            </td>
+            <td>{userid}</td>
+            <td>{name}</td>
+            <td>{nickname}</td>
+            <td>{birth}</td>
+            <td>{address}</td>
+            <td>{gender}</td>
+            <td>{tel}</td>
+            <td>{phone}</td>
+            <td>{email}</td>
+            <td>{intro}</td>
+            <td>{point}</td>
+            <td>
+                <input type="hidden" name="active" id="{userid}_active" value="{active}">
+                <input type="radio" name="{userid}_active" id="{userid}_active1" value="1"><label for="{userid}_active1">1</label>
+                <input type="radio" name="{userid}_active" id="{userid}_active0" value="0"><label for="{userid}_active0">0</label>
+            </td>
+            <td>{date}</td>
+            <td><input type="checkbox" name="modify"></td>
         </tr>
     </template>
 </body>
