@@ -55,18 +55,18 @@ exports.board = async (req, res) => {
     }
 };
 
-exports.view = async (req, res) => {
-    console.log(req.params);
-    const sql = `SELECT nickname FROM board WHERE idx=?`;
-    const prepare = [];
-    const sql2 = `SELECT * FROM board WHERE nickname=?`;
-    const prepare2 = [];
+// exports.view = async (req, res) => {
+    // console.log(req.params);
+    // const sql = `SELECT nickname FROM board WHERE idx=?`;
+    // const prepare = [];
+    // const sql2 = `SELECT * FROM board WHERE nickname=?`;
+    // const prepare2 = [];
     // try {
     //     const [result] = await pool.execute(sql, prepare);
     // } catch (e) {
     //     console.log(e.message);
     // }
-};
+// };
 
 exports.stats = (req, res) => {
     res.redirect('/');

@@ -112,3 +112,13 @@ exports.login = async (req,res)=>{
         res.json(response)
     }
 }
+
+exports.profile = async (req,res) => {
+    const {userid,userpw} = req.user
+
+    const sql = `SELECT * FROM user WHERE userid=? and userpw=?`
+    const prepare = [userid, userpw]
+    const [[result]] = await pool.execute(sql,prepare)
+    
+    res.json(result)
+}

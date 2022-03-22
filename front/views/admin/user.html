@@ -118,6 +118,9 @@
                 const response = await axios.post('http://localhost:3000/api/admin/userModify', body, {
                     withCredentials:true,
                 });
+                // const reponse = await axios.get('http://localhost:3001/api/admin/user', {
+                //     withCredentials:true,
+                // });
             });
         });
     </script>
@@ -127,7 +130,7 @@
     <a href="/admin">Home</a>
     <a href="/admin/user">User</a>
     <button>Modify</button>
-    <form method="get" action="/admin/user">
+    <form method="get" action="user">
         <input type="submit" id="submit" value="Submit">
         <table cellspacing="0" cellpadding="0">
             <thead>
