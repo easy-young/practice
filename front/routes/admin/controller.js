@@ -14,6 +14,10 @@ exports.board = (req, res)=>{
     res.render('admin/board.html');
 };
 
+exports.view = (req, res)=>{
+    res.render('admin/board/view.html');
+};
+
 exports.stats = (req, res)=>{
     res.render('admin/stats.html');
 };

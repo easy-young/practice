@@ -9,7 +9,5 @@ CREATE TABLE board(
     PRIMARY KEY(idx)
 );
 
-
-
 -- INSERT INTO board(subject,nickname,content)
 -- SELECT subject,nickname,content FROM board;

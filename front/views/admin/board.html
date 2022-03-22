@@ -15,7 +15,6 @@
         document.addEventListener('DOMContentLoaded', async ()=>{
             const boards =document.querySelector('#boards');
             const board = document.querySelector('#board').innerHTML;
-            const aElement = document.createElement('a');
             const response = await axios.post('http://localhost:3000/api/admin/board', {
                 withCredentials:true,
             });
@@ -27,12 +26,13 @@
                                 .replace('{date}', v.date.split('T')[0])
                                 .replace('{hit}', v.hit)
                                 .replace('{good}', v.good);
-                aElement.href = '/admin/board/view/'+v.idx;
-                aElement.innerHTML = v.subject;
             });
             boards.innerHTML = template;
             const subject = document.querySelectorAll('.subject');
             response.data.forEach(v=>{
+                const aElement = document.createElement('a');
+                aElement.href = '/admin/board/view/'+v.idx;
+                aElement.innerHTML = v.subject;
                 subject[v.idx-1].appendChild(aElement);
             });
         });
@@ -58,7 +58,7 @@
     <template id="board">
         <tr>
             <td>{idx}</td>
-            <td class="subject">{subject}</td>
+            <td class="subject"></td>
             <td>{nickname}</td>
             <td>{date}</td>
             <td>{hit}</td>
