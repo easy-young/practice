@@ -8,24 +8,30 @@
     <script type="text/javascript" src="https://unpkg.com/axios@0.26.0/dist/axios.min.js"></script>
     <style>
         table {
-            width: 40%;
+            width: 50%;
         }
     </style>
     <script type="text/javascript">
         document.addEventListener('DOMContentLoaded', async ()=>{
             const boards =document.querySelector('#boards');
             const board = document.querySelector('#board').innerHTML;
+            const form = document.querySelector('form');
+            const submit = document.querySelector('#submit');
+            submit.style.visibility = 'hidden';
             const response = await axios.post('http://localhost:3000/api/admin/board', {
                 withCredentials:true,
             });
             let template = '';
             response.data.forEach(v=>{
                 template += board.replace('{idx}', v.idx)
+                                .replace('{main}', v.main)
+                                .replace('{sub}', v.sub)
                                 .replace('{subject}', v.subject)
                                 .replace('{nickname}', v.nickname)
                                 .replace('{date}', v.date.split('T')[0])
                                 .replace('{hit}', v.hit)
-                                .replace('{good}', v.good);
+                                .replace('{good}', v.good)
+                                .replace('{active}', v.active);
             });
             boards.innerHTML = template;
             const subject = document.querySelectorAll('.subject');
@@ -35,34 +41,195 @@
                 aElement.innerHTML = v.subject;
                 subject[v.idx-1].appendChild(aElement);
             });
+
+            const hide = document.querySelector('#hide');
+            hide.addEventListener('click', async ()=>{
+                const boardModify = document.querySelector('#boardModify').innerHTML;
+                const title = document.querySelector('#title');
+                const ban = document.querySelector('#ban');
+                submit.style.visibility = 'visible';
+                const response = await axios.post('http://localhost:3000/api/admin/board/hide', {
+                    withCredentials:true,
+                });
+                boards.innerHTML = '';
+                template = '';
+                response.data.forEach(v=>{
+                    template += boardModify.replace('{idx}', v.idx)
+                                    .replace('{main}', v.main)
+                                    .replace('{sub}', v.sub)
+                                    .replace('{subject}', v.subject)
+                                    .replace('{nickname}', v.nickname)
+                                    .replace('{date}', v.date.split('T')[0])
+                                    .replace('{hit}', v.hit)
+                                    .replace('{good}', v.good)
+                                    .replace('{active}', v.active);
+                });
+                boards.innerHTML = template;
+                const subject = document.querySelectorAll('.subject');
+                let i = 0;
+                response.data.forEach(v=>{
+                    const aElement = document.createElement('a');
+                    aElement.href = '/admin/board/view/'+v.idx;
+                    aElement.innerHTML = v.subject;
+                    subject[i].append(aElement);
+                    i++;
+                });
+                if (title.innerHTML.match(/Active/g) === null) title.innerHTML += ban.innerHTML;
+            });
+
+            const idx = document.querySelector('#idx');
+            idx.addEventListener('click', async ()=>{
+                const response = await axios.post('http://localhost:3000/api/admin/board/idx', {
+                    withCredentials:true,
+                });
+                boards.innerHTML = '';
+                template = '';
+                response.data.forEach(v=>{
+                    template += board.replace('{idx}', v.idx)
+                                    .replace('{main}', v.main)
+                                    .replace('{sub}', v.sub)
+                                    .replace('{subject}', v.subject)
+                                    .replace('{nickname}', v.nickname)
+                                    .replace('{date}', v.date.split('T')[0])
+                                    .replace('{hit}', v.hit)
+                                    .replace('{good}', v.good)
+                                    .replace('{active}', v.active);
+                });
+                boards.innerHTML = template;
+                const subject = document.querySelectorAll('.subject');
+                let i = 0;
+                response.data.forEach(v=>{
+                    const aElement = document.createElement('a');
+                    aElement.href = '/admin/board/view/'+v.idx;
+                    aElement.innerHTML = v.subject;
+                    subject[i].append(aElement);
+                    i++;
+                });
+            });
+
+            const hit = document.querySelector('#hit');
+            hit.addEventListener('click', async ()=>{
+                const response = await axios.post('http://localhost:3000/api/admin/board/hit', {
+                    withCredentials:true,
+                });
+                boards.innerHTML = '';
+                template = '';
+                response.data.forEach(v=>{
+                    template += board.replace('{idx}', v.idx)
+                                    .replace('{main}', v.main)
+                                    .replace('{sub}', v.sub)
+                                    .replace('{subject}', v.subject)
+                                    .replace('{nickname}', v.nickname)
+                                    .replace('{date}', v.date.split('T')[0])
+                                    .replace('{hit}', v.hit)
+                                    .replace('{good}', v.good)
+                                    .replace('{active}', v.active);
+                });
+                boards.innerHTML = template;
+                const subject = document.querySelectorAll('.subject');
+                let i = 0;
+                response.data.forEach(v=>{
+                    const aElement = document.createElement('a');
+                    aElement.href = '/admin/board/view/'+v.idx;
+                    aElement.innerHTML = v.subject;
+                    subject[i].append(aElement);
+                    i++;
+                });
+            });
+
+            const good = document.querySelector('#good');
+            good.addEventListener('click', async ()=>{
+                const response = await axios.post('http://localhost:3000/api/admin/board/good', {
+                    withCredentials:true,
+                });
+                boards.innerHTML = '';
+                template = '';
+                response.data.forEach(v=>{
+                    template += board.replace('{idx}', v.idx)
+                                    .replace('{main}', v.main)
+                                    .replace('{sub}', v.sub)
+                                    .replace('{subject}', v.subject)
+                                    .replace('{nickname}', v.nickname)
+                                    .replace('{date}', v.date.split('T')[0])
+                                    .replace('{hit}', v.hit)
+                                    .replace('{good}', v.good)
+                                    .replace('{active}', v.active);
+                });
+                boards.innerHTML = template;
+                const subject = document.querySelectorAll('.subject');
+                let i = 0;
+                response.data.forEach(v=>{
+                    const aElement = document.createElement('a');
+                    aElement.href = '/admin/board/view/'+v.idx;
+                    aElement.innerHTML = v.subject;
+                    subject[i].append(aElement);
+                    i++;
+                });
+            });
+
+            form.addEventListener('submit', async ()=>{
+                const response = await axios.post('http://localhost:3000/api/admin/boardModify', {
+                    withCredentials:true,
+                });
+                console.log(response.data);
+            });
         });
     </script>
 </head>
 <body>
-    <h1>Board</h1>
+    <h1><a href="/admin/board">Board</a></h1>
     <a href="/admin">Back</a>
-    <table cellspacing="0" cellpadding="0">
-        <thead>
-            <tr>
-                <th>No.</th>
-                <th>Subject</th>
-                <th>Nickname</th>
-                <th>Date</th>
-                <th>Hit</th>
-                <th>Good</th>
-            </tr>
-        </thead>
-        <tbody id="boards"></tbody>
-    </table>
+    <button id="hide">Hide</button>
+    <button id="idx">No.</button>
+    <button id="hit">Hit</button>
+    <button id="good">Good</button>
+    <form action="/">
+        <input type="submit" id="submit" value="Submit">
+        <table cellspacing="0" cellpadding="0">
+            <thead>
+                <tr id="title">
+                    <th>No.</th>
+                    <th>Main Category</th>
+                    <th>Sub Category</th>
+                    <th>Subject</th>
+                    <th>Nickname</th>
+                    <th>Date</th>
+                    <th>Hit</th>
+                    <th>Good</th>
+                    <th>Active</th>
+                </tr>
+            </thead>
+            <tbody id="boards"></tbody>
+        </table>
+    </form>
 
     <template id="board">
         <tr>
             <td>{idx}</td>
+            <td>{main}</td>
+            <td>{sub}</td>
             <td class="subject"></td>
             <td>{nickname}</td>
             <td>{date}</td>
             <td>{hit}</td>
             <td>{good}</td>
+            <td>{active}</td>
+        </tr>
+    </template>
+
+    <template id="boardModify">
+        <tr>
+            <td>{idx}</td>
+            <td>{main}</td>
+            <td>{sub}</td>
+            <td class="subject"></td>
+            <td>{nickname}</td>
+            <td>{date}</td>
+            <td>{hit}</td>
+            <td>{good}</td>
+            <td><input type="radio" name="{idx}_modify" id="{idx}_modify1" value="1"><label for="modify1">1</label>
+                <input type="radio" name="{idx}_modify" id="{idx}_modify0" value="0"><label for="modify0">0</label>
+            </td>
         </tr>
     </template>
 </body>

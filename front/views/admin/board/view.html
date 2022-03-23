@@ -8,18 +8,39 @@
     <script type="text/javascript" src="https://unpkg.com/axios@0.26.0/dist/axios.min.js"></script>
     <script type="text/javascript">
         document.addEventListener('DOMContentLoaded', async ()=>{
+            const [,,,,idx] = location.pathname.split('/');
+            let template = document.querySelector('template').innerHTML;
             const view = document.querySelector('#view');
-            const ulElement = document.createElement('ul');
-            const liElement = document.createElement('li');
-
-            // const response = await axios.post('http://localhost:3000/api/admin/boardView', {
-            //     withCredentials:true,
-            // });
+            const response = await axios.post(`http://localhost:3000/api/admin/board/view/${idx}`, {
+                withCredentials:true,
+            });
+            const {subject, nickname, date, content, hit, good, imageName} = response.data[0];
+            template = template.replace('{idx}', idx)
+                                .replace('{subject}', subject)
+                                .replace('{nickname}', nickname)
+                                .replace('{date}', date.split('T')[0])
+                                .replace('{content}', content)
+                                .replace('{hit}', hit)
+                                .replace('{good}', good)
+                                .replace('{imageName}', imageName);
+            view.innerHTML = template;
         });
     </script>
 </head>
 <body>
     Board View
-    <template id="view"></template>
+    <div id="view"></div>
+    <template>
+        <ul>
+            <li>No. {idx}</li>
+            <li>Subject : {subject}</li>
+            <li>Nickname : {nickname}</li>
+            <li>Date : {date}</li>
+            <li>Content : {content}</li>
+            <li>Hit : {hit}</li>
+            <li>Good : {good}</li>
+            <li>Image : {imageName}</li>
+        </ul>
+    </template>
 </body>
 </html>

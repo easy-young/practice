@@ -1,4 +1,5 @@
 const pool = require('../../db').pool;
+const axios = require('axios');
 
 exports.admin = (req, res) => {
     res.redirect('/');
@@ -37,7 +38,7 @@ exports.userModify = async (req, res) => {
             prepare = [];
         }
     }
-    res.send(result);
+    res.redirect('http://localhost:3001/admin/user');
 };
 
 exports.category = (req, res) => {
@@ -55,18 +56,61 @@ exports.board = async (req, res) => {
     }
 };
 
-// exports.view = async (req, res) => {
-    // console.log(req.params);
-    // const sql = `SELECT nickname FROM board WHERE idx=?`;
-    // const prepare = [];
-    // const sql2 = `SELECT * FROM board WHERE nickname=?`;
-    // const prepare2 = [];
-    // try {
-    //     const [result] = await pool.execute(sql, prepare);
-    // } catch (e) {
-    //     console.log(e.message);
-    // }
-// };
+exports.boardModify = async (req, res) => {
+    //
+};
+
+exports.hide = async (req, res) => {
+    const sql = `SELECT * FROM board`;
+    try {
+        const [result] = await pool.execute(sql);
+        res.send(result);
+    } catch (e) {
+        console.log(e.message);
+    }
+};
+
+exports.idx = async (req, res) => {
+    const sql = `SELECT * FROM board ORDER BY idx ASC`;
+    try {
+        const [result] = await pool.execute(sql);
+        res.send(result);
+    } catch (e) {
+        console.log(e.message);
+    }
+}
+
+exports.hit = async (req, res) => {
+    const sql = `SELECT * FROM board ORDER BY hit DESC`;
+    try {
+        const [result] = await pool.execute(sql);
+        res.send(result);
+    } catch (e) {
+        console.log(e.message);
+    }
+};
+
+exports.good = async (req, res) => {
+    const sql = `SELECT * FROM board ORDER BY good DESC`;
+    try {
+        const [result] = await pool.execute(sql);
+        res.send(result);
+    } catch (e) {
+        console.log(e.message);
+    }
+};
+
+exports.view = async (req, res) => {
+    const {idx} = req.params;
+    const sql = `SELECT * FROM board WHERE idx=?`;
+    const prepare = [idx];
+    try {
+        const [result] = await pool.execute(sql, prepare);
+        res.send(result);
+    } catch (e) {
+        console.log(e.message);
+    }
+};
 
 exports.stats = (req, res) => {
     res.redirect('/');
