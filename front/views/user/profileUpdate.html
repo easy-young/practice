@@ -43,19 +43,17 @@
                               
             profile.innerHTML = template
 
-            const profilefrm = document.querySelector('#profilefrm')
-            profileFrm.addEventListener('click', async (e)=>{
-                e.preventDefault();
+            // const profilefrm = document.querySelector('#profilefrm')
 
-                const option = {
-                    "Content-type":"application/json",
-                    withCredentials:true,
-                }
+            const response2 = await axios.post('http://localhost:3000/user/profileUpdate',null,option)
+            console.log(response2.data)
 
-                const response = await axios.post('http://localhost:3000/user/profileUpdate',null,option);
-
-            })
-
+            // profilefrm.addEventListener('submit', (e)=>{
+            // e.preventDefault();
+            
+            // const userimage1 = document.querySelector('#userimage')
+            // console.log(userimage1)
+            // })
         })
         
     </script>
@@ -72,7 +70,7 @@
     </div>
 
     <template id="profileUpdate">
-        <form method="post" action="/user/profileUpdate" id="profileFrm">
+        <form method="post" action="/user/profileUpdate" id="profilefrm">
             <ul>
                 <li>
                     <strong>ID :</strong>
@@ -80,7 +78,7 @@
                 </li>
                 <li>
                     <strong>사진 :</strong>
-                    <input type="text" value="{userimage}">       
+                    <input type="text" value="{userimage}" id="userimage">       
                 </li>
                 <li>
                     <strong>이름 :</strong>
@@ -138,6 +136,23 @@
             </ul>
         </form>
     </template>
+
+    <!-- <script type="text/javascript">
+        const profilefrm = document.querySelector('#profilefrm')
+            profilefrm.addEventListener('submit', async (e)=>{
+                e.preventDefault();
+                
+                const userimage = document.querySelector('#userimage')
+                console.log(userimage)
+            //     const option = {
+            //         "Content-type":"application/json",
+            //         withCredentials:true,
+            //     }
+
+            //     const response = await axios.post('http://localhost:3000/user/profileUpdate',null,option);
+            //     console.log(response.data)
+            })
+    </script> -->
 
 </body>
 </html>

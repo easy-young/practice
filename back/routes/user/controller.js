@@ -103,8 +103,8 @@ exports.profile = async (req,res) => {
     res.json(result)
 }
 
-exports.profileUpdate = async (req,res)=>{
-    // const {userid} = req.user
+exports.profileUpdate = (req,res)=>{
+    const {userid} = req.user
     // const sql = `SELECT * FROM user WHERE userid=?`
     // const prepare = [userid]
     // const [[result]] = await pool.execute(sql,prepare)
