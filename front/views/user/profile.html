@@ -54,24 +54,67 @@
         My Profile 임다
     </h2>
     <div id="profiles"></div>
+    
     <template id="profile">
         <ul>
-            <li>{userid}</li>
-            <li>{userimage}</li>
-            <li>{name}</li>
-            <li>{nickname}</li>
-            <li>{birth}</li>
-            <li>{address}</li>
-            <li>{gender}</li>
-            <li>{tel}</li>
-            <li>{phone}</li>
-            <li>{email}</li>
-            <li>{intro}</li>
-            <li>{point}</li>
-            <li>{active}</li>
-            <li>{date}</li>
+            <li>
+                <strong>ID :</strong>
+                {userid}
+            </li>
+            <li>
+                <strong>사진 :</strong>
+                {userimage}
+            </li>
+            <li>
+                <strong>이름 :</strong>
+                {name}
+            </li>
+            <li>
+                <strong>닉네임 :</strong>
+                {nickname}
+            </li>
+            <li>
+                <strong>생년월일 :</strong>
+                {birth}
+            </li>
+            <li>
+                <strong>주소 :</strong>
+                {address}
+            </li>
+            <li>
+                <strong>성별 :</strong>
+                {gender}
+            </li>
+            <li>
+                <strong>집전화 :</strong>
+                {tel}
+            </li>
+            <li>
+                <strong>핸드폰번호 :</strong>
+                {phone}
+            </li>
+            <li>
+                <strong>E-mail :</strong>
+                {email}
+            </li>
+            <li>
+                <strong>자기소개 :</strong>
+                {intro}
+            </li>
+            <li>
+                <strong>나의 포인트 :</strong>
+                {point}
+            </li>
+            <li>
+                <strong>나의 레벨 :</strong>
+                {active}
+            </li>
+            <li>
+                <strong>가입일 :</strong>
+                {date}
+            </li>
         </ul>
     </template>
-    
+    <a href="/user/profileUpdate">프로필 수정하기</a>
 </body>
 </html>

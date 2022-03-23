@@ -4,7 +4,6 @@ const app = express()
 const axios = require('axios')
 const router = require('./routes/index.js')
 const cookieParser = require('cookie-parser')
-// const axios = require('axios')
 
 app.set('view engine','html')
 nunjucks.configure('views',{
@@ -17,9 +16,10 @@ app.use(cookieParser())
 app.use(express.static('public'));
 app.get('/',(req,res)=>{
     try {
-        const userData = JSON.parse(req.cookies.CURRENT_USER)
-        console.log(userData)
-        res.render('main.html', { userData: userData })
+        const userData = req.cookies.token
+        const kakaoData = req.cookies.kakaoToken
+        
+        res.render('main.html', { userData, kakaoData })
     } catch (error) {
         res.render('main.html')
     }
