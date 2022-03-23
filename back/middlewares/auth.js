@@ -8,7 +8,7 @@ exports.Auth = (req,res,next) => {
 
         if(sign !==signature) throw new Error('토큰 변조함 NaGa')
         const user = JSON.parse(Buffer.from(payload,'base64').toString('utf-8'))
-        console.log(user)
+        // console.log(user)
         req.user = {
             ...user
         }

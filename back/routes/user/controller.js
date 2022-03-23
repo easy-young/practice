@@ -22,15 +22,7 @@ exports.join = async (req,res)=>{
 
     try {
         const [ result ] = await pool.execute(sql,prepare)
-        // console.log(result)
-
-        // res.setHeader('Set-cookie','name=seungju; path=/; Domain=localhost;')
-        res.cookie('name2','ingoo2',{
-            path:'/',
-            httpOnly:true,
-            secure:true,
-            domain:'localhost'
-        })
+        console.log(result)
 
         const response = {
             result:{
@@ -58,12 +50,9 @@ exports.join = async (req,res)=>{
 }
 
 exports.login = async (req,res)=>{
-
- 
-
     const {userid, userpw} = req.body
     const sql = `
-                SELECT userid, userpw, name, level, point, nickname 
+                SELECT userid, name, level, point, nickname 
                 FROM user 
                 WHERE userid=? and userpw=?
                 `
@@ -71,14 +60,14 @@ exports.login = async (req,res)=>{
 
     try {
         const [result] = await pool.execute(sql,prepare)
-  
+        const {userid, nickname} = result[0]
+       
+        const tokenResult = {userid, nickname}
+        // { userid: '3', nickname: '3' }
 
         if(result.length == 0) throw Error('등록된회원이 아닙니다.')
      
-
-
-
-        const jwt = createToken({...result[0]})
+        const jwt = createToken({...tokenResult})
         
         res.cookie('token',jwt,{
             path:'/',
@@ -86,15 +75,7 @@ exports.login = async (req,res)=>{
             secure:true,
             domain:'localhost'
         })
-        delete result[0].userpw
-        res.cookie('CURRENT_USER',JSON.stringify(result[0]),
-        {
-            path:'/',
-            httpOnly:true,
-            secure:true,
-            domain:'localhost'
-        })
-
+       
         const response = {
             result,
             errno:0
@@ -114,11 +95,39 @@ exports.login = async (req,res)=>{
 }
 
 exports.profile = async (req,res) => {
-    const {userid,userpw} = req.user
-
-    const sql = `SELECT * FROM user WHERE userid=? and userpw=?`
-    const prepare = [userid, userpw]
+    const {userid} = req.user
+    const sql = `SELECT * FROM user WHERE userid=?`
+    const prepare = [userid]
     const [[result]] = await pool.execute(sql,prepare)
-    
+
     res.json(result)
 }
+
+exports.profileUpdate = (req,res)=>{
+    const {userid} = req.user
+    // const sql = `SELECT * FROM user WHERE userid=?`
+    // const prepare = [userid]
+    // const [[result]] = await pool.execute(sql,prepare)
+    // const {userimage,name,nickname,birth,address,gender,tel,phone,email,intro} = result
+
+    // const sql2 = `UPDATE user SET name=?, gender=? WHERE=?`
+    // const prepare2 = [name,gender,userid]
+    // const [[result2]] = await pool.execute(sql2,prepare2)
+    // console.log(result2)
+
+}
+
+
+
+exports.kakaoLogout = (req,res) => {
+    res.clearCookie('kakaoToken')
+
+    res.json({})
+}
+
+exports.logout = (req,res) => {
+    res.clearCookie('token')
+
+    res.json({})
+}
+

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+    <script type="text/javascript">
+        document.addEventListener('DOMContentLoaded',async ()=>{
+            const profile = document.querySelector('#profile')
+            const profileUpdate = document.querySelector('#profileUpdate').innerHTML
+
+            const option = {
+                "Content-type":"application/json",
+                withCredentials:true,
+            }
+
+            const response = await axios.post('http://localhost:3000/user/profile',null,option)
+            const { level, userid, userimage, name, nickname,
+                    birth, address, gender, tel, phone, email, intro,
+                    point, active, date } = response.data
+            
+
+            let template = '';
+            template = profileUpdate.replace('{level}',level)
+                                    .replace('{userid}',userid)
+                                    .replace('{userimage}',userimage)
+                                    .replace('{name}',name)
+                                    .replace('{nickname}',nickname)
+                                    .replace('{birth}',birth)
+                                    .replace('{address}',address)
+                                    .replace('{gender}',gender)
+                                    .replace('{tel}',tel)
+                                    .replace('{phone}',phone)
+                                    .replace('{email}',email)
+                                    .replace('{intro}',intro)
+                                    .replace('{point}',point)
+                                    .replace('{active}',active)
+                                    .replace('{date}',date)
+                              
+            profile.innerHTML = template
+
+            // const profilefrm = document.querySelector('#profilefrm')
+
+            const response2 = await axios.post('http://localhost:3000/user/profileUpdate',null,option)
+            console.log(response2.data)
+
+            // profilefrm.addEventListener('submit', (e)=>{
+            // e.preventDefault();
+            
+            // const userimage1 = document.querySelector('#userimage')
+            // console.log(userimage1)
+            // })
+        })
+        
+    </script>
+</head>
+<body>
+    <h1>
+        <a href="/">Logo</a>
+    </h1>
+    <h2>
+        My Profile 임다
+    </h2>
+    <div id="profile">
+        
+    </div>
+
+    <template id="profileUpdate">
+        <form method="post" action="/user/profileUpdate" id="profilefrm">
+            <ul>
+                <li>
+                    <strong>ID :</strong>
+                    {userid}
+                </li>
+                <li>
+                    <strong>사진 :</strong>
+                    <input type="text" value="{userimage}" id="userimage">       
+                </li>
+                <li>
+                    <strong>이름 :</strong>
+                    <input type="text" value="{name}">
+                </li>
+                <li>
+                    <strong>닉네임 :</strong>
+                    <input type="text" value="{nickname}">
+                </li>
+                <li>
+                    <strong>생년월일 :</strong>
+                    <input type="text" value="{birth}">
+                </li>
+                <li>
+                    <strong>주소 :</strong>
+                    <input type="text" value="{address}">
+                </li>
+                <li>
+                    <strong>성별 :</strong>
+                    <input type="text" value="{gender}">
+                </li>
+                <li>
+                    <strong>집전화 :</strong>
+                    <input type="text" value="{tel}">
+                </li>
+                <li>
+                    <strong>핸드폰번호 :</strong>
+                    <input type="text" value="{phone}">
+                </li>
+                <li>
+                    <strong>E-mail :</strong>
+                    <input type="text" value="{email}">
+                </li>
+                <li>
+                    <strong>자기소개 :</strong>
+                    <input type="text" value="{intro}">
+                </li>
+                <li>
+                    <strong>나의 포인트 :</strong>
+                    <input type="text" value="{point}">
+                </li>
+                <li>
+                    <strong>나의 레벨 :</strong>
+                    <input type="text" value="{level}">
+                </li>
+                <li>
+                    <strong>계정 활성화 여부 :</strong>
+                    <input type="text" value="{active}">
+                </li>
+                <li>
+                    <strong>가입일 :</strong>
+                    <input type="text" value="{date}">
+                </li>
+                <input type="submit" value="프로필 수정하기">
+            </ul>
+        </form>
+    </template>
+
+    <!-- <script type="text/javascript">
+        const profilefrm = document.querySelector('#profilefrm')
+            profilefrm.addEventListener('submit', async (e)=>{
+                e.preventDefault();
+                
+                const userimage = document.querySelector('#userimage')
+                console.log(userimage)
+            //     const option = {
+            //         "Content-type":"application/json",
+            //         withCredentials:true,
+            //     }
+
+            //     const response = await axios.post('http://localhost:3000/user/profileUpdate',null,option);
+            //     console.log(response.data)
+            })
+    </script> -->
+
+</body>
+</html>
