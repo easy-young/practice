@@ -9,6 +9,7 @@ router.post('/kakaoLogout',controller.kakaoLogout);
  // 카카오 쿠키 로그아웃
 router.post('/profile',controller.profile);
 router.post('/profileUpdate',controller.profileUpdate);
+router.post('/resign',controller.resign);
 
 
 module.exports = router

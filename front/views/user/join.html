@@ -18,11 +18,11 @@
         <ul>
             <li>
                 <strong>아이디</strong>
-                <input type="text" name="userid" id="userid">
+                <input type="text" name="userid" id="userid" maxlength="10">
             </li>
             <li>
                 <strong>비밀번호</strong>
-                <input type="text" name="userpw" id="userpw">
+                <input type="text" name="userpw" id="userpw" maxlength="10">
             </li>
             <li>
                 <strong>사진</strong>
@@ -30,15 +30,15 @@
             </li>
             <li>
                 <strong>이름</strong>
-                <input type="text" name="name" id="name">
+                <input type="text" name="name" id="name" maxlength="10">
             </li>
             <li>
                 <strong>닉네임</strong>
-                <input type="text" name="nickname" id="nickname">
+                <input type="text" name="nickname" id="nickname" maxlength="10">
             </li>
             <li>
                 <strong>생년월일</strong>
-                <input type="text" name="birth" id="birth">
+                <input type="date" name="birth" id="birth">
             </li>
             <li>
                 <strong>주소</strong>
@@ -46,15 +46,16 @@
             </li>
             <li>
                 <strong>성별</strong>
-                <input type="text" name="gender" id="gender">
+                <input type="radio" name="gender" id="genderM" value="M">남자
+                <input type="radio" name="gender" id="genderF" value="F" checked="checked">여자
             </li>
             <li>
                 <strong>집전화번호</strong>
-                <input type="text" name="tel" id="tel">
+                <input type="text" name="tel" id="tel" maxlength="11">
             </li>
             <li>
                 <strong>휴대폰번호</strong>
-                <input type="text" name="phone" id="phone">
+                <input type="text" name="phone" id="phone" maxlength="11">
             </li>
             <li>
                 <strong>E-mail</strong>
@@ -79,12 +80,12 @@
             const nickname = document.querySelector('#nickname').value
             const birth = document.querySelector('#birth').value
             const address = document.querySelector('#address').value
-            const gender = document.querySelector('#gender').value
+            const gender = document.querySelector('input[name="gender"]:checked').value;
             const tel = document.querySelector('#tel').value
             const phone = document.querySelector('#phone').value
             const email = document.querySelector('#email').value
             const intro = document.querySelector('#intro').value
-
+            
             const body = {
                 userid,
                 userpw,

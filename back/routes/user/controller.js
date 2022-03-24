@@ -22,7 +22,6 @@ exports.join = async (req,res)=>{
 
     try {
         const [ result ] = await pool.execute(sql,prepare)
-        console.log(result)
 
         const response = {
             result:{
@@ -96,25 +95,38 @@ exports.login = async (req,res)=>{
 
 exports.profile = async (req,res) => {
     const {userid} = req.user
-    const sql = `SELECT * FROM user WHERE userid=?`
-    const prepare = [userid]
-    const [[result]] = await pool.execute(sql,prepare)
-
-    res.json(result)
+    
+    try {
+        const sql = `SELECT * FROM user WHERE userid=?`
+        const prepare = [userid]
+        const [[result]] = await pool.execute(sql,prepare)
+    
+        res.json(result)
+    } catch (e){
+        console.log(e.message)
+    }
+    
 }
 
-exports.profileUpdate = (req,res)=>{
+exports.profileUpdate = async (req,res)=>{
     const {userid} = req.user
-    // const sql = `SELECT * FROM user WHERE userid=?`
-    // const prepare = [userid]
-    // const [[result]] = await pool.execute(sql,prepare)
-    // const {userimage,name,nickname,birth,address,gender,tel,phone,email,intro} = result
+    const {userpw,userimage,name,nickname,birth,address,gender,tel,phone,email,intro} = req.body
 
-    // const sql2 = `UPDATE user SET name=?, gender=? WHERE=?`
-    // const prepare2 = [name,gender,userid]
-    // const [[result2]] = await pool.execute(sql2,prepare2)
-    // console.log(result2)
-
+    try {
+        const sql = `UPDATE user SET userpw=?, userimage=?, name=?, nickname=?, birth=?,
+        address=?, gender=?, tel=?, phone=?, email=?, intro=? WHERE userid=?`
+        const prepare = [ userpw, userimage, name, nickname, birth,address,
+                          gender, tel, phone, email, intro, userid ]
+        const [result] = await pool.execute(sql,prepare)
+        res.json(result)
+    } catch(e){
+        console.log(e)
+        const err = 1062
+        res.json({err})
+        // console.log('중복된 닉네임 임다')
+        // res.redirect('http://localhost:3001/user/profileUpdate')
+    }
+    
 }
 
 
@@ -131,3 +143,14 @@ exports.logout = (req,res) => {
     res.json({})
 }
 
+exports.resign = async (req,res) => {
+    const {userid} = req.user
+    const sql = `DELETE FROM user WHERE userid=?`
+    const prepare = [userid]
+    const [result] = await pool.execute(sql,prepare)
+
+    res.clearCookie('token')
+    
+
+    res.json({})
+}
