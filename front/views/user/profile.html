@@ -25,24 +25,31 @@
             const { level, userid, userpw, userimage, name, nickname,
                     birth, address, gender, tel, phone, email, intro,
                     point, active, date } = response.data
+
+            try {
+                let template = '';
+                template = profile.replace('{userid}',userid)
+                                .replace('{userimage}',userimage)
+                                .replace('{name}',name)
+                                .replace('{nickname}',nickname)
+                                .replace('{birth}',birth)
+                                .replace('{address}',address)
+                                .replace('{gender}',gender)
+                                .replace('{tel}',tel)
+                                .replace('{phone}',phone)
+                                .replace('{email}',email)
+                                .replace('{intro}',intro)
+                                .replace('{point}',point)
+                                .replace('{active}',active)
+                                .replace('{date}',date)
+                                    
+                profiles.innerHTML = template
+            } catch (e){
+                alert('로그인부터하시죠?')
+                location.href = 'localhost:3000/user/login'
+                console.log(e)
+            }
             
-            let template = '';
-            template = profile.replace('{userid}',userid)
-                              .replace('{userimage}',userimage)
-                              .replace('{name}',name)
-                              .replace('{nickname}',nickname)
-                              .replace('{birth}',birth)
-                              .replace('{address}',address)
-                              .replace('{gender}',gender)
-                              .replace('{tel}',tel)
-                              .replace('{phone}',phone)
-                              .replace('{email}',email)
-                              .replace('{intro}',intro)
-                              .replace('{point}',point)
-                              .replace('{active}',active)
-                              .replace('{date}',date)
-                              
-            profiles.innerHTML = template
         });
     </script>
 </head>
@@ -53,7 +60,10 @@
     <h2>
         My Profile 임다
     </h2>
-    <div id="profiles"></div>
+
+    <div id="profiles">
+
+    </div>
     
     <template id="profile">
         <ul>
