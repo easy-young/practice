@@ -41,9 +41,32 @@ exports.userModify = async (req, res) => {
     res.redirect('http://localhost:3001/admin/user');
 };
 
-exports.category = (req, res) => {
-    console.log(req.body.subject);
-    res.send('샌드 ㄱㄱ') ;
+exports.category = async (req, res) => {
+    const sql = `SELECT * FROM category ORDER BY code ASC`;
+    try {
+        const [result] = await pool.execute(sql);
+        res.send(result);
+    } catch (e) {
+        console.log(e.message);
+    }
+};
+
+exports.categoryAdd = async (req, res) => {
+    const {main, sub} = req.body;
+    const sql = `INSERT INTO category(main,sub) VALUES(?,?)`;
+    const prepare = [main, sub];
+    try {
+        const [result] = await pool.execute(sql, prepare);
+        res.send(prepare);
+    } catch (e) {
+        if (e.errno === 1062) res.send('duplicate');
+        else console.log(e.message);
+    }
+};
+
+exports.categoryModify = async (req, res) => {
+    console.log(req.body);
+    const sql = `UPDATE category SET ???`;
 };
 
 exports.board = async (req, res) => {
@@ -57,7 +80,22 @@ exports.board = async (req, res) => {
 };
 
 exports.boardModify = async (req, res) => {
-    //
+    const {active} = req.body;
+    const sql = `SELECT * FROM board`;
+    const [result] = await pool.execute(sql);
+
+    const sql2 = `UPDATE board SET active=? WHERE idx=?`;
+    let prepare = [];
+    for (let i = 0; i < result.length; i++) {
+        if (result[i].active != active[i]) {
+            prepare.push(active[i]);
+            prepare.push(result[i].idx);
+
+            const [result2] = await pool.execute(sql2, prepare);
+            prepare = [];
+        }
+    }
+    res.redirect('http://localhost:3001/admin/board');
 };
 
 exports.hide = async (req, res) => {

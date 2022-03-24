@@ -14,18 +14,11 @@ app.use(Auth)
 app.use(express.static('public'));
 
 const corsOptions = {
-
-    origin: [
-      'http://localhost',
-      'http://localhost:80',
-      'http://localhost:3000',
-      'http://localhost:3001',
-      'http://localhost:3000/board/write',
-    ],
+    origin:true,
     credentials: true,   
     methods:["GET","POST"], 
-  };
-  
+};
+
 app.use(cors(corsOptions))
 app.use(express.json({limit: '5000mb'})); 
 app.use(express.urlencoded({limit: '5000mb', extended: true}));

@@ -58,7 +58,8 @@ CREATE TABLE category(
     code INT NOT NULL AUTO_INCREMENT,
     main VARCHAR(10) NOT NULL,
     sub VARCHAR(10) NOT NULL,
-    UNIQUE KEY(main, sub)
+    PRIMARY KEY (code),
+    UNIQUE KEY(sub)
 );
 
 CREATE TABLE tag(

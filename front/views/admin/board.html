@@ -8,7 +8,7 @@
     <script type="text/javascript" src="https://unpkg.com/axios@0.26.0/dist/axios.min.js"></script>
     <style>
         table {
-            width: 50%;
+            width: 70%;
         }
     </style>
     <script type="text/javascript">
@@ -18,7 +18,7 @@
             const form = document.querySelector('form');
             const submit = document.querySelector('#submit');
             submit.style.visibility = 'hidden';
-            const response = await axios.post('http://localhost:3000/api/admin/board', {
+            const response = await axios.post('http://localhost:3000/api/admin/board', null, {
                 withCredentials:true,
             });
             let template = '';
@@ -48,13 +48,13 @@
                 const title = document.querySelector('#title');
                 const ban = document.querySelector('#ban');
                 submit.style.visibility = 'visible';
-                const response = await axios.post('http://localhost:3000/api/admin/board/hide', {
+                const response = await axios.post('http://localhost:3000/api/admin/board/hide', null, {
                     withCredentials:true,
                 });
                 boards.innerHTML = '';
                 template = '';
                 response.data.forEach(v=>{
-                    template += boardModify.replace('{idx}', v.idx)
+                    template += boardModify.replaceAll('{idx}', v.idx)
                                     .replace('{main}', v.main)
                                     .replace('{sub}', v.sub)
                                     .replace('{subject}', v.subject)
@@ -75,11 +75,19 @@
                     i++;
                 });
                 if (title.innerHTML.match(/Active/g) === null) title.innerHTML += ban.innerHTML;
+
+                response.data.forEach(v=>{
+                    const active = document.querySelector(`#active_${v.idx}`);
+                    const active1 = document.querySelector(`#active1_${v.idx}`);
+                    const active0 = document.querySelector(`#active0_${v.idx}`);
+                    if (active.value == 1) active1.checked = true;
+                    else active0.checked = true;
+                });
             });
 
             const idx = document.querySelector('#idx');
             idx.addEventListener('click', async ()=>{
-                const response = await axios.post('http://localhost:3000/api/admin/board/idx', {
+                const response = await axios.post('http://localhost:3000/api/admin/board/idx', null, {
                     withCredentials:true,
                 });
                 boards.innerHTML = '';
@@ -109,7 +117,7 @@
 
             const hit = document.querySelector('#hit');
             hit.addEventListener('click', async ()=>{
-                const response = await axios.post('http://localhost:3000/api/admin/board/hit', {
+                const response = await axios.post('http://localhost:3000/api/admin/board/hit', null, {
                     withCredentials:true,
                 });
                 boards.innerHTML = '';
@@ -139,7 +147,7 @@
 
             const good = document.querySelector('#good');
             good.addEventListener('click', async ()=>{
-                const response = await axios.post('http://localhost:3000/api/admin/board/good', {
+                const response = await axios.post('http://localhost:3000/api/admin/board/good', null, {
                     withCredentials:true,
                 });
                 boards.innerHTML = '';
@@ -167,23 +175,33 @@
                 });
             });
 
-            form.addEventListener('submit', async ()=>{
-                const response = await axios.post('http://localhost:3000/api/admin/boardModify', {
+            let mydata = response.data;
+            form.addEventListener('submit', async (e)=>{
+                let body = {};
+                body.active = [];
+                mydata.forEach(v=>{
+                    const active = document.querySelector(`#active_${v.idx}`);
+                    const active1 = document.querySelector(`#active1_${v.idx}`);
+                    const active0 = document.querySelector(`#active0_${v.idx}`);
+                    if (active1.checked === true) active.value = 1;
+                    else active.value = 0;
+                    body.active.push(active.value);
+                });
+                const response = await axios.post('http://localhost:3000/api/admin/boardModify', body, {
                     withCredentials:true,
                 });
-                console.log(response.data);
             });
         });
     </script>
 </head>
 <body>
     <h1><a href="/admin/board">Board</a></h1>
-    <a href="/admin">Back</a>
+    <a href="/admin">Home</a>
     <button id="hide">Hide</button>
     <button id="idx">No.</button>
     <button id="hit">Hit</button>
     <button id="good">Good</button>
-    <form action="/">
+    <form method="post" action="http://localhost:3000/api/admin/boardModify">
         <input type="submit" id="submit" value="Submit">
         <table cellspacing="0" cellpadding="0">
             <thead>
@@ -227,8 +245,9 @@
             <td>{date}</td>
             <td>{hit}</td>
             <td>{good}</td>
-            <td><input type="radio" name="{idx}_modify" id="{idx}_modify1" value="1"><label for="modify1">1</label>
-                <input type="radio" name="{idx}_modify" id="{idx}_modify0" value="0"><label for="modify0">0</label>
+            <td><input type="hidden" name="active" id="active_{idx}" value="{active}">
+                <input type="radio" name="active_{idx}" id="active1_{idx}" value="1"><label for="modify1">1</label>
+                <input type="radio" name="active_{idx}" id="active0_{idx}" value="0"><label for="modify0">0</label>
             </td>
         </tr>
     </template>
