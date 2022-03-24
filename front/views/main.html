@@ -38,10 +38,21 @@
                 let list= response.data.data
                 list.map((item)=>{
                     // <img src="http://localhost:3000/uploades/${item.imageName}" alt="post image"/>
-                    const url=`http://localhost:3000/uploades/${item.imageName}`
+              
+                    const imgs = JSON.parse(item.imageName)
+                    const imageView = (arr)=>{
+                        let result = ``
+                        for (let i = 0; i < arr.length; i++) {
+                            const img = arr[0];
+                            
+                            result+= `<img src="http://localhost:3000/uploades/${img.filename}" alt="post image"/>`
+                        }
+                        return result
+                    }
+
                     innerData+=`<div class="col-sm-12 col-md-6 col-lg-4 col-xl-3">
                         <div class="card post-wrapper" onclick="moveHandler(${item.idx} , ${item.hit})">
-                        ${item.filename!==null?`<div class="image"><img src="http://localhost:3000/uploades/${item.imageName}" alt="post image"/></div>`:''}
+                            ${imageView(item.filename)}
                         <div class="card-header subject">${item.subject.substr(0,20)}</div>
                         
                         <div class=" card-body content">${item.content.length>20? `${item.content.substr(0,20)}...`:item.content}</div>

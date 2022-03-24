@@ -87,6 +87,7 @@ exports.login = async (req,res)=>{
             domain:'localhost'
         })
         delete result[0].userpw
+        console.log(result[0])
         res.cookie('CURRENT_USER',JSON.stringify(result[0]),
         {
             path:'/',

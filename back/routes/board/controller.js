@@ -27,7 +27,19 @@ exports.view = (req,res)=>{
 
 exports.write = (req,res)=>{
     try {
-        res.status(200).json({ reqName: 'post_write', status: true})
+  
+        console.log(req)
+
+        const nickName= JSON.parse(req.cookies.CURRENT_USER).nickname
+
+        const queryStr=`INSERT INTO board(nickname,imageName , subject , content,hit,good,date) VALUES('${nickName}','${filename}','${req.body.subject}','${req.body.content}',0,0,NOW() );`
+
+        pool.query(queryStr).then(()=>{
+            res.status(200).json({ reqName: 'post_write', status: true})
+        })
+
+
+     
     } catch (error) {
         res.status(200).json({ reqName: 'post_write', status: false })
     }
