@@ -40,19 +40,12 @@ CREATE TABLE board(
 
 CREATE TABLE reply(
     idx INT NOT NULL AUTO_INCREMENT,
+    --  
+    -- 부모idx =  target??? idx = =?? 
+    --userid & nickname
     content TEXT NOT NULL,
     FOREIGN KEY (idx) REFERENCES board (idx)
 );
-
--- CREATE TABLE img(
---     idx INT NOT NULL AUTO_INCREMENT,
---     img1 TEXT NOT NULL,
---     img2 TEXT NOT NULL,
---     img3 TEXT NOT NULL,
---     img4 TEXT NOT NULL,
---     img5 TEXT NOT NULL,
---     FOREIGN KEY (idx) REFERENCES board (idx)
--- );
 
 CREATE TABLE category(
     code INT NOT NULL AUTO_INCREMENT,

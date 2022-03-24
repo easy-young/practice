@@ -21,7 +21,7 @@
 
 
 
-    <form method="post" action="/board/write" id="frm_write">
+    <form method="post" action="/board/write" id="frm_write" enctype="multipart/form-data">
         <ul>
             <li>
                 <strong>제목 : </strong>
@@ -30,7 +30,7 @@
 
             <li>
                 <strong>image : </strong>
-                <input type="file" name="upload" id="upload" required >   
+                <input type="file" name="upload" id="upload" required multiple accept="image/*" >   
             </li>
 
             <li>
@@ -58,28 +58,32 @@ return value? value[2] : null;
         e.preventDefault()
         const subject = document.querySelector('#subject').value
         const content = document.querySelector('#content').value
-        const file = document.querySelector('#upload').files[0];
+        const files = document.querySelector('#upload').files;
         const formData = new FormData()
+
+
+        for (let i = 0; i < files.length; i++) {
+            const file = files[i];
+            formData.append('upload',file)
+        }
+        
         formData.append('subject',subject)
         formData.append('content',content)
-        formData.append('upload',file)
-        // const body = {
-        //     subject:subject.value,
-        //     content:content.value,
-        // }
+        
+     
         const option = {
                     "Content-type":"application/json",
                     withCredentials:true,
                     Authorization:'',// user Token?
                 }
 
-               const response =  await axios.post('http://localhost:3000/board/write',formData,option)
-               if(response.data.status === true){
-                   alert ("글쓰기가 성공하였씁니다 ㅎㅎ")
-                   location.href="/"
-               } else {
-                   alert ("글쓰기가 실패하였습니다 관리자에게 문의해주세요")
-               }
+        const response =  await axios.post('http://localhost:3000/board/write',formData,option)
+        if(response.data.status === true){
+            alert ("글쓰기가 성공하였씁니다 ㅎㅎ")
+            location.href="/"
+        } else {
+            alert ("글쓰기가 실패하였습니다 관리자에게 문의해주세요")
+        }
 
    
             

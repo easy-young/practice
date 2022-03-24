@@ -6,7 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-    <style>
+   
+   
+ <style>
         *{margin:0; padding:10px;}
 ul,li{
     list-style:none;
@@ -123,6 +125,9 @@ ul,li{
     color:#666;
     outline: none;
 }
+.image-wrapper img{
+    width:900px;
+}
     </style>
 </head>
 <body>
@@ -132,8 +137,8 @@ ul,li{
     <div id="hit"></div>
     <div id="image"></div>
     <div id="content"></div>
-
     <script>
+
           async function view(){
             const [,,,idx] = location.pathname.split('/') // []
             const subjectBox = document.querySelector('#subject')
@@ -146,13 +151,21 @@ ul,li{
                 withCredentials:true,
             })
             if(response.data.status){
-                const {subject,nickname,content,imageName , hit} = response.data.data
-                console.log(response.data)
+                const {subject,nickname,content,imageName , hit} = response.data.data              
+                const array=JSON.parse(imageName).upload
+                let carousel=''
+                for (let i = 0; i < array.length; i++) {
+                    const image = array[i];
+                    const url=`http://localhost:3000/${image.path.replace('public/','')}`
+
+                   imageBox.innerHTML += `<div class="image-wrapper"><img src="${url} "/></div>`
+                    
+                }
                 subjectBox.innerHTML = subject
                 nicknameBox.innerHTML = nickname
                 contentBox.innerHTML = content
-                hitBox.innerHTML = hit
-                imageBox.innerHTML = `<img src="http://localhost:3000/uploades/${imageName}" />`
+                hitBox.innerHTML = `hit : ${hit}`
+              
             }
             
         }
@@ -163,9 +176,7 @@ ul,li{
     
 <script>
     const deleteHandler = async(idx)=>{
-        console.log(idx)
         await axios.post(`http://localhost:3000/board/delete/${idx}`)
-        
     }
     
 </script>
@@ -393,5 +404,7 @@ ul,li{
 
         commentView()
     </script> -->
+
+   
 </body>
 </html>

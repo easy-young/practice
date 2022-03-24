@@ -37,11 +37,14 @@
             if(response.data.status){
                 let list= response.data.data
                 list.map((item)=>{
-                    // <img src="http://localhost:3000/uploades/${item.imageName}" alt="post image"/>
-                    const url=`http://localhost:3000/uploades/${item.imageName}`
+                    console.log(JSON.parse(item.imageName).upload[0].path.replace('public/','') )
+                    
+                    // <img src="http://localhost:3000/uploades/${item.imageName}" alt="post image"/> 밧데리...ㅠㅠ
+                    //${JSON.parse(item.imageName).length!==0?`<div class="image"><img src="http://localhost:3000/${JSON.parse(item.imageName)[0].path}" alt="post image"/></div>`:''}
+                    const url=`http://localhost:3000/${JSON.parse(item.imageName).upload[0].path.replace('public/','')}`
                     innerData+=`<div class="col-sm-12 col-md-6 col-lg-4 col-xl-3">
                         <div class="card post-wrapper" onclick="moveHandler(${item.idx} , ${item.hit})">
-                        ${item.filename!==null?`<div class="image"><img src="http://localhost:3000/uploades/${item.imageName}" alt="post image"/></div>`:''}
+                            <div class="image"><img src="${url}" alt="post image"/></div>
                         <div class="card-header subject">${item.subject.substr(0,20)}</div>
                         
                         <div class=" card-body content">${item.content.length>20? `${item.content.substr(0,20)}...`:item.content}</div>

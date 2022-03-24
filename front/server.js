@@ -18,7 +18,7 @@ app.get('/',(req,res)=>{
     try {
         const userData = req.cookies.token
         const kakaoData = req.cookies.kakaoToken
-        
+      
         res.render('main.html', { userData, kakaoData })
     } catch (error) {
         res.render('main.html')

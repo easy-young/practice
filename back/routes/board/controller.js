@@ -1,4 +1,7 @@
 const { pool } = require("../../db")
+
+
+
 exports.list = (req,res)=>{
     try {
         pool.query('SELECT * FROM board').then((data)=>{
@@ -25,10 +28,23 @@ exports.view = (req,res)=>{
     }
 }
 
-exports.write = (req,res)=>{
+exports.write = (req,res,next)=>{
     try {
-        res.status(200).json({ reqName: 'post_write', status: true})
+        // console.log(req.files)
+        // console.log(req.body)
+    //  { userid: 'admin', nickname: '임현우' }
+        console.log(req.user)
+        const { content , subject} =req.body
+        const filename= JSON.stringify(req.files)
+       
+            const queryStr=`INSERT INTO board(nickname,imageName , subject , content,hit,good,date) VALUES('${ req.user.nickname}','${filename}','${subject}','${content}',0,0,NOW() );`
+            pool.query(queryStr).then(()=>{
+                res.status(200).json({ reqName: 'post_write', status: true})
+            })
+
+
     } catch (error) {
+        console.log(error)
         res.status(200).json({ reqName: 'post_write', status: false })
     }
 }
