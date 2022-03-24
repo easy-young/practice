@@ -6,8 +6,118 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin</title>
     <script type="text/javascript" src="https://unpkg.com/axios@0.26.0/dist/axios.min.js"></script>
+    <script type="text/javascript">
+        document.addEventListener('DOMContentLoaded', init);
+        async function init() {
+            const categories = document.querySelector('#categories');
+            const category = document.querySelector('#category').innerHTML;
+            const categoryModify = document.querySelector('#categoryModify').innerHTML;
+            const add = document.querySelector('#add');
+            const modifybtn = document.querySelector('#modifybtn');
+            const modify = document.querySelector('#modify');
+            const response = await axios.post('http://localhost:3000/api/admin/category', null, {
+                withCredentials:true,
+            });
+            let template = '';
+            response.data.forEach(v=>{
+                template += category.replace('{code}', v.code)
+                                    .replace('{main}', v.main)
+                                    .replace('{sub}', v.sub);
+            });
+            categories.innerHTML = template;
+
+            add.addEventListener('submit', async (e)=>{
+                e.preventDefault();
+                const {main, sub} = e.target;
+                const body = {
+                    main:main.value,
+                    sub:sub.value
+                };
+                const response = await axios.post('http://localhost:3000/api/admin/categoryAdd', body, {
+                    withCredentials:true,
+                });
+                let arr = response.data;
+                if (response.data === 'duplicate') {
+                    alert('이미 존재하는 카테고리입니다.');
+                } else {
+                    const main2 = arr[0];
+                    const sub2 = arr[1];
+                    alert(`
+                            카테고리가 추가되었습니다.\n
+                            메인 카테고리 : ${main2}
+                            서브 카테고리 : ${sub2}`);
+                    init();
+                }
+            });
+
+            modifybtn.addEventListener('click', async ()=>{
+                const response = await axios.post('http://localhost:3000/api/admin/category', null, {
+                    withCredentials:true,
+                });
+                template = '';
+                response.data.forEach(v=>{
+                    template += categoryModify.replaceAll('{code}', v.code)
+                                            .replace('{main}', v.main)
+                                            .replace('{sub}', v.sub);
+                });
+                categories.innerHTML = template;
+            });
+
+            modify.addEventListener('submit', async (e)=>{
+                e.preventDefault();
+                let data = e.target;
+                // console.log(data.match(/mainModify/g));
+                // console.log(e.target.mainModify1.value);
+                const body = {
+                    data
+                };
+                const response = await axios.post('http://localhost:3000/api/admin/categoryModify', body, {
+                    withCredentials:true,
+                });
+                // const {} = e.target;
+            });
+        };
+    </script>
 </head>
 <body>
-    Categories
+    <h1><a href="/admin/category">Categories</a></h1>
+    <a href="/admin">Home</a>
+    <button id="modifybtn">Modify</button>
+    <form method="post" id="modify" action="http://localhost:3000/api/admin/categoryModify">
+        <input type="submit" id="submit" value="Submit">
+        <table cellspacing="0" cellpadding="0">
+            <thead>
+                <tr>
+                    <th>Code</th>
+                    <th>Main Category</th>
+                    <th>Sub Category</th>
+                </tr>
+            </thead>
+            <tbody id="categories"></tbody>
+        </table>
+    </form>
+
+    <form method="post" id="add" action="http://localhost:3000/api/admin/categoryAdd">
+        <strong>Category Add</strong>
+        <div>Main Category : <input type="text" name="main" id="main" placeholder="Main Category"></div>
+        <div>Sub Category : <input type="text" name="sub" id="sub" placeholder="Sub Category"></div>
+        <input type="submit" value="Submit">
+    </form>
+
+    <template id="category">
+        <tr>
+            <td>{code}</td>
+            <td>{main}</td>
+            <td>{sub}</td>
+        </tr>
+    </template>
+
+    <template id="categoryModify">
+        <tr>
+            <td>{code}</td>
+            <td><input type="text" name="main" id="mainModify{code}" value="{main}"></td>
+            <td><input type="text" name="sub" id="subModify{code}" value="{sub}"></td>
+        </tr>
+    </template>
 </body>
 </html>

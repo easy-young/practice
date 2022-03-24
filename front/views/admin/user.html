@@ -25,7 +25,7 @@
             const ban = document.querySelector('#ban');
             const submit = document.querySelector('#submit');
             submit.style.display = 'none';
-            const response = await axios.post('http://localhost:3000/api/admin/user', {
+            const response = await axios.post('http://localhost:3000/api/admin/user', null, {
                 withCredentials:true,
             });
             let template = '';
@@ -50,7 +50,7 @@
             const button = document.querySelector('button');
             button.addEventListener('click', async ()=>{
                 submit.style.display = 'block';
-                const response = await axios.post('http://localhost:3000/api/admin/user', {
+                const response = await axios.post('http://localhost:3000/api/admin/user', null, {
                     withCredentials:true,
                 });
                 let template = '';
@@ -123,9 +123,8 @@
     </script>
 </head>
 <body>
-    <h1>Users</h1>
+    <h1><a href="/admin/user">Users</a></h1>
     <a href="/admin">Home</a>
-    <a href="/admin/user">User</a>
     <button>Modify</button>
     <form method="post" action="http://localhost:3000/api/admin/userModify">
         <input type="submit" id="submit" value="Submit">
