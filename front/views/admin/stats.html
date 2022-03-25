@@ -8,7 +8,7 @@
     <script type="text/javascript" src="https://unpkg.com/axios@0.26.0/dist/axios.min.js"></script>
     <script type="text/javascript">
         document.addEventListener('DOMContentLoaded', async ()=>{
-            const response = await axios.post('http://localhost:3000/api/admin/stats', {
+            const response = await axios.post('http://localhost:3000/api/admin/stats', null, {
                 withCredentials:true,
             });
         });
@@ -17,5 +17,9 @@
 <body>
     <h1><a href="/admin/stats">Stats</a></h1>
     <a href="/admin">Home</a>
+    <ul>
+        <li><strong>Total Hit : </strong>{hit}</li>
+        <li><strong>Total Good : </strong>{good}</li>
+    </ul>
 </body>
 </html>
