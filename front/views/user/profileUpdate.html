@@ -12,6 +12,7 @@
         document.addEventListener('DOMContentLoaded',async ()=>{
         const profile = document.querySelector('#profile')
         const profileUpdate = document.querySelector('#profileUpdate').innerHTML
+
         
         const option = {
             "Content-type":"application/json",
@@ -23,6 +24,27 @@
                 birth, address, gender, tel, phone, email, intro,
                 point, active, date } = response.data
 
+        let tel11
+        let tel22
+        let tel33
+
+        if(tel.substring(0,2)==='02'){
+            tel11 = tel.substring(0,2);
+            tel22 = tel.substring(2,6);
+            tel33 = tel.substring(6,10);
+        } else {
+            tel11 = tel.substring(0,3);
+            tel22 = tel.substring(3,6);
+            tel33 = tel.substring(6,10)
+        }
+        
+        const phone11 = phone.substring(0,3)
+        const phone22 = phone.substring(3,7)
+        const phone33 = phone.substring(7,11)
+
+        let email11 = email.split('@')[0]
+        let email22 = email.split('@')[1]
+
         let template = '';
         template = profileUpdate.replace('{level}',level)
                                 .replace('{userpw}',userpw)
@@ -33,9 +55,14 @@
                                 .replace('{birth}',birth)
                                 .replace('{address}',address)
                                 .replace('{gender}',gender)
-                                .replace('{tel}',tel)
-                                .replace('{phone}',phone)
-                                .replace('{email}',email)
+                                .replace('{tel1}',tel11)
+                                .replace('{tel2}',tel22)
+                                .replace('{tel3}',tel33)
+                                .replace('{phone1}',phone11)
+                                .replace('{phone2}',phone22)
+                                .replace('{phone3}',phone33)
+                                .replace('{email1}',email11)
+                                .replace('{email2}',email22)
                                 .replace('{intro}',intro)
                                 .replace('{point}',point)
                                 .replace('{active}',active)
@@ -43,7 +70,6 @@
 
                                 
         profile.innerHTML = template
-        
         
         const profilefrm = document.querySelector('#profilefrm')
 
@@ -54,11 +80,19 @@
         if(gender==="F") F.checked = true 
 
         const default_birth = birth.substring(0,10)
-        document.getElementById("birth").defaultValue = default_birth;
+        // document.getElementById("birth").defaultValue = default_birth;
+
+        const emailSelect = document.querySelector('#email_select')
+        emailSelect.addEventListener('click',(e)=>{
+            let email2Value = document.querySelector('#email2')
+            email2Value.value = e.target.value
+        })
 
 
         profilefrm.addEventListener('submit', async (e)=>{
             e.preventDefault();
+
+            // console.log('이쩜타겟',e.target.tel1.value)
             
             // const gender = document.querySelector('input[name="gender"]:checked').value;
             // const {userimage:userimage1} = e.target.userimage
@@ -67,12 +101,25 @@
             const userimage1 = e.target.userimage.value
             const name1 = e.target.name.value
             const nickname1 = e.target.nickname.value
-            const birth1 = e.target.birth.value
+
+            const year = e.target.year.value
+            const month = e.target.month.value
+            const day = e.target.day.value
+
             const address1 = e.target.address.value
             const gender1 = e.target.gender.value
-            const tel1 = e.target.tel.value
-            const phone1 = e.target.phone.value
-            const email1 = e.target.email.value
+
+            const tel1 = e.target.tel1.value
+            const tel2 = e.target.tel2.value
+            const tel3 = e.target.tel3.value
+
+            const phone1 = e.target.phone1.value
+            const phone2 = e.target.phone2.value
+            const phone3 = e.target.phone3.value
+
+            const email1 = e.target.email1.value
+            const email2 = e.target.email2.value
+
             const intro1 = e.target.intro.value
             
             const body = {
@@ -80,12 +127,12 @@
                 userimage:userimage1,
                 name:name1,
                 nickname:nickname1,
-                birth:birth1,
+                birth:[year,month,day],
                 address:address1,
                 gender:gender1,
-                tel:tel1,
-                phone:phone1,
-                email:email1,
+                tel:[tel1,tel2,tel3],
+                phone:[phone1,phone2,phone3],
+                email:[email1,email2],
                 intro:intro1
             }
 
@@ -160,7 +207,21 @@
                 </li>
                 <li>
                     <strong>생년월일 :</strong>
-                    <input type="date" value="{birth}" name="birth" id="birth">
+                    <select id="year">
+                        <option value="1999">1999년</option>
+                        <option value="2000">2000년</option>
+                        <option value="2001">2001년</option>
+                        <option value="2002">2002년</option>
+                    </select>
+                    <select id="month">
+                        <option value="01">1월</option>
+                        <option value="02">2월</option>
+                    </select>
+                    <select id="day">
+                        <option value="01">1일</option>
+                        <option value="02">2일</option>
+                        <option value="03">3일</option>
+                    </select>
                 </li>
                 <li>
                     <strong>주소 :</strong>
@@ -175,15 +236,27 @@
                 </li>
                 <li>
                     <strong>집전화 :</strong>
-                    <input type="text" value="{tel}" name="tel" id="tel" maxlength="11">
+                    <input type="text" value="{tel1}" name="tel" id="tel1" minlength="2" maxlength="3"> -
+                    <input type="text" value="{tel2}" name="tel" id="tel2" minlength="3" maxlength="4"> -
+                    <input type="text" value="{tel3}" name="tel" id="tel3" minlength="4" maxlength="4">
                 </li>
                 <li>
                     <strong>핸드폰번호 :</strong>
-                    <input type="text" value="{phone}" name="phone" id="phone" maxlength="11">
+                    <input type="text" value="{phone1}" name="phone" id="phone1" minlength="3" maxlength="3"> -
+                    <input type="text" value="{phone2}" name="phone" id="phone2" minlength="4" maxlength="4"> -
+                    <input type="text" value="{phone3}" name="phone" id="phone3" minlength="4" maxlength="4">
+
                 </li>
                 <li>
                     <strong>E-mail :</strong>
-                    <input type="text" value="{email}" name="email" id="email">
+                    <input type="text" value="{email1}" name="email1" id="email"> @
+                    <input type="text" value="{email2}" name="email2" id="email2">
+                    <select id="email_select">
+                        <option id="hanmail.net">hanmail.net</option>
+                        <option id="gmail.com">gmail.com</option>
+                        <option id="naver.com">naver.com</option>
+                        <option id="또뭐있냐?.com">또뭐있냐?.com</option>
+                    </select>
                 </li>
                 <li>
                     <strong>자기소개 :</strong>
@@ -210,7 +283,5 @@
         </form>
         <a href="" id="resign">회원 탈퇴하기</a>
     </template>
-
-    
 </body>
 </html>

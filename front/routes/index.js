@@ -7,7 +7,5 @@ const adminRouter = require('./admin/index.js');
 router.use('/board', boardRouter);
 router.use('/user', userRouter);
 router.use('/admin', adminRouter);
-router.get('/asdf',(req,res)=>{
-    res.render('asdf.html')
-})
+
 module.exports = router;

@@ -23,8 +23,22 @@
 
             const response = await axios.post('http://localhost:3000/user/profile',null,option);
             const { level, userid, userpw, userimage, name, nickname,
-                    birth, address, gender, tel, phone, email, intro,
+                    birth, address, email, intro,
                     point, active, date } = response.data
+
+            let {tel,phone,gender} = response.data
+            
+            
+            if(tel.substring(0,2)==='02'){
+                tel = tel.substring(0,2)+'-'+tel.substring(2,6)+'-'+tel.substring(6,10)
+            } else {
+                tel = tel.substring(0,3)+'-'+tel.substring(3,6)+'-'+tel.substring(6,10)
+            }
+
+            phone = phone.substring(0,3)+'-'+phone.substring(3,7)+'-'+phone.substring(7,11)
+            
+            if(gender==="F") gender = "여자 여성 F 등등 수정가능"
+            if(gender==="M") gender = "남자 남성 M 등등 수정가능"
 
             try {
                 let template = '';
@@ -32,7 +46,7 @@
                                 .replace('{userimage}',userimage)
                                 .replace('{name}',name)
                                 .replace('{nickname}',nickname)
-                                .replace('{birth}',birth)
+                                .replace('{birth}',birth.substring(0,10))
                                 .replace('{address}',address)
                                 .replace('{gender}',gender)
                                 .replace('{tel}',tel)
@@ -41,7 +55,7 @@
                                 .replace('{intro}',intro)
                                 .replace('{point}',point)
                                 .replace('{active}',active)
-                                .replace('{date}',date)
+                                .replace('{date}',date.substring(0,10))
                                     
                 profiles.innerHTML = template
             } catch (e){

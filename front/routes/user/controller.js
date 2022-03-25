@@ -7,7 +7,11 @@ const client_secret = 'tmv3oBdGla9uOAwSSlJKQraK4Ukq0L1P'
 const {createToken} = require('../../../back/utils/jwt.js')
 
 exports.login = (req,res)=>{
-    res.render('./user/login.html')
+    if(req.headers.cookie != undefined){
+        res.redirect('/')
+    } else {
+        res.render('./user/login.html')
+    }
 }
 
 exports.kakaoLogin = (req,res)=>{
@@ -66,13 +70,23 @@ exports.oauthKakao = async (req,res)=>{
 }
 
 exports.join = (req,res)=>{
-    res.render('./user/join.html')
+    if(req.headers.cookie != undefined){
+        res.redirect('/')
+    } else {
+        res.render('./user/join.html')
+    }
 }
 
 exports.profile = (req,res)=>{
     res.render('./user/profile.html')
+  
 }
 
 exports.profileUpdate = (req,res)=>{
     res.render('./user/profileUpdate.html')
+    
+}
+
+exports.welcome = (req,res) => {
+    res.render('./user/welcome')
 }
