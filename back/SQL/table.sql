@@ -1,5 +1,3 @@
-CREATE DATABASE jenny;
-USE DATABASE jenny;
 
 CREATE TABLE user(
     level INT DEFAULT 3 NOT NULL,
@@ -34,15 +32,11 @@ CREATE TABLE board(
     good INT DEFAULT 0 NOT NULL,
     imageName TEXT NOT NULL,
     active INT NOT NULL DEFAULT 1,
-    PRIMARY KEY(idx),
-    FOREIGN KEY (main, sub) REFERENCES board (main, sub)
+    PRIMARY KEY(idx)
 );
 
 CREATE TABLE reply(
     idx INT NOT NULL AUTO_INCREMENT,
-    --  
-    -- 부모idx =  target??? idx = =?? 
-    --userid & nickname
     content TEXT NOT NULL,
     FOREIGN KEY (idx) REFERENCES board (idx)
 );
