@@ -12,7 +12,8 @@
         }
     </style>
     <script type="text/javascript">
-        document.addEventListener('DOMContentLoaded', async ()=>{
+        document.addEventListener('DOMContentLoaded', init);
+        async function init() {
             const boards =document.querySelector('#boards');
             const board = document.querySelector('#board').innerHTML;
             const form = document.querySelector('form');
@@ -46,7 +47,6 @@
             hide.addEventListener('click', async ()=>{
                 const boardModify = document.querySelector('#boardModify').innerHTML;
                 const title = document.querySelector('#title');
-                const ban = document.querySelector('#ban');
                 submit.style.visibility = 'visible';
                 const response = await axios.post('http://localhost:3000/api/admin/board/hide', null, {
                     withCredentials:true,
@@ -177,6 +177,7 @@
 
             let mydata = response.data;
             form.addEventListener('submit', async (e)=>{
+                e.preventDefault();
                 let body = {};
                 body.active = [];
                 mydata.forEach(v=>{
@@ -190,8 +191,9 @@
                 const response = await axios.post('http://localhost:3000/api/admin/boardModify', body, {
                     withCredentials:true,
                 });
+                init();
             });
-        });
+        };
     </script>
 </head>
 <body>

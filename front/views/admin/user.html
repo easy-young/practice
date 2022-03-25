@@ -17,7 +17,8 @@
         }
     </style>
     <script type="text/javascript">
-        document.addEventListener('DOMContentLoaded', async ()=>{
+        document.addEventListener('DOMContentLoaded', init);
+        async function init() {
             const users = document.querySelector('#users');
             const user = document.querySelector('#user').innerHTML;
             const userModify = document.querySelector('#userModify');
@@ -71,8 +72,6 @@
                                 .replace('{date}', v.date.split('T')[0]);
                 });
                 users.innerHTML = template;
-                title.innerHTML += ban.innerHTML;
-                button.style.visibility = 'hidden';
                 response.data.forEach(v=>{
                     const level = document.querySelector(`#${v.userid}_level`);
                     const useridLevel1 = document.querySelector(`#${v.userid}_level1`);
@@ -92,7 +91,8 @@
             let mydata = response.data;
 
             const form = document.querySelector('form');
-            form.addEventListener('submit', async ()=>{
+            form.addEventListener('submit', async (e)=>{
+                e.preventDefault();
                 let body = {};
                 body.level = [];
                 body.active = [];
@@ -118,8 +118,9 @@
                 const response = await axios.post('http://localhost:3000/api/admin/userModify', body, {
                     withCredentials:true,
                 });
+                init();
             });
-        });
+        };
     </script>
 </head>
 <body>
@@ -145,7 +146,6 @@
                     <th>Point</th>
                     <th>Active</th>
                     <th>Date</th>
-                    <template id="ban"><th>Ban</th></template>
                 </tr>
             </thead>
             <tbody id="users"></tbody>
@@ -196,7 +196,6 @@
                 <input type="radio" name="{userid}_active" id="{userid}_active0" value="0"><label for="{userid}_active0">0</label>
             </td>
             <td>{date}</td>
-            <td><input type="checkbox" name="modify"></td>
         </tr>
     </template>
 </body>

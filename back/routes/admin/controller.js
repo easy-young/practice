@@ -1,8 +1,25 @@
 const pool = require('../../db').pool;
-const axios = require('axios');
 
-exports.admin = (req, res) => {
-    res.redirect('/');
+exports.admin = async (req, res) => {
+    //
+};
+
+exports.login = async (req, res) => {
+    const {userid, userpw} = req.body;
+    const sql = `SELECT userid, userpw FROM user WHERE userid=? AND userpw=? AND level=1`;
+    const prepare = [userid, userpw];
+    const [result] = await pool.execute(sql, prepare);
+    let result2;
+    if (result.length === 1) {
+        req.session.user = result[0].userid;
+        result2 = {user:req.session.user};
+        res.send(result2);
+    } else {
+        req.session.destroy(()=>{
+            req.session
+        });
+        res.send('Login Fail');
+    }
 };
 
 exports.user = async (req, res) => {
@@ -38,7 +55,7 @@ exports.userModify = async (req, res) => {
             prepare = [];
         }
     }
-    res.redirect('http://localhost:3001/admin/user');
+    res.send();
 };
 
 exports.category = async (req, res) => {
@@ -65,8 +82,39 @@ exports.categoryAdd = async (req, res) => {
 };
 
 exports.categoryModify = async (req, res) => {
-    console.log(req.body);
-    const sql = `UPDATE category SET ???`;
+    const {main, sub} = req.body;
+    const sql = `SELECT * FROM category`;
+    const [result] = await pool.execute(sql);
+
+    const sql2 = `UPDATE category SET main=?,sub=? WHERE code=?`;
+    let prepare = [];
+    for (let i = 0; i < main.length; i++) {
+        if (result[i].main != main[i] || result[i].sub != sub[i]) {
+            prepare.push(main[i]);
+            prepare.push(sub[i]);
+            prepare.push(result[i].code);
+
+            const [result2] = await pool.execute(sql2, prepare);
+            prepare = [];
+        }
+    }
+    res.send();
+};
+
+exports.categoryDelete = async (req, res) => {
+    const {num} = req.body;
+    const sql = `SELECT * FROM category`;
+    const [result] = await pool.execute(sql);
+    const {code} = result[num-1];
+
+    const sql2 = `DELETE FROM category WHERE code=?`;
+    const prepare = [code];
+    try {
+        const [result2] = await pool.execute(sql2, prepare);
+        res.send(result2);
+    } catch (e) {
+        console.log(e.message);
+    }
 };
 
 exports.board = async (req, res) => {
@@ -95,7 +143,7 @@ exports.boardModify = async (req, res) => {
             prepare = [];
         }
     }
-    res.redirect('http://localhost:3001/admin/board');
+    res.send();
 };
 
 exports.hide = async (req, res) => {
@@ -151,5 +199,6 @@ exports.view = async (req, res) => {
 };
 
 exports.stats = (req, res) => {
-    res.redirect('/');
+    const sql = ``;
+    res.send();
 };

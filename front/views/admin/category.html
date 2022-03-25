@@ -50,31 +50,58 @@
                 }
             });
 
-            modifybtn.addEventListener('click', async ()=>{
+            modifybtn.addEventListener('click', modifyFunc);
+            async function modifyFunc() {
                 const response = await axios.post('http://localhost:3000/api/admin/category', null, {
                     withCredentials:true,
                 });
+                let num = 1;
                 template = '';
                 response.data.forEach(v=>{
-                    template += categoryModify.replaceAll('{code}', v.code)
+                    template += categoryModify.replaceAll('{num}', num)
+                                            .replace('{code}', v.code)
                                             .replace('{main}', v.main)
                                             .replace('{sub}', v.sub);
+                    num++;
                 });
                 categories.innerHTML = template;
-            });
 
+                const del = document.querySelectorAll('.del');
+                for (let i = 0; i < del.length; i++) {
+                    del[i].addEventListener('click', async (e)=>{
+                        e.preventDefault();
+                        let delNum = del[i].id.split('l')[1];
+                        const body = {
+                            num:delNum
+                        };
+                        const response = await axios.post('http://localhost:3000/api/admin/categoryDelete', body, {
+                            withCredentials:true,
+                        });
+                        modifyFunc();
+                    });
+                }
+            };
+
+            num = 1;
             modify.addEventListener('submit', async (e)=>{
                 e.preventDefault();
-                let data = e.target;
-                // console.log(data.match(/mainModify/g));
-                // console.log(e.target.mainModify1.value);
+                const modifyLength = e.target.innerHTML.match(/mainModify/g).length;
+                mainTarget = e.target.main;
+                subTarget = e.target.sub;
+                const mainModify = [];
+                const subModify = [];
+                for (let i = 0; i < modifyLength; i++) {
+                    mainModify.push(mainTarget[i].value);
+                    subModify.push(subTarget[i].value);
+                }
                 const body = {
-                    data
+                    main:mainModify,
+                    sub:subModify
                 };
                 const response = await axios.post('http://localhost:3000/api/admin/categoryModify', body, {
                     withCredentials:true,
                 });
-                // const {} = e.target;
+                init();
             });
         };
     </script>
@@ -109,14 +136,18 @@
             <td>{code}</td>
             <td>{main}</td>
             <td>{sub}</td>
+            <template id="del">
+                <input type="checkbox" name="delete" id="delete{num}">
+            </template>
         </tr>
     </template>
 
     <template id="categoryModify">
         <tr>
             <td>{code}</td>
-            <td><input type="text" name="main" id="mainModify{code}" value="{main}"></td>
-            <td><input type="text" name="sub" id="subModify{code}" value="{sub}"></td>
+            <td><input type="text" name="main" id="mainModify{num}" value="{main}"></td>
+            <td><input type="text" name="sub" id="subModify{num}" value="{sub}"></td>
+            <td><button name="del" class="del" id="del{num}">Delete</button></td>
         </tr>
     </template>
 </body>

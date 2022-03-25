@@ -8,5 +8,6 @@ router.get('/category', controller.category);
 router.get('/board', controller.board);
 router.get('/board/view/:idx', controller.view);
 router.get('/stats', controller.stats);
+router.post('/logout', controller.logout);
 
 module.exports = router;
