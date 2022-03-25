@@ -15,16 +15,31 @@ nunjucks.configure('views',{
 app.use(cookieParser())
 app.use(express.static('public'));
 app.get('/',(req,res)=>{
-    try {
-        const userData = req.cookies.token
-        const kakaoData = req.cookies.kakaoToken
-      
-        res.render('main.html', { userData, kakaoData })
-    } catch (error) {
-        res.render('main.html')
+    let userData;
+    if(req.headers.cookie == undefined){
+        userData = 0;
+        res.render('main.html',{
+            userData,
+        })
+    } else {
+        userData = 1;
+        res.render('main.html',{
+            userData,
+        })
     }
- 
     
+    // let userData 
+    // if(req.cookies != undefined) {
+    //     userData = 1
+    //     res.render('main.html', {
+    //         userData,
+    //     })
+    // } else {
+    //     userData = 0
+    //     res.render('main.html',{
+    //         userData,
+    //     })
+    // }
 })
 
 app.use(router)
