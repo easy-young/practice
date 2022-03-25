@@ -6,11 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
 
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
    
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    
     
     <script src="https://momentjs.com/downloads/moment.min.js"></script>
     <script type="text/javascript">
@@ -39,7 +39,7 @@
                 list.map((item)=>{
                     console.log(JSON.parse(item.imageName).upload[0].path.replace('public/','') )
                     
-                    // <img src="http://localhost:3000/uploades/${item.imageName}" alt="post image"/> 밧데리...ㅠㅠ
+                    // <img src="http://localhost:3000/uploades/${item.imageName}" alt="post image"/>
                     //${JSON.parse(item.imageName).length!==0?`<div class="image"><img src="http://localhost:3000/${JSON.parse(item.imageName)[0].path}" alt="post image"/></div>`:''}
                     const url=`http://localhost:3000/${JSON.parse(item.imageName).upload[0].path.replace('public/','')}`
                     innerData+=`<div class="col-sm-12 col-md-6 col-lg-4 col-xl-3">
@@ -159,9 +159,7 @@
 
 
 
-    <!-- JavaScript Bundle with Popper -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
-
+ 
 <script type="text/javascript">
     const logout = document.querySelector('#logout')
     
@@ -180,5 +178,13 @@
         location.href = 'http://localhost:3001'
     })
 </script>
+
+
+
+
+
+   <!-- JavaScript Bundle with Popper -->
+   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+
 </body>
 </html>
