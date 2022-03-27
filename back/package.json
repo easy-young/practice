@@ -4,6 +4,7 @@
   "main": "db.js",
   "dependencies": {
     "axios": "^0.26.1",
+    "buffer": "^6.0.3",
     "chokidar": "^3.5.3",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
@@ -13,7 +14,8 @@
     "mysql2": "^2.3.3",
     "nodemon": "^2.0.15",
     "nunjucks": "^3.2.3",
-    "path": "^0.12.7"
+    "path": "^0.12.7",
+    "ws": "^8.5.0"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

@@ -59,7 +59,16 @@
                     레벨은 ${response.data.result[0].level}
                     현재 포인트는 ${response.data.result[0].point} 점 입니다.
                 `)
-                location.href = 'http://localhost:3001'
+
+                //  get render값에 두번째 인자로 마지막 url 넘겨받는곳
+                const lastPage = '{{pageName}}'
+                if(lastPage){
+                    location.href = lastPage
+                }else{
+                    location.href = 'http://localhost:3001'
+                }
+               
+                // location.href = 'http://localhost:3001'
             } catch (e) {
                 alert('아이디나 비밀번호를 다시 확인해보세욜')
             }
