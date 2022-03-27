@@ -151,7 +151,7 @@ ul,li{
                 withCredentials:true,
             })
             if(response.data.status){
-                const {subject,nickname,content,imageName , hit} = response.data.data              
+                const {subject,nickname,content,imageName,hit} = response.data.data              
                 const array=JSON.parse(imageName).upload
                 let carousel=''
                 for (let i = 0; i < array.length; i++) {
