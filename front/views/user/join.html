@@ -14,7 +14,7 @@
     <h2>
         회원가입 페이지 입니다.
     </h2>
-    <form method="post" action="/user/join" id="login_frm" enctype="multipart/form-data">
+    <form method="post" action="/user/join" id="join_frm" enctype="multipart/form-data">
         <ul>
             <li>
                 <strong>아이디</strong>
@@ -95,7 +95,7 @@
     </form>
 
     <script type="text/javascript">
-        const frm = document.querySelector('#login_frm')
+        const frm = document.querySelector('#join_frm')
 
         const emailSelect = document.querySelector('#email_select')
         emailSelect.addEventListener('click',(e)=>{

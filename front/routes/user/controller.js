@@ -66,15 +66,11 @@ exports.oauthKakao = async (req,res)=>{
         console.log(e)
     }
     
-    res.redirect('/')
+    res.redirect('/user/join')
 }
 
 exports.join = (req,res)=>{
-    if(req.headers.cookie != undefined){
-        res.redirect('/')
-    } else {
-        res.render('./user/join.html')
-    }
+    res.render('./user/join.html')
 }
 
 exports.profile = (req,res)=>{

@@ -46,7 +46,7 @@
                                 .replace('{userimage}',userimage)
                                 .replace('{name}',name)
                                 .replace('{nickname}',nickname)
-                                .replace('{birth}',birth.substring(0,10))
+                                .replace('{birth}',birth)
                                 .replace('{address}',address)
                                 .replace('{gender}',gender)
                                 .replace('{tel}',tel)
@@ -55,7 +55,7 @@
                                 .replace('{intro}',intro)
                                 .replace('{point}',point)
                                 .replace('{active}',active)
-                                .replace('{date}',date.substring(0,10))
+                                .replace('{date}',date)
                                     
                 profiles.innerHTML = template
             } catch (e){
