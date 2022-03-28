@@ -5,7 +5,10 @@
     background-color: #eee;
 }
 
-ul, li {list-style: none;}
+a {
+    text-decoration: none;
+    color: black;
+}
 
 h1, #menu {
     display: flex;

@@ -1,6 +1,0 @@
-{
-  "dependencies": {
-    "express-session": "^1.17.2",
-    "memorystore": "^1.6.7"
-  }
-}
