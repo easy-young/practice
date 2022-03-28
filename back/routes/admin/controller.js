@@ -35,6 +35,21 @@ exports.user = async (req, res) => {
     }
 };
 
+exports.search = async (req, res) => {
+    const {search} = req.body;
+    const sql = `SELECT level, userid, userimage, name, nickname,
+                        birth, address, gender, tel, phone,
+                        email, intro, point, active, date
+                    FROM user
+                    WHERE nickname LIKE '%${search}%'`;
+    try {
+        const [result] = await pool.execute(sql);
+        res.send(result);
+    } catch (e) {
+        console.log(e.message);
+    }
+};
+
 exports.userModify = async (req, res) => {
     const {level, active} = req.body;
     const sql = `SELECT level, userid, userimage, name, nickname,

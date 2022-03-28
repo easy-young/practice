@@ -6,6 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin</title>
     <script type="text/javascript" src="https://unpkg.com/axios@0.26.0/dist/axios.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="/admin/category.css">
+    <link href='https://fonts.googleapis.com/css?family=Arvo' rel='stylesheet' type='text/css'>
+    <style>
+        @import url('https://cdn.rawgit.com/moonspam/NanumSquare/master/nanumsquare.css');
+    </style>
     <script type="text/javascript">
         document.addEventListener('DOMContentLoaded', init);
         async function init() {
@@ -108,11 +113,13 @@
 </head>
 <body>
     <h1><a href="/admin/category">Categories</a></h1>
-    <a href="/admin">Home</a>
-    <button id="modifybtn">Modify</button>
+    <div id="menu">
+        <a href="/admin">Home</a>
+        <button id="modifybtn">Modify</button>
+    </div>
     <form method="post" id="modify" action="http://localhost:3000/api/admin/categoryModify">
         <input type="submit" id="submit" value="Submit">
-        <table cellspacing="0" cellpadding="0">
+        <table cellspacing="0" cellpadding="0" border="1">
             <thead>
                 <tr>
                     <th>Code</th>

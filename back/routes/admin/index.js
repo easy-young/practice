@@ -21,6 +21,7 @@ router.post('/', controller.admin);
 router.post('/login', controller.login);
 
 router.post('/user', controller.user);
+router.post('/search', controller.search);
 router.post('/userModify', controller.userModify);
 
 router.post('/category', controller.category);

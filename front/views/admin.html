@@ -6,11 +6,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin</title>
     <script type="text/javascript" src="https://unpkg.com/axios@0.26.0/dist/axios.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="/admin/admin.css">
+    <link href='https://fonts.googleapis.com/css?family=Arvo' rel='stylesheet' type='text/css'>
+    <style>
+        @import url('https://cdn.rawgit.com/moonspam/NanumSquare/master/nanumsquare.css');
+    </style>
     <script type="text/javascript">
         document.addEventListener('DOMContentLoaded', init);
         async function init() {
             const login = document.querySelector('#login');
-            const logout = document.querySelector('button');
+            const logout = document.querySelector('#logout');
             if (login !== null) {
                 login.addEventListener('submit', async (e)=>{
                     e.preventDefault();
@@ -26,23 +31,45 @@
                     else location.href = 'http://localhost:3001/admin';
                 });
             } else {
-                let time = 30*60;
-                let min = '';
-                let sec = '';
-                let x = setInterval(()=>{
-                    min = parseInt(time/60);
-                    sec = time%60;
-                    let clock = document.querySelector('#clock');
-                    let clockIn = document.querySelector('#clockIn');
-                    clock.innerHTML = '';
-                    clockIn = min + '분' + sec + '초';
-                    clock.append(clockIn);
-                    time--;
-                    if (time < 0) {
-                        clearInterval(x);
-                        clock = 'Time out';
+                let go;
+                let cnt = parseInt(20*60);
+                let counter = document.querySelector('#counter');
+                let more = document.querySelector('#more');
+                let hour = 0;
+                let min = 0;
+                let sec = 0;
+                function counter_init() {
+                    go = setInterval(async ()=>{
+                        counter.innerHTML = time_format(cnt);
+                        cnt--;
+                        if (cnt <= 0) {
+                            clearInterval(tid);
+                            const response = await axios.post('http://localhost:3001/admin/logout', null, {
+                                withCredentials:true,
+                            });
+                            location.href = 'http://localhost:3001/admin';
+                        }
+                    }, 1000);
+                }
+                function time_format(v) {
+                    if (v > 0) {
+                        min = parseInt(v/60);
+                        sec = v%60;
+                        if (min > 60) {
+                            hour = parseInt(min/60);
+                            min = min%60;
+                        }
                     }
-                }, 1000);
+                    if (sec < 10) sec = '0' + sec;
+                    if (min < 10) min = '0' + min;
+                    return min + ':' + sec;
+                }
+                counter_init();
+
+                more.addEventListener('click', ()=>{
+                    cnt = 20 * 60;
+                });
+
                 logout.addEventListener('click', async (e)=>{
                     e.preventDefault();
                     const response = await axios.post('http://localhost:3001/admin/logout', null, {
@@ -55,25 +82,29 @@
     </script>
 </head>
 <body>
-    <h1>Admin Page</h1>
-    {% if isLogin %}
-    <div id="clock">
-        <template id="clockIn"></template>
+    <div id="container">
+        <h1>Admin Page</h1>
+        {% if isLogin %}
+        <div id="timer">
+            <span id="counter">20:00</span><button id="more">Reset</button>
+        </div>
+        <nav>
+            <a href="/admin/user"><strong>Users</strong></a>
+            <a href="/admin/category"><strong>Categories</strong></a>
+            <a href="/admin/board"><strong>Board</strong></a>
+            <a href="/admin/stats"><strong>Stats</strong></a>
+            <button id="logout">Logout</button>
+        </nav>
+        {% else %}
+        <h3>Login</h3>
+        <form method="post" id="login" action="http://localhost:3000/api/admin">
+            <ul>
+                <li><strong>ID : </strong><input type="text" name="userid" id="userid" placeholder="admin ID"></li>
+                <li><strong>PW : </strong><input type="password" name="userpw" id="userpw" placeholder="admin PW"></li>
+                <input type="submit" value="Login">
+            </ul>
+        </form>
+        {% endif %}
     </div>
-    <a href="/admin/user">Users</a>
-    <a href="/admin/category">Categories</a>
-    <a href="/admin/board">Board</a>
-    <a href="/admin/stats">Stats</a>
-    <button>Logout</button>
-    {% else %}
-    <h2>Login</h2>
-    <form method="post" id="login" action="http://localhost:3000/api/admin">
-        <ul>
-            <li><input type="text" name="userid" id="userid" placeholder="admin ID"></li>
-            <li><input type="password" name="userpw" id="userpw" placeholder="admin PW"></li>
-            <input type="submit" value="Submit">
-        </ul>
-    </form>
-    {% endif %}
 </body>
 </html>
