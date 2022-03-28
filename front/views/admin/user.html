@@ -24,6 +24,7 @@
             const search = document.querySelector('#search');
             const userFrm = document.querySelector('#userFrm');
             const submit = document.querySelector('#submit');
+
             submit.style.visibility = 'hidden';
             const response = await axios.post('http://localhost:3000/api/admin/user', null, option);
             let template = '';
@@ -174,7 +175,7 @@
             <input type="submit" id="searchBtn" value="Search">
         </form>
     </div>
-    <form method="post" id="userFrm" action="http://localhost:3000/api/admin/userModify">
+    <form method="post" id="userFrm" action="http://localhost:4000/api/admin/userModify">
         <input type="submit" id="submit" value="Submit">
         <table cellspacing="0" cellpadding="0" border="1">
             <thead>

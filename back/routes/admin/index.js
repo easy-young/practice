@@ -30,6 +30,7 @@ router.post('/categoryModify', controller.categoryModify);
 router.post('/categoryDelete', controller.categoryDelete);
 
 router.post('/board', controller.board);
+router.post('/boardSearch', controller.boardSearch);
 router.post('/boardModify', controller.boardModify);
 router.post('/board/hide', controller.hide);
 router.post('/board/idx', controller.idx);

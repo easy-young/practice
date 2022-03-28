@@ -23,6 +23,7 @@ exports.login = async (req, res) => {
 };
 
 exports.user = async (req, res) => {
+    console.log(req.session);
     const sql = `SELECT level, userid, userimage, name, nickname,
                         birth, address, gender, tel, phone,
                         email, intro, point, active, date
@@ -134,6 +135,18 @@ exports.categoryDelete = async (req, res) => {
 
 exports.board = async (req, res) => {
     const sql = `SELECT * FROM board`;
+    try {
+        const [result] = await pool.execute(sql);
+        res.send(result);
+    } catch (e) {
+        console.log(e.message);
+    }
+};
+
+exports.boardSearch = async (req, res) => {
+    const {search} = req.body;
+    const sql = `SELECT * FROM board
+                WHERE subject LIKE '%${search}%'`;
     try {
         const [result] = await pool.execute(sql);
         res.send(result);

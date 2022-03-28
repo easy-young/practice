@@ -14,6 +14,7 @@
     <script type="text/javascript">
         document.addEventListener('DOMContentLoaded', init);
         async function init() {
+            const option = {withCredentials:true};
             const login = document.querySelector('#login');
             const logout = document.querySelector('#logout');
             if (login !== null) {
@@ -24,9 +25,7 @@
                         userid:userid.value,
                         userpw:userpw.value
                     };
-                    const response = await axios.post('http://localhost:3000/api/admin/login', body, {
-                        withCredentials:true,
-                    });
+                    const response = await axios.post('http://localhost:3000/api/admin/login', body, option);
                     if (response.data === 'Login Fail') alert('Check your ID or Password.');
                     else location.href = 'http://localhost:3001/admin';
                 });
@@ -44,9 +43,7 @@
                         cnt--;
                         if (cnt <= 0) {
                             clearInterval(tid);
-                            const response = await axios.post('http://localhost:3001/admin/logout', null, {
-                                withCredentials:true,
-                            });
+                            const response = await axios.post('http://localhost:3001/admin/logout', null, option);
                             location.href = 'http://localhost:3001/admin';
                         }
                     }, 1000);
@@ -66,15 +63,11 @@
                 }
                 counter_init();
 
-                more.addEventListener('click', ()=>{
-                    cnt = 20 * 60;
-                });
+                more.addEventListener('click', ()=> cnt = 20 * 60);
 
                 logout.addEventListener('click', async (e)=>{
                     e.preventDefault();
-                    const response = await axios.post('http://localhost:3001/admin/logout', null, {
-                        withCredentials:true,
-                    });
+                    const response = await axios.post('http://localhost:3001/admin/logout', null, option);
                     location.href = 'http://localhost:3001/admin';
                 });
             }
