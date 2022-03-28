@@ -29,11 +29,11 @@ exports.view = (req,res)=>{
 }
 
 exports.write = (req,res,next)=>{
+
     try {
         // console.log(req.files)
         // console.log(req.body)
     //  { userid: 'admin', nickname: '임현우' }
-        console.log(req.user)
         const { content , subject , main , sub } =req.body
         const filename= JSON.stringify(req.files)
         

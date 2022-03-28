@@ -1,7 +1,7 @@
 const express = require('express')
 const nunjucks = require('nunjucks')
 const app = express()
-const axios = require('axios')
+// const axios = require('axios')
 const router = require('./routes/index.js')
 const cookieParser = require('cookie-parser')
 
@@ -11,9 +11,10 @@ nunjucks.configure('views',{
     watch:true
 })
 
-
 app.use(cookieParser())
 app.use(express.static('public'));
+
+
 app.get('/',(req,res)=>{
     let userData;
     if(req.headers.cookie == undefined){
@@ -27,19 +28,6 @@ app.get('/',(req,res)=>{
             userData,
         })
     }
-    
-    // let userData 
-    // if(req.cookies != undefined) {
-    //     userData = 1
-    //     res.render('main.html', {
-    //         userData,
-    //     })
-    // } else {
-    //     userData = 0
-    //     res.render('main.html',{
-    //         userData,
-    //     })
-    // }
 })
 
 app.use(router)

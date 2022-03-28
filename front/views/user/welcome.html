@@ -21,8 +21,12 @@
 
             const response = await axios.post('http://localhost:3000/user/welcome',null,option);
             const { level, userid, userpw, userimage, name, nickname,
-                    birth, address, gender, tel, phone, email, intro,
+                    address, gender, tel, phone, email, intro,
                     point, active, date } = response.data;
+
+            let {birth}=response.data   // 1998-12-31T15:00:00.000Z
+            // let dateObj = new Date(timeSource);
+            // console.log(dateObj)
 
             let template = ''
             template = welcome2.replace('{userid}',userid)
@@ -30,6 +34,7 @@
                                .replace('{name}',name)
                                .replace('{nickname}',nickname)
                                .replace('{birth}',birth)
+                            //    .replace('{birth}',birth.substring(0,10))
                                .replace('{address}',address)
                                .replace('{gender}',gender)
                                .replace('{tel}',tel)
@@ -39,7 +44,8 @@
                                .replace('{point}',point)
                                .replace('{active}',active)
                                .replace('{date}',date)
-                               
+                            //    .replace('{date}',date.substring(0,10)+' '+date.substring(11,19))
+                             
 
             welcome.innerHTML = template
 

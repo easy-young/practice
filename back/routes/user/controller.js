@@ -1,4 +1,5 @@
 const pool = require('../../db.js').pool
+const session = require('express-session')
 const {createToken} = require('../../utils/jwt.js')
 
 exports.join = async (req,res)=>{
@@ -64,9 +65,6 @@ exports.join = async (req,res)=>{
         }
         res.json(response)
     }
-
-    
-
 }
 
 exports.login = async (req,res)=>{
@@ -120,17 +118,25 @@ exports.login = async (req,res)=>{
 
 exports.profile = async (req,res) => {
     const {userid} = req.user
+    const sql = `SELECT * FROM user WHERE userid=?`
+    const prepare = [userid]
     
-    try {
-        const sql = `SELECT * FROM user WHERE userid=?`
-        const prepare = [userid]
-        const [[result]] = await pool.execute(sql,prepare)
+    let [[result]] = await pool.execute(sql,prepare)
     
-        res.json(result)
-    } catch (e){
-        console.log(e.message)
-    }
+    let birth = JSON.stringify(result.birth)
+    let date = JSON.stringify(result.date)
     
+    const sql1 = `SELECT DATE_ADD(${birth}, INTERVAL 9 HOUR)`
+    const sql2 = `SELECT DATE_ADD(${date}, INTERVAL 9 HOUR)`
+    let [[result1]] = await pool.execute(sql1)
+    let [[result2]] = await pool.execute(sql2)
+
+    let a = JSON.stringify(result1).split(`"`)[5].split(' ')[0]
+    let b = JSON.stringify(result2).split('"')[5]
+    result.birth = a
+    result.date = b
+    
+    res.json(result)
 }
 
 exports.profileUpdate = async (req,res)=>{
@@ -159,15 +165,9 @@ exports.profileUpdate = async (req,res)=>{
     
 }
 
-exports.kakaoLogout = (req,res) => {
-    res.clearCookie('kakaoToken')
-    res.clearCookie('userData')
-    res.json({})
-}
-
 exports.logout = (req,res) => {
-    res.clearCookie('token')
-    res.clearCookie('userData')
+    const cookie = req.headers.cookie.split('=')[0]
+    res.clearCookie(cookie)
     res.json({})
 }
 
@@ -188,7 +188,76 @@ exports.welcome = async (req,res) => {
     const sql = `SELECT * FROM user WHERE userid=?`
     const prepare = [userid]
     
-    const [[result]] = await pool.execute(sql,prepare)
+    let [[result]] = await pool.execute(sql,prepare)
+    
+    let birth = JSON.stringify(result.birth)
+    let date = JSON.stringify(result.date)
+    
+    const sql1 = `SELECT DATE_ADD(${birth}, INTERVAL 9 HOUR)`
+    const sql2 = `SELECT DATE_ADD(${date}, INTERVAL 9 HOUR)`
+    let [[result1]] = await pool.execute(sql1)
+    let [[result2]] = await pool.execute(sql2)
+
+    let a = JSON.stringify(result1).split(`"`)[5].split(' ')[0]
+    let b = JSON.stringify(result2).split('"')[5]
+    result.birth = a
+    result.date = b
     
     res.json(result)
+}
+
+exports.Auth = async (req,res)=>{
+    try{
+        if(req.body.cookie.split('=')[0]==='token'){
+            try{
+                const cookie = req.body.cookie.split('=')[1].split('.')[1]
+                const user = JSON.parse(Buffer.from(cookie,'base64').toString('utf-8'))
+            
+                const sql = `SELECT * FROM user WHERE userid=? and nickname=?`
+                const prepare = [user.userid, user.nickname]
+        
+                const [[result]] = await pool.execute(sql,prepare)
+                
+                const response  = {
+                    errno:0,
+                }
+                res.json(response)
+        
+            } catch (e){
+                console.log(e.message)
+                const response = {
+                    errno:1,
+                }
+                res.json(response)
+            }
+        } else if (req.body.cookie.split('=')[0]==='kakaoToken'){
+            try{
+                const cookie = req.body.cookie.split('=')[1].split('.')[1]
+                const user = JSON.parse(Buffer.from(cookie,'base64').toString('utf-8'))
+                console.log(user)
+                
+                const response = {
+                    errno:0,
+                }
+                res.json(response)
+            } catch(e){
+                console.log(e.message)
+                const response = {
+                    errno:1,
+                }
+                res.json(response)
+            }
+        } else {
+            const response = {
+                errno:1,
+            }
+            res.json(response)
+        }
+    } catch(e){
+        console.log(e.message)
+        const response = {
+            errno:1,
+        }
+        res.json(response)
+    }
 }
