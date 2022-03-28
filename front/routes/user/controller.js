@@ -48,17 +48,19 @@ exports.oauthKakao = async (req,res)=>{
                 'Authorization':`Bearer ${access_token}`
             }
         })
+        const email = userinfo.data.kakao_account.email
         const nickname = userinfo.data.kakao_account.profile.nickname
         const userimage = userinfo.data.kakao_account.profile.profile_image_url
         // nickname,userimage
-        const result = {nickname,userimage}
+        const result = {nickname,userimage,email}
         const jwt = createToken({...result})
         
         res.cookie('kakaoToken',jwt,{
             path:'/',
             httpOnly:true,
             secure:true,
-            domain:'localhost'
+            domain:'localhost',
+            maxAge: 1000
         })
         const userData = req.cookies.kakaoToken
         
