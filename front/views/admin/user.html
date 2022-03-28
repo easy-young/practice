@@ -6,29 +6,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin</title>
     <script type="text/javascript" src="https://unpkg.com/axios@0.26.0/dist/axios.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="/admin/user.css">
+    <link href='https://fonts.googleapis.com/css?family=Arvo' rel='stylesheet' type='text/css'>
     <style>
-        table {
-            width: 100%;
-        }
-        tbody > td, tbody > th {
-            padding: 7px 14px;
-            border-bottom: 1px solid #eee;
-            text-align: center;
-        }
+        @import url('https://cdn.rawgit.com/moonspam/NanumSquare/master/nanumsquare.css');
     </style>
     <script type="text/javascript">
         document.addEventListener('DOMContentLoaded', init);
         async function init() {
+            const option = {withCredentials:true};
             const users = document.querySelector('#users');
             const user = document.querySelector('#user').innerHTML;
             const userModify = document.querySelector('#userModify');
+            const button = document.querySelector('button');
             const title = document.querySelector('#title');
-            const ban = document.querySelector('#ban');
+            const searchFrm = document.querySelector('#searchFrm');
+            const search = document.querySelector('#search');
+            const userFrm = document.querySelector('#userFrm');
             const submit = document.querySelector('#submit');
-            submit.style.display = 'none';
-            const response = await axios.post('http://localhost:3000/api/admin/user', null, {
-                withCredentials:true,
-            });
+
+            submit.style.visibility = 'hidden';
+            const response = await axios.post('http://localhost:3000/api/admin/user', null, option);
             let template = '';
             response.data.forEach(v=>{
                 template += user.replace('{level}', v.level)
@@ -48,50 +46,96 @@
             });
             users.innerHTML = template;
 
-            const button = document.querySelector('button');
-            button.addEventListener('click', async ()=>{
-                submit.style.display = 'block';
-                const response = await axios.post('http://localhost:3000/api/admin/user', null, {
-                    withCredentials:true,
-                });
-                let template = '';
+            searchFrm.addEventListener('submit', async (e)=>{
+                e.preventDefault();
+                const body = {search:search.value};
+                const response = await axios.post('http://localhost:3000/api/admin/search', body, option);
+                console.log(response.data);
+                template = '';
                 response.data.forEach(v=>{
-                    template += userModify.innerHTML.replaceAll('{level}', v.level)
-                                .replaceAll('{userid}', v.userid)
-                                .replace('{name}', v.name)
-                                .replace('{nickname}', v.nickname)
-                                .replace('{birth}', v.birth.split('T')[0])
-                                .replace('{address}', v.address)
-                                .replace('{gender}', v.gender)
-                                .replace('{tel}', v.tel.substring(0,3)+'-'+v.tel.substring(3,6)+'-'+v.tel.substring(6,10))
-                                .replace('{phone}', v.phone.substring(0,3)+'-'+v.phone.substring(3,7)+'-'+v.phone.substring(7,11))
-                                .replace('{email}', v.email)
-                                .replace('{intro}', v.intro)
-                                .replace('{point}', v.point)
-                                .replace('{active}', v.active)
-                                .replace('{date}', v.date.split('T')[0]);
+                    template += user.replace('{level}', v.level)
+                                    .replace('{userid}', v.userid)
+                                    .replace('{name}', v.name)
+                                    .replace('{nickname}', v.nickname)
+                                    .replace('{birth}', v.birth.split('T')[0])
+                                    .replace('{address}', v.address)
+                                    .replace('{gender}', v.gender)
+                                    .replace('{tel}', v.tel.substring(0,3)+'-'+v.tel.substring(3,6)+'-'+v.tel.substring(6,10))
+                                    .replace('{phone}', v.phone.substring(0,3)+'-'+v.phone.substring(3,7)+'-'+v.phone.substring(7,11))
+                                    .replace('{email}', v.email)
+                                    .replace('{intro}', v.intro)
+                                    .replace('{point}', v.point)
+                                    .replace('{active}', v.active)
+                                    .replace('{date}', v.date.split('T')[0]);
                 });
                 users.innerHTML = template;
-                response.data.forEach(v=>{
-                    const level = document.querySelector(`#${v.userid}_level`);
-                    const useridLevel1 = document.querySelector(`#${v.userid}_level1`);
-                    const useridLevel2 = document.querySelector(`#${v.userid}_level2`);
-                    const useridLevel3 = document.querySelector(`#${v.userid}_level3`);
-                    if (level.value == 1) useridLevel1.checked = true;
-                    else if (level.value == 2) useridLevel2.checked = true;
-                    else useridLevel3.checked = true;
+            });
 
-                    const active = document.querySelector(`#${v.userid}_active`);
-                    const useridActive1 = document.querySelector(`#${v.userid}_active1`);
-                    const useridActive0 = document.querySelector(`#${v.userid}_active0`);
-                    if (active.value == 1) useridActive1.checked = true;
-                    else useridActive0.checked = true;
-                });
+            let num = 1;
+            button.addEventListener('click', async ()=>{
+                if (num%2 === 1) {
+                    submit.style.visibility = 'visible';
+                    const response = await axios.post('http://localhost:3000/api/admin/user', null, option);
+                    template = '';
+                    response.data.forEach(v=>{
+                        template += userModify.innerHTML.replaceAll('{level}', v.level)
+                                    .replaceAll('{userid}', v.userid)
+                                    .replace('{name}', v.name)
+                                    .replace('{nickname}', v.nickname)
+                                    .replace('{birth}', v.birth.split('T')[0])
+                                    .replace('{address}', v.address)
+                                    .replace('{gender}', v.gender)
+                                    .replace('{tel}', v.tel.substring(0,3)+'-'+v.tel.substring(3,6)+'-'+v.tel.substring(6,10))
+                                    .replace('{phone}', v.phone.substring(0,3)+'-'+v.phone.substring(3,7)+'-'+v.phone.substring(7,11))
+                                    .replace('{email}', v.email)
+                                    .replace('{intro}', v.intro)
+                                    .replace('{point}', v.point)
+                                    .replace('{active}', v.active)
+                                    .replace('{date}', v.date.split('T')[0]);
+                    });
+                    users.innerHTML = template;
+                    response.data.forEach(v=>{
+                        const level = document.querySelector(`#${v.userid}_level`);
+                        const useridLevel1 = document.querySelector(`#${v.userid}_level1`);
+                        const useridLevel2 = document.querySelector(`#${v.userid}_level2`);
+                        const useridLevel3 = document.querySelector(`#${v.userid}_level3`);
+                        if (level.value == 1) useridLevel1.checked = true;
+                        else if (level.value == 2) useridLevel2.checked = true;
+                        else useridLevel3.checked = true;
+
+                        const active = document.querySelector(`#${v.userid}_active`);
+                        const useridActive1 = document.querySelector(`#${v.userid}_active1`);
+                        const useridActive0 = document.querySelector(`#${v.userid}_active0`);
+                        if (active.value == 1) useridActive1.checked = true;
+                        else useridActive0.checked = true;
+                    });
+                } else {
+                    submit.style.visibility = 'hidden';
+                    const response = await axios.post('http://localhost:3000/api/admin/user', null, option);
+                    let template = '';
+                    response.data.forEach(v=>{
+                        template += user.replace('{level}', v.level)
+                                        .replace('{userid}', v.userid)
+                                        .replace('{name}', v.name)
+                                        .replace('{nickname}', v.nickname)
+                                        .replace('{birth}', v.birth.split('T')[0])
+                                        .replace('{address}', v.address)
+                                        .replace('{gender}', v.gender)
+                                        .replace('{tel}', v.tel.substring(0,3)+'-'+v.tel.substring(3,6)+'-'+v.tel.substring(6,10))
+                                        .replace('{phone}', v.phone.substring(0,3)+'-'+v.phone.substring(3,7)+'-'+v.phone.substring(7,11))
+                                        .replace('{email}', v.email)
+                                        .replace('{intro}', v.intro)
+                                        .replace('{point}', v.point)
+                                        .replace('{active}', v.active)
+                                        .replace('{date}', v.date.split('T')[0]);
+                    });
+                    users.innerHTML = template;
+                }
+                num++;
             });
             let mydata = response.data;
 
-            const form = document.querySelector('form');
-            form.addEventListener('submit', async (e)=>{
+            userFrm.addEventListener('submit', async (e)=>{
                 e.preventDefault();
                 let body = {};
                 body.level = [];
@@ -115,9 +159,7 @@
 
                     body.active.push(active.value);
                 });
-                const response = await axios.post('http://localhost:3000/api/admin/userModify', body, {
-                    withCredentials:true,
-                });
+                const response = await axios.post('http://localhost:3000/api/admin/userModify', body, option);
                 init();
             });
         };
@@ -125,14 +167,20 @@
 </head>
 <body>
     <h1><a href="/admin/user">Users</a></h1>
-    <a href="/admin">Home</a>
-    <button>Modify</button>
-    <form method="post" action="http://localhost:3000/api/admin/userModify">
+    <div id="menu">
+        <a href="/admin">Home</a>
+        <button>Modify</button>
+        <form method="post" id="searchFrm" action="http://localhost:3000/api/admin/search">
+            <input type="text" name="search" id="search" placeholder="Nickname">
+            <input type="submit" id="searchBtn" value="Search">
+        </form>
+    </div>
+    <form method="post" id="userFrm" action="http://localhost:4000/api/admin/userModify">
         <input type="submit" id="submit" value="Submit">
-        <table cellspacing="0" cellpadding="0">
+        <table cellspacing="0" cellpadding="0" border="1">
             <thead>
                 <tr id="title">
-                    <th>Level</th>
+                    <th id="level">Level</th>
                     <th>ID</th>
                     <th>Name</th>
                     <th>Nickname</th>

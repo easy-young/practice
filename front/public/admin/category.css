@@ -1,0 +1,113 @@
+* {
+    margin: 0;
+    padding: 0;
+    font-family: 'Arvo', 'nanumsquare', serif;
+    background-color: #eee;
+}
+
+a {
+    text-decoration: none;
+    text-align: center;
+    color: black;
+}
+
+h1, #menu {
+    display: flex;
+    justify-content: center;
+}
+
+h1 {
+    margin-top: 15px;
+}
+
+#menu {
+    width: 1000px;
+    margin: 15px auto;
+}
+
+#menu > a {
+    width: 65px;
+    height: 25px;
+    line-height: 25px;
+    border-radius: 5px;
+    background-color: rgb(200, 200, 200);
+}
+
+button {
+    width: 65px;
+    height: 25px;
+    font-size: 15px;
+    margin: 0 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: rgb(200, 200, 200);
+}
+
+table {
+    width: 35%;
+    margin: 0 auto;
+}
+
+td, th {
+    padding: 3px 5px;
+    text-align: center;
+}
+
+th {
+    background-color: rgb(253, 253, 120);
+}
+
+#add {
+    width: 100%;
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    bottom: 50px;
+}
+
+#add > strong {
+    margin: 10px auto;
+    font-size: 22px;
+}
+
+#add > div {
+    margin: 10px auto;
+}
+
+#add > div > input:nth-child(1), #add > div > input:nth-child(2) {
+    width: 140px;
+    height: 22px;
+    float: right;
+    margin-left: 10px;
+    border: 2px solid rgb(150, 150, 150);
+    border-radius: 5px;
+    background-color: white;
+}
+
+#addBtn {
+    width: 60px;
+    height: 25px;
+    margin-top: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: rgb(160, 160, 160);
+}
+
+input {
+    width: 120px;
+    height: 22px;
+    font-size: 16px;
+    font-weight: 500;
+    background-color: white;
+    border: 1px solid rgb(180, 180, 180);
+    border-radius: 5px;
+}
+
+#submit {
+    width: 80px;
+    margin: 10px auto;
+    margin-left: 950px;
+    border: none;
+    background-color: rgb(160, 160, 160);
+}

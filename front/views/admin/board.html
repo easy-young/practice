@@ -6,22 +6,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin</title>
     <script type="text/javascript" src="https://unpkg.com/axios@0.26.0/dist/axios.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="/admin/board.css">
+    <link href='https://fonts.googleapis.com/css?family=Arvo' rel='stylesheet' type='text/css'>
     <style>
-        table {
-            width: 70%;
-        }
+        @import url('https://cdn.rawgit.com/moonspam/NanumSquare/master/nanumsquare.css');
     </style>
     <script type="text/javascript">
         document.addEventListener('DOMContentLoaded', init);
         async function init() {
+            const option = {withCredentials:true};
             const boards =document.querySelector('#boards');
             const board = document.querySelector('#board').innerHTML;
-            const form = document.querySelector('form');
+            const searchFrm = document.querySelector('#searchFrm');
+            const modify = document.querySelector('#modify');
             const submit = document.querySelector('#submit');
+            const hide = document.querySelector('#hide');
+            const idx = document.querySelector('#idx');
+            const hit = document.querySelector('#hit');
+            const good = document.querySelector('#good');
+
             submit.style.visibility = 'hidden';
-            const response = await axios.post('http://localhost:3000/api/admin/board', null, {
-                withCredentials:true,
-            });
+            const response = await axios.post('http://localhost:3000/api/admin/board', null, option);
             let template = '';
             response.data.forEach(v=>{
                 template += board.replace('{idx}', v.idx)
@@ -43,53 +48,101 @@
                 subject[v.idx-1].appendChild(aElement);
             });
 
-            const hide = document.querySelector('#hide');
+            searchFrm.addEventListener('submit', async (e)=>{
+                e.preventDefault();
+                template = '';
+                const body = {search:search.value};
+                const response = await axios.post('http://localhost:3000/api/admin/boardSearch', body, option);
+                response.data.forEach(v=>{
+                    template += board.replace('{idx}', v.idx)
+                                    .replace('{main}', v.main)
+                                    .replace('{sub}', v.sub)
+                                    .replace('{subject}', v.subject)
+                                    .replace('{nickname}', v.nickname)
+                                    .replace('{date}', v.date.split('T')[0])
+                                    .replace('{hit}', v.hit)
+                                    .replace('{good}', v.good)
+                                    .replace('{active}', v.active);
+                });
+                boards.innerHTML = template;
+                const subject = document.querySelectorAll('.subject');
+                let cnt = 0;
+                response.data.forEach(v=>{
+                    const aElement = document.createElement('a');
+                    aElement.href = '/admin/board/view/'+v.idx;
+                    aElement.innerHTML = v.subject;
+                    subject[cnt].appendChild(aElement);
+                    cnt++;
+                });
+            });
+
+            let num = 1;
             hide.addEventListener('click', async ()=>{
-                const boardModify = document.querySelector('#boardModify').innerHTML;
-                const title = document.querySelector('#title');
-                submit.style.visibility = 'visible';
-                const response = await axios.post('http://localhost:3000/api/admin/board/hide', null, {
-                    withCredentials:true,
-                });
-                boards.innerHTML = '';
-                template = '';
-                response.data.forEach(v=>{
-                    template += boardModify.replaceAll('{idx}', v.idx)
-                                    .replace('{main}', v.main)
-                                    .replace('{sub}', v.sub)
-                                    .replace('{subject}', v.subject)
-                                    .replace('{nickname}', v.nickname)
-                                    .replace('{date}', v.date.split('T')[0])
-                                    .replace('{hit}', v.hit)
-                                    .replace('{good}', v.good)
-                                    .replace('{active}', v.active);
-                });
-                boards.innerHTML = template;
-                const subject = document.querySelectorAll('.subject');
-                let i = 0;
-                response.data.forEach(v=>{
-                    const aElement = document.createElement('a');
-                    aElement.href = '/admin/board/view/'+v.idx;
-                    aElement.innerHTML = v.subject;
-                    subject[i].append(aElement);
-                    i++;
-                });
+                if (num%2 === 1) {
+                    const boardModify = document.querySelector('#boardModify').innerHTML;
+                    const title = document.querySelector('#title');
+                    submit.style.visibility = 'visible';
+                    const response = await axios.post('http://localhost:3000/api/admin/board/hide', null, option);
+                    boards.innerHTML = '';
+                    template = '';
+                    response.data.forEach(v=>{
+                        template += boardModify.replaceAll('{idx}', v.idx)
+                                        .replace('{main}', v.main)
+                                        .replace('{sub}', v.sub)
+                                        .replace('{subject}', v.subject)
+                                        .replace('{nickname}', v.nickname)
+                                        .replace('{date}', v.date.split('T')[0])
+                                        .replace('{hit}', v.hit)
+                                        .replace('{good}', v.good)
+                                        .replace('{active}', v.active);
+                    });
+                    boards.innerHTML = template;
+                    const subject = document.querySelectorAll('.subject');
+                    let i = 0;
+                    response.data.forEach(v=>{
+                        const aElement = document.createElement('a');
+                        aElement.href = '/admin/board/view/'+v.idx;
+                        aElement.innerHTML = v.subject;
+                        subject[i].append(aElement);
+                        i++;
+                    });
+                    response.data.forEach(v=>{
+                        const active = document.querySelector(`#active_${v.idx}`);
+                        const active1 = document.querySelector(`#active1_${v.idx}`);
+                        const active0 = document.querySelector(`#active0_${v.idx}`);
+                        if (active.value == 1) active1.checked = true;
+                        else active0.checked = true;
+                    });
+                } else {
+                    submit.style.visibility = 'hidden';
+                    const response = await axios.post('http://localhost:3000/api/admin/board', null, option);
+                    let template = '';
+                    response.data.forEach(v=>{
+                        template += board.replace('{idx}', v.idx)
+                                        .replace('{main}', v.main)
+                                        .replace('{sub}', v.sub)
+                                        .replace('{subject}', v.subject)
+                                        .replace('{nickname}', v.nickname)
+                                        .replace('{date}', v.date.split('T')[0])
+                                        .replace('{hit}', v.hit)
+                                        .replace('{good}', v.good)
+                                        .replace('{active}', v.active);
+                    });
+                    boards.innerHTML = template;
+                    const subject = document.querySelectorAll('.subject');
+                    response.data.forEach(v=>{
+                        const aElement = document.createElement('a');
+                        aElement.href = '/admin/board/view/'+v.idx;
+                        aElement.innerHTML = v.subject;
+                        subject[v.idx-1].appendChild(aElement);
+                    });
+                }
+                num++;
                 if (title.innerHTML.match(/Active/g) === null) title.innerHTML += ban.innerHTML;
-
-                response.data.forEach(v=>{
-                    const active = document.querySelector(`#active_${v.idx}`);
-                    const active1 = document.querySelector(`#active1_${v.idx}`);
-                    const active0 = document.querySelector(`#active0_${v.idx}`);
-                    if (active.value == 1) active1.checked = true;
-                    else active0.checked = true;
-                });
             });
 
-            const idx = document.querySelector('#idx');
             idx.addEventListener('click', async ()=>{
-                const response = await axios.post('http://localhost:3000/api/admin/board/idx', null, {
-                    withCredentials:true,
-                });
+                const response = await axios.post('http://localhost:3000/api/admin/board/idx', null, option);
                 boards.innerHTML = '';
                 template = '';
                 response.data.forEach(v=>{
@@ -115,11 +168,8 @@
                 });
             });
 
-            const hit = document.querySelector('#hit');
             hit.addEventListener('click', async ()=>{
-                const response = await axios.post('http://localhost:3000/api/admin/board/hit', null, {
-                    withCredentials:true,
-                });
+                const response = await axios.post('http://localhost:3000/api/admin/board/hit', null, option);
                 boards.innerHTML = '';
                 template = '';
                 response.data.forEach(v=>{
@@ -145,11 +195,8 @@
                 });
             });
 
-            const good = document.querySelector('#good');
             good.addEventListener('click', async ()=>{
-                const response = await axios.post('http://localhost:3000/api/admin/board/good', null, {
-                    withCredentials:true,
-                });
+                const response = await axios.post('http://localhost:3000/api/admin/board/good', null, option);
                 boards.innerHTML = '';
                 template = '';
                 response.data.forEach(v=>{
@@ -176,7 +223,7 @@
             });
 
             let mydata = response.data;
-            form.addEventListener('submit', async (e)=>{
+            modify.addEventListener('submit', async (e)=>{
                 e.preventDefault();
                 let body = {};
                 body.active = [];
@@ -188,9 +235,7 @@
                     else active.value = 0;
                     body.active.push(active.value);
                 });
-                const response = await axios.post('http://localhost:3000/api/admin/boardModify', body, {
-                    withCredentials:true,
-                });
+                const response = await axios.post('http://localhost:3000/api/admin/boardModify', body, option);
                 init();
             });
         };
@@ -198,14 +243,20 @@
 </head>
 <body>
     <h1><a href="/admin/board">Board</a></h1>
-    <a href="/admin">Home</a>
-    <button id="hide">Hide</button>
-    <button id="idx">No.</button>
-    <button id="hit">Hit</button>
-    <button id="good">Good</button>
-    <form method="post" action="http://localhost:3000/api/admin/boardModify">
+    <div id="menu">
+        <a href="/admin">Home</a>
+        <button id="hide">Hide</button>
+        <button id="idx">No.</button>
+        <button id="hit">Hit</button>
+        <button id="good">Good</button>
+        <form method="post" id="searchFrm" action="http://localhost:3000/api/admin/search">
+            <input type="text" name="search" id="search" placeholder="Subject">
+            <input type="submit" id="searchBtn" value="Search">
+        </form>
+    </div>
+    <form method="post" id="modify" action="http://localhost:3000/api/admin/boardModify">
         <input type="submit" id="submit" value="Submit">
-        <table cellspacing="0" cellpadding="0">
+        <table cellspacing="0" cellpadding="0" border="1">
             <thead>
                 <tr id="title">
                     <th>No.</th>

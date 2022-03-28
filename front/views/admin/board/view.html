@@ -8,12 +8,11 @@
     <script type="text/javascript" src="https://unpkg.com/axios@0.26.0/dist/axios.min.js"></script>
     <script type="text/javascript">
         document.addEventListener('DOMContentLoaded', async ()=>{
+            const option = {withCredentials:true};
             const [,,,,idx] = location.pathname.split('/');
             let template = document.querySelector('template').innerHTML;
             const view = document.querySelector('#view');
-            const response = await axios.post(`http://localhost:3000/api/admin/board/view/${idx}`, {
-                withCredentials:true,
-            });
+            const response = await axios.post(`http://localhost:3000/api/admin/board/view/${idx}`, null, option);
             const {subject, nickname, date, content, hit, good, imageName} = response.data[0];
             template = template.replace('{idx}', idx)
                                 .replace('{subject}', subject)

@@ -78,13 +78,19 @@ exports.login = async (req,res)=>{
         if(result.length == 0) throw Error('등록된회원이 아닙니다.')
      
         const jwt = createToken({...tokenResult})
-        
-        res.cookie('token',jwt,{
+          res.cookie('token',jwt,{
             path:'/',
             httpOnly:true,
             secure:true,
             domain:'localhost'
         })
+        res.cookie('userData',{userid:userid, nickname:nickname},{
+            path:'/',
+            httpOnly:true,
+            secure:true,
+            domain:'localhost'
+        })
+    
        
         const response = {
             result,
@@ -152,11 +158,9 @@ exports.profileUpdate = async (req,res)=>{
     
 }
 
-
 exports.logout = (req,res) => {
     const cookie = req.headers.cookie.split('=')[0]
     res.clearCookie(cookie)
-    
     res.json({})
 }
 
@@ -167,7 +171,7 @@ exports.resign = async (req,res) => {
     const [result] = await pool.execute(sql,prepare)
 
     res.clearCookie('token')
-    
+    res.clearCookie('userData')
 
     res.json({})
 }

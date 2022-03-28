@@ -21,6 +21,7 @@ router.post('/', controller.admin);
 router.post('/login', controller.login);
 
 router.post('/user', controller.user);
+router.post('/search', controller.search);
 router.post('/userModify', controller.userModify);
 
 router.post('/category', controller.category);
@@ -29,6 +30,7 @@ router.post('/categoryModify', controller.categoryModify);
 router.post('/categoryDelete', controller.categoryDelete);
 
 router.post('/board', controller.board);
+router.post('/boardSearch', controller.boardSearch);
 router.post('/boardModify', controller.boardModify);
 router.post('/board/hide', controller.hide);
 router.post('/board/idx', controller.idx);
