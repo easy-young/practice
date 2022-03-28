@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     
-    {% include "../header.html" %}
+
     <script type="text/javascript">
             localStorage.removeItem('current_page')
          localStorage.setItem('current_page',document.location.href)
@@ -42,7 +42,7 @@
                 let welcomMent = {
                     type:'welcom',
                     data:{
-                        userid:'{{  userData.nickname  }}',
+                        nickname:'{{  userData.nickname  }}',
                     }
                 }
 
@@ -61,11 +61,11 @@
                
                 const{ input } = e.target
                 let data = {
-                    type:'send_meg',
+                    type:'private_meg',
                     data:{
                         userid:'{{  userData.nickname  }}',
                         msg:input.value,
-                
+                        targetNickname:'{{ nickname }}'
                     }
                 }
 
@@ -87,7 +87,8 @@
     </script>
 </head>
 <body>
-    {% include "../nav.html" %}
+    target nickname : {{ nickname }}
+    my nickname:  {{  userData.nickname  }}
     <form action="/" method="get">
         <input type="text" name="input" id="input">
         <input type="submit" value="전송">
@@ -95,7 +96,5 @@
     <ul id="chat">
 
     </ul>
-
-    {% include "../footer.html" %}
 </body>
 </html>

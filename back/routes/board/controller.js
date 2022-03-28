@@ -37,10 +37,15 @@ exports.write = (req,res,next)=>{
         const { content , subject , main , sub } =req.body
         const filename= JSON.stringify(req.files)
         
+        if(req.user.isLogin){
             const queryStr=`INSERT INTO board(nickname,imageName,subject,content,hit,good,date,main,sub) VALUES('${req.user.nickname}','${filename}','${subject}','${content}',0,0,NOW(),'${main}','${sub}' );`
             pool.query(queryStr).then(()=>{
                 res.status(200).json({ reqName: 'post_write', status: true})
             })
+        }else{
+            res.status(200).json({ reqName: 'post_write', status: false })
+        }
+            
 
 
     } catch (error) {
