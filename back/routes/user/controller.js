@@ -44,23 +44,16 @@ exports.join = async (req,res)=>{
             result:{
                 userid,
                 nickname,
-                row:result.affectedRows,
-                id:result.insertId
             },
             errno:0,
         }
         
-
         res.json(response)
         // res.send(JSON.stringify(response))
 
     } catch (e) {
         console.log(e)
         const response = {
-            result:{
-                row:0,
-                id:0
-            },
             errno:1,
         }
         res.json(response)
