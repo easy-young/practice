@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+    <script type="text/javascript">
+        document.addEventListener('DOMContentLoaded', async ()=>{
+            
+
+            const welcome = document.querySelector('#welcome')
+            const welcome2 = document.querySelector('#welcome2').innerHTML
+            
+            const option = {
+                "Content-type":"application/json",
+                withCredentials:true,
+            }
+
+            const response = await axios.post('http://localhost:3000/user/kakaoWelcome',null,option);
+            const { level, userid, userpw, userimage, name, nickname,
+                    address, gender, tel, phone, email, intro,
+                    point, active, date } = response.data;
+
+            let {birth}=response.data   // 1998-12-31T15:00:00.000Z
+            // let dateObj = new Date(timeSource);
+            // console.log(dateObj)
+
+            let template = ''
+            template = welcome2.replace('{userid}',userid)
+                               .replace('{userimage}',userimage)
+                               .replace('{name}',name)
+                               .replace('{nickname}',nickname)
+                               .replace('{birth}',birth)
+                            //    .replace('{birth}',birth.substring(0,10))
+                               .replace('{address}',address)
+                               .replace('{gender}',gender)
+                               .replace('{tel}',tel)
+                               .replace('{phone}',phone)
+                               .replace('{email}',email)
+                               .replace('{intro}',intro)
+                               .replace('{point}',point)
+                               .replace('{active}',active)
+                               .replace('{date}',date)
+                            //    .replace('{date}',date.substring(0,10)+' '+date.substring(11,19))
+                             
+
+            welcome.innerHTML = template
+
+
+
+        })
+    </script>
+</head>
+<body>
+    <h1>
+        <a href="/">Logo</a>
+    </h1>
+    <h2>
+        회원가입 축하 페이지 입니다.
+    </h2>
+    <h3>
+        로그인 후에 프로필 수정이가능하니 잘못 작성했다고 당황하지마세요~_~
+    </h3>
+
+    <div id="welcome">
+
+    </div>
+
+    <template id="welcome2">
+        <ul>
+            <li>
+                <strong>ID :</strong>
+                {userid}
+            </li>
+            <li>
+                <strong>사진 :</strong>
+                {userimage}
+            </li>
+            <li>
+                <strong>이름 :</strong>
+                {name}
+            </li>
+            <li>
+                <strong>닉네임 :</strong>
+                {nickname}
+            </li>
+            <li>
+                <strong>생년월일 :</strong>
+                {birth}
+            </li>
+            <li>
+                <strong>주소 :</strong>
+                {address}
+            </li>
+            <li>
+                <strong>성별 :</strong>
+                {gender}
+            </li>
+            <li>
+                <strong>집전화 :</strong>
+                {tel}
+            </li>
+            <li>
+                <strong>핸드폰번호 :</strong>
+                {phone}
+            </li>
+            <li>
+                <strong>E-mail :</strong>
+                {email}
+            </li>
+            <li>
+                <strong>자기소개 :</strong>
+                {intro}
+            </li>
+            <li>
+                <strong>나의 포인트 :</strong>
+                {point}
+            </li>
+            <li>
+                <strong>나의 레벨 :</strong>
+                {active}
+            </li>
+            <li>
+                <strong>가입일 :</strong>
+                {date}
+            </li>
+        </ul>
+    </template>
+
+    <a href="/">홈으로!</a>
+</body>
+</html>

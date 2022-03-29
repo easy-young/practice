@@ -6,8 +6,11 @@ router.get('/login',controller.login)
 router.get('/kakao/login',controller.kakaoLogin)
 router.get('/oauth/kakao',controller.oauthKakao)
 router.get('/join',controller.join)
+router.get('/kakaoJoin',controller.kakaoJoin)
 router.get('/profile',controller.profile)
+router.get('/kakaoProfile',controller.kakaoProfile)
 router.get('/profileUpdate',controller.profileUpdate)
 router.get('/welcome',controller.welcome)
+router.get('/kakaoWelcome',controller.kakaoWelcome)
 
 module.exports = router

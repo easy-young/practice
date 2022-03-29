@@ -60,6 +60,45 @@ exports.join = async (req,res)=>{
     }
 }
 
+exports.kakaoJoin = async (req,res)=>{
+    const {userid,userpw,userimage,name,nickname,address,gender,email,intro} = req.body
+    let {birth, tel, phone} = req.body
+    birth = birth[0]+birth[1]+birth[2]
+    tel = tel[0]+tel[1]+tel[2]
+    phone = phone[0]+phone[1]+phone[2]
+
+    const sql = `INSERT INTO user (
+        userid, userpw, userimage, name,
+        nickname, birth, address, gender, tel,
+        phone, email, intro
+    ) VALUES (
+        ?,?,?,?,?,
+        ?,?,?,?,?,
+        ?,?
+    )`
+
+    const prepare = [ userid, userpw, userimage, name, nickname,
+                     birth, address, gender, tel, phone, email,
+                     intro ];
+
+    const [ result ] = await pool.execute(sql,prepare);
+    
+    const tokenResult = {nickname, email}
+    const jwt = createToken({...tokenResult})
+    res.cookie('kakaoToken',jwt,{
+        path:'/',
+        httpOnly:true,
+        secure:true,
+        domain:'localhost'
+    })
+
+    const response = {
+        errno:0
+    }
+    
+    res.json(response)
+}
+
 exports.login = async (req,res)=>{
     const {userid, userpw} = req.body
     const sql = `
@@ -110,50 +149,114 @@ exports.login = async (req,res)=>{
 }
 
 exports.profile = async (req,res) => {
-    const {userid} = req.user
-    const sql = `SELECT * FROM user WHERE userid=?`
-    const prepare = [userid]
-    
-    let [[result]] = await pool.execute(sql,prepare)
-    
-    let birth = JSON.stringify(result.birth)
-    let date = JSON.stringify(result.date)
-    
-    const sql1 = `SELECT DATE_ADD(${birth}, INTERVAL 9 HOUR)`
-    const sql2 = `SELECT DATE_ADD(${date}, INTERVAL 9 HOUR)`
-    let [[result1]] = await pool.execute(sql1)
-    let [[result2]] = await pool.execute(sql2)
+    const cookie = req.headers.cookie.split('=')[0]
+    const cookie1 = req.headers.cookie.split('=')[1].split('.')[1]
+    const user = JSON.parse(Buffer.from(cookie1,'base64').toString('utf-8'))
 
-    let a = JSON.stringify(result1).split(`"`)[5].split(' ')[0]
-    let b = JSON.stringify(result2).split('"')[5]
-    result.birth = a
-    result.date = b
+    if(cookie == 'token'){
+        const {userid} = req.user
+        const sql = `SELECT * FROM user WHERE userid=?`
+        const prepare = [userid]
+        
+        let [[result]] = await pool.execute(sql,prepare)
+        
+        let birth = JSON.stringify(result.birth)
+        let date = JSON.stringify(result.date)
+        
+        const sql1 = `SELECT DATE_ADD(${birth}, INTERVAL 9 HOUR)`
+        const sql2 = `SELECT DATE_ADD(${date}, INTERVAL 9 HOUR)`
+        let [[result1]] = await pool.execute(sql1)
+        let [[result2]] = await pool.execute(sql2)
     
-    res.json(result)
+        let a = JSON.stringify(result1).split(`"`)[5].split(' ')[0]
+        let b = JSON.stringify(result2).split('"')[5]
+        result.birth = a
+        result.date = b
+        
+        res.json(result)
+    } else if(cookie == 'kakaoToken'){
+        // console.log(cookie) // kakaoToken
+
+        const {email} = user
+        const sql = `SELECT * FROM user WHERE email=?`
+        const prepare = [email]
+        
+        let [[result]] = await pool.execute(sql,prepare)
+        
+        let birth = JSON.stringify(result.birth)
+        let date = JSON.stringify(result.date)
+        
+        const sql1 = `SELECT DATE_ADD(${birth}, INTERVAL 9 HOUR)`
+        const sql2 = `SELECT DATE_ADD(${date}, INTERVAL 9 HOUR)`
+        let [[result1]] = await pool.execute(sql1)
+        let [[result2]] = await pool.execute(sql2)
+    
+        let a = JSON.stringify(result1).split(`"`)[5].split(' ')[0]
+        let b = JSON.stringify(result2).split('"')[5]
+        result.birth = a
+        result.date = b
+
+        res.json(result)
+    }
+    
 }
 
 exports.profileUpdate = async (req,res)=>{
-    const {userid} = req.user
-    const {userpw,userimage,name,nickname,address,gender,intro} = req.body
-    let {phone, birth, tel, email} = req.body
-    phone = phone[0]+phone[1]+phone[2]
-    birth = birth[0]+birth[1]+birth[2]
-    tel = tel[0]+tel[1]+tel[2]
-    email = email[0]+'@'+email[1]
+    const cookie = req.headers.cookie.split('=')[0]
+    const cookie1 = req.headers.cookie.split('=')[1].split('.')[1]
+    const user = JSON.parse(Buffer.from(cookie1,'base64').toString('utf-8'))
+    if(cookie == 'token'){
+        const {userid} = req.user
+        const {userpw,userimage,name,nickname,address,gender,intro} = req.body
+        let {phone, birth, tel, email} = req.body
+        phone = phone[0]+phone[1]+phone[2]
+        birth = birth[0]+birth[1]+birth[2]
+        tel = tel[0]+tel[1]+tel[2]
+        email = email[0]+'@'+email[1]
+        console.log('로컬',userid,userpw,userimage,name,nickname,address,gender,intro,phone, birth, tel, email)
+        
+    
+        try {
+            const sql = `UPDATE user SET userpw=?, userimage=?, name=?, nickname=?, birth=?,
+            address=?, gender=?, tel=?, phone=?, email=?, intro=? WHERE userid=?`
+            const prepare = [ userpw, userimage, name, nickname, birth,address,
+                              gender, tel, phone, email, intro, userid ]
+            const [result] = await pool.execute(sql,prepare)
+            
+            res.json(result)
+        } catch(e){
+            console.log(e)
+            const err = 1062
+            res.json({err})
+            console.log('중복된 닉네임 임다')
+            res.redirect('http://localhost:3001/user/profileUpdate')
+        }
+    } else if(cookie == 'kakaoToken'){
+        const {email} = user
+        const sql = `SELECT * FROM user WHERE email=?`
+        const prepare = [email]
+        let [[result]] = await pool.execute(sql,prepare)
 
-    try {
-        const sql = `UPDATE user SET userpw=?, userimage=?, name=?, nickname=?, birth=?,
-        address=?, gender=?, tel=?, phone=?, email=?, intro=? WHERE userid=?`
-        const prepare = [ userpw, userimage, name, nickname, birth,address,
-                          gender, tel, phone, email, intro, userid ]
-        const [result] = await pool.execute(sql,prepare)
-        res.json(result)
-    } catch(e){
-        console.log(e)
-        const err = 1062
-        res.json({err})
-        console.log('중복된 닉네임 임다')
-        res.redirect('http://localhost:3001/user/profileUpdate')
+        const {userid,userpw,userimage,name,nickname,address,gender,intro} = result
+        let {phone, birth, tel} = result
+        birth = JSON.stringify(birth).split('"')[1].split('T')[0].split('-')
+        birth = birth[0]+birth[1]+birth[2]
+
+
+        try {
+            const sql = `UPDATE user SET userpw=?, userimage=?, name=?, nickname=?, birth=?,
+            address=?, gender=?, tel=?, phone=?, email=?, intro=? WHERE userid=?`
+            const prepare = [ userpw, userimage, name, nickname, birth,address,
+                              gender, tel, phone, email, intro, userid ]
+            const [[result]] = await pool.execute(sql,prepare)
+
+            res.json(result)
+        } catch(e){
+            console.log(e.message)
+            const err = 1062
+            res.json({err})
+            res.redirect('http://localhost:3001/user/profileUpdate')
+        }
     }
     
 }
@@ -196,6 +299,31 @@ exports.welcome = async (req,res) => {
     result.birth = a
     result.date = b
     
+    res.json(result)
+}
+
+exports.kakaoWelcome = async (req,res)=>{
+    const cookie = req.headers.cookie.split('=')[1].split('.')[1]
+    const user = JSON.parse(Buffer.from(cookie,'base64').toString('utf-8'))
+    const {nickname, email} = user
+
+    const sql = `SELECT * FROM user WHERE nickname=? and email=?`
+    const prepare = [nickname, email]
+    let [[result]] = await pool.execute(sql, prepare)
+
+    let birth = JSON.stringify(result.birth)
+    let date = JSON.stringify(result.date)
+    
+    const sql1 = `SELECT DATE_ADD(${birth}, INTERVAL 9 HOUR)`
+    const sql2 = `SELECT DATE_ADD(${date}, INTERVAL 9 HOUR)`
+    let [[result1]] = await pool.execute(sql1)
+    let [[result2]] = await pool.execute(sql2)
+
+    let a = JSON.stringify(result1).split(`"`)[5].split(' ')[0]
+    let b = JSON.stringify(result2).split('"')[5]
+    result.birth = a
+    result.date = b
+
     res.json(result)
 }
 
@@ -253,4 +381,22 @@ exports.Auth = async (req,res)=>{
         }
         res.json(response)
     }
+}
+
+exports.kakaoJoinAuth = async (req,res)=>{
+    const {nickname,email} = req.body
+    const sql = `SELECT userid FROM user WHERE nickname=? and email=?`
+    const prepare = [nickname, email]
+    const [[result]] = await pool.execute(sql,prepare)
+    let response
+    if(result == undefined){
+        response = {
+            errno:0
+        }
+    } else {
+        response = {
+            errno:1
+        }
+    }
+    res.json(response)
 }

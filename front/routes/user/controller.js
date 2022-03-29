@@ -52,39 +52,72 @@ exports.oauthKakao = async (req,res)=>{
         const nickname = userinfo.data.kakao_account.profile.nickname
         const userimage = userinfo.data.kakao_account.profile.profile_image_url
         // nickname,userimage
-        const result = {nickname,userimage,email}
-        const jwt = createToken({...result})
+        // const result = {nickname,userimage,email}
+        // const jwt = createToken({...result})
         
-        res.cookie('kakaoToken',jwt,{
-            path:'/',
-            httpOnly:true,
-            secure:true,
-            domain:'localhost',
-            maxAge: 1000
-        })
-        const userData = req.cookies.kakaoToken
+        // res.cookie('kakaoToken',jwt,{
+        //     path:'/',
+        //     httpOnly:true,
+        //     secure:true,
+        //     domain:'localhost',
+        //     maxAge: 1000
+        // })
+        // const userData = req.cookies.kakaoToken
+        const body1 = {
+            nickname,
+            email,
+        }
+        const option1 = {
+            'Content-type':'application/json',
+            withCredentials:true,
+        }
         
+        const response1 = await axios.post('http://localhost:3000/user/kakaoJoinAuth',body1,option1)
+        if(response1.data.errno == 1){
+            const tokenResult = {nickname,email}
+            const jwt = createToken({...tokenResult})
+                res.cookie('kakaoToken',jwt,{
+                path:'/',
+                httpOnly:true,
+                secure:true,
+                domain:'localhost'
+            })
+            res.render('main.html')
+
+        } else{
+            res.render('./user/kakao_join.html',{
+                data:userinfo.data.kakao_account
+            })
+        }
     } catch (e) {
         console.log(e)
     }
-    
-    res.redirect('/user/join')
 }
 
 exports.join = (req,res)=>{
     res.render('./user/join.html')
 }
 
+exports.kakaoJoin = (req,res)=>{
+    res.render('./user/kakao_join.html')
+}
+
 exports.profile = (req,res)=>{
     res.render('./user/profile.html')
-  
+}
+
+exports.kakaoProfile = (req,res)=>{
+    res.render('./user/kakao_profile.html')
 }
 
 exports.profileUpdate = (req,res)=>{
     res.render('./user/profileUpdate.html')
-    
 }
 
 exports.welcome = (req,res) => {
     res.render('./user/welcome')
+}
+
+exports.kakaoWelcome = (req,res) => {
+    res.render('./user/kakao_welcome.html')
 }
