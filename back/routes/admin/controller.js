@@ -1,4 +1,5 @@
 const pool = require('../../db').pool;
+const {sqls} = require('./stat.js');
 
 exports.admin = async (req, res) => {
     //
@@ -23,7 +24,6 @@ exports.login = async (req, res) => {
 };
 
 exports.user = async (req, res) => {
-    console.log(req.session);
     const sql = `SELECT level, userid, userimage, name, nickname,
                         birth, address, gender, tel, phone,
                         email, intro, point, active, date
@@ -33,6 +33,7 @@ exports.user = async (req, res) => {
         res.send(result);
     } catch (e) {
         console.log(e.message);
+        res.send();
     }
 };
 
@@ -48,6 +49,7 @@ exports.search = async (req, res) => {
         res.send(result);
     } catch (e) {
         console.log(e.message);
+        res.send();
     }
 };
 
@@ -81,6 +83,7 @@ exports.category = async (req, res) => {
         res.send(result);
     } catch (e) {
         console.log(e.message);
+        res.send();
     }
 };
 
@@ -94,6 +97,7 @@ exports.categoryAdd = async (req, res) => {
     } catch (e) {
         if (e.errno === 1062) res.send('duplicate');
         else console.log(e.message);
+        res.send();
     }
 };
 
@@ -130,6 +134,7 @@ exports.categoryDelete = async (req, res) => {
         res.send(result2);
     } catch (e) {
         console.log(e.message);
+        res.send();
     }
 };
 
@@ -140,6 +145,7 @@ exports.board = async (req, res) => {
         res.send(result);
     } catch (e) {
         console.log(e.message);
+        res.send();
     }
 };
 
@@ -152,6 +158,7 @@ exports.boardSearch = async (req, res) => {
         res.send(result);
     } catch (e) {
         console.log(e.message);
+        res.send();
     }
 };
 
@@ -181,6 +188,7 @@ exports.hide = async (req, res) => {
         res.send(result);
     } catch (e) {
         console.log(e.message);
+        res.send();
     }
 };
 
@@ -191,6 +199,7 @@ exports.idx = async (req, res) => {
         res.send(result);
     } catch (e) {
         console.log(e.message);
+        res.send();
     }
 }
 
@@ -201,6 +210,7 @@ exports.hit = async (req, res) => {
         res.send(result);
     } catch (e) {
         console.log(e.message);
+        res.send();
     }
 };
 
@@ -211,6 +221,7 @@ exports.good = async (req, res) => {
         res.send(result);
     } catch (e) {
         console.log(e.message);
+        res.send();
     }
 };
 
@@ -223,10 +234,84 @@ exports.view = async (req, res) => {
         res.send(result);
     } catch (e) {
         console.log(e.message);
+        res.send();
     }
 };
 
-exports.stats = (req, res) => {
-    const sql = ``;
-    res.send();
+exports.stats = async (req, res) => {
+    const sql = `SELECT * FROM board`;
+    try {
+        const [result] = await pool.execute(sql);
+        res.send(result);
+    } catch (e) {
+        console.log(e.message);
+        res.send();
+    }
+};
+
+exports.hitNgood = async (req, res) => {
+    const sql = `SELECT sum(hit) AS hit, sum(good) AS good FROM board`;
+    try {
+        const [result] = await pool.execute(sql);
+        res.send(result);
+    } catch (e) {
+        console.log(e.message);
+        res.send();
+    }
+};
+
+exports.dayCount = async (req, res) => {
+    try {
+        const [result] = await pool.execute(sqls);
+        res.send(result);
+    } catch (e) {
+        console.log(e.message);
+        res.send();
+    }
+};
+
+exports.statsView = async (req, res) => {
+    const {idx} = req.params;
+    let weekday;
+    if (idx % 7 === 1) {
+        weekday = 6;
+    } else {
+        weekday = idx % 7 - 2;
+    }
+    const hour = parseInt(idx/7);
+    const sql = `SELECT * FROM board WHERE weekday(date)=? AND hour(date)=?`;
+    const prepare = [weekday, hour];
+    try {
+        const [result] = await pool.execute(sql, prepare);
+        res.send(result);
+    } catch (e) {
+        console.log(e.message);
+        res.send();
+    }
+};
+
+exports.day = async (req, res) => {
+    const {day} = req.body;
+    const sql = `SELECT * FROM board WHERE weekday(date)=?`;
+    const prepare = [day];
+    try {
+        const [result] = await pool.execute(sql,prepare);
+        res.send(result);
+    } catch (e) {
+        console.log(e.message);
+        res.send();
+    }
+};
+
+exports.time = async (req, res) => {
+    const {time} = req.body;
+    const sql = `SELECT * FROM board WHERE hour(date)=?`;
+    const prepare = [time];
+    try {
+        const [result] = await pool.execute(sql, prepare);
+        res.send(result);
+    } catch (e) {
+        console.log(e.message);
+        res.send();
+    }
 };
