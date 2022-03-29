@@ -1,0 +1,40 @@
+* {
+    margin: 0;
+    padding: 0;
+    font-family: 'Arvo', 'nanumsquare', serif;
+    background-color: #eee;
+}
+
+a {
+    text-decoration: none;
+    text-align: center;
+    color: black;
+}
+
+h1, #home, #menu {
+    display: flex;
+    justify-content: center;
+}
+
+span:nth-child(1) {
+    margin-right: 30px;
+}
+
+table {
+    width: 50%;
+    margin: 0 auto;
+}
+
+td, th {
+    width: 10%;
+    padding: 3px 5px;
+    text-align: center;
+}
+
+td:nth-child(1), th:nth-child(1) {
+    width: 20%;
+}
+
+th {
+    background-color: rgb(253, 253, 120);
+}

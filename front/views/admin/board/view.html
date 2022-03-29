@@ -6,6 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin</title>
     <script type="text/javascript" src="https://unpkg.com/axios@0.26.0/dist/axios.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="/admin/board_view.css">
+    <link href='https://fonts.googleapis.com/css?family=Arvo' rel='stylesheet' type='text/css'>
+    <style>
+        @import url('https://cdn.rawgit.com/moonspam/NanumSquare/master/nanumsquare.css');
+    </style>
     <script type="text/javascript">
         document.addEventListener('DOMContentLoaded', async ()=>{
             const option = {withCredentials:true};
@@ -14,32 +19,45 @@
             const view = document.querySelector('#view');
             const response = await axios.post(`http://localhost:3000/api/admin/board/view/${idx}`, null, option);
             const {subject, nickname, date, content, hit, good, imageName} = response.data[0];
-            template = template.replace('{idx}', idx)
-                                .replace('{subject}', subject)
-                                .replace('{nickname}', nickname)
-                                .replace('{date}', date.split('T')[0])
-                                .replace('{content}', content)
-                                .replace('{hit}', hit)
-                                .replace('{good}', good)
-                                .replace('{imageName}', imageName);
+            template = template.replaceAll('{idx}', idx)
+                                .replaceAll('{subject}', subject)
+                                .replaceAll('{nickname}', nickname)
+                                .replaceAll('{date}', date.split('T')[0])
+                                .replaceAll('{content}', content)
+                                .replaceAll('{hit}', hit)
+                                .replaceAll('{good}', good);
             view.innerHTML = template;
+            const imgBox = document.querySelector('#imgBox');
+            const img = document.querySelector('#img');
+            const fileLength = imageName.match(/filename/g).length;
+            let tmp;
+            for (let i = 0; i < fileLength; i++) {
+                tmp = img.innerHTML.replace('{image}', imageName.split('"')[30*(i+1)-1].split('public/')[1]);
+                imgBox.innerHTML += tmp;
+            }
         });
     </script>
 </head>
 <body>
-    Board View
+    <h1>Board View</h1>
     <div id="view"></div>
     <template>
-        <ul>
-            <li>No. {idx}</li>
-            <li>Subject : {subject}</li>
-            <li>Nickname : {nickname}</li>
-            <li>Date : {date}</li>
-            <li>Content : {content}</li>
-            <li>Hit : {hit}</li>
-            <li>Good : {good}</li>
-            <li>Image : {imageName}</li>
-        </ul>
+        <div id="container">
+            <span><strong>No. </strong>{idx}</span>
+            <span><strong>Subject : </strong>{subject}</span>
+            <span><strong>Nickname : </strong>{nickname}</span>
+            <span><strong>Date : </strong>{date}</span>
+            <div id="imgBox">
+                <template id="img">
+                    <img src="http://localhost:3000/{image}" width="300px" height="200px">
+                </template>
+            </div>
+            <div>
+                <strong>Content : </strong>{content}
+            </div>
+            <span><strong>Hit : </strong>{hit}</span>
+            <span><strong>Good : </strong>{good}</span>
+        </div>
     </template>
 </body>
 </html>

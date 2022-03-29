@@ -6,20 +6,264 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin</title>
     <script type="text/javascript" src="https://unpkg.com/axios@0.26.0/dist/axios.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="/admin/stats.css">
+    <link href='https://fonts.googleapis.com/css?family=Arvo' rel='stylesheet' type='text/css'>
+    <style>
+        @import url('https://cdn.rawgit.com/moonspam/NanumSquare/master/nanumsquare.css');
+    </style>
     <script type="text/javascript">
         document.addEventListener('DOMContentLoaded', async ()=>{
-            const response = await axios.post('http://localhost:3000/api/admin/stats', null, {
-                withCredentials:true,
+            const option = {withCredentials:true};
+            const menu = document.querySelector('#menu');
+            let menuIn = document.querySelector('#menuIn').innerHTML;
+            const dayCounts = document.querySelector('#dayCounts');
+            let dayCount = document.querySelector('#dayCount').innerHTML;
+            const boards = document.querySelector('#boards');
+            const board = document.querySelector('#board').innerHTML;
+            const dayFrm = document.querySelector('#dayFrm');
+            const day = document.querySelector('#day');
+            const timeFrm = document.querySelector('#timeFrm');
+            const time = document.querySelector('#time');
+            const response = await axios.post('http://localhost:3000/api/admin/board', null, option);
+            let template = '';
+            response.data.forEach(v=>{
+                template += board.replace('{idx}', v.idx)
+                                .replace('{main}', v.main)
+                                .replace('{sub}', v.sub)
+                                .replace('{subject}', v.subject)
+                                .replace('{nickname}', v.nickname)
+                                .replace('{date}', v.date.split('T')[0])
+                                .replace('{hit}', v.hit)
+                                .replace('{good}', v.good)
+                                .replace('{active}', v.active);
+            });
+            boards.innerHTML = template;
+            const subject = document.querySelectorAll('.subject');
+            let cnt = 0;
+            response.data.forEach(v=>{
+                const aElement = document.createElement('a');
+                aElement.href = '/admin/board/view/'+v.idx;
+                aElement.innerHTML = v.subject;
+                subject[cnt].appendChild(aElement);
+                cnt++;
+            });
+
+            const response2 = await axios.post('http://localhost:3000/api/admin/stats/hitNgood', null, option);
+            const {hit, good} = response2.data[0];
+            menuIn = menuIn.replace('{hits}', hit)
+                        .replace('{goods}', good);
+            menu.innerHTML = menuIn;
+
+            const response3 = await axios.post('http://localhost:3000/api/admin/stats/dayCount', null, option);
+            let tmp = '';
+            for (let i = 0; i < 24; i++) {
+                if (i < 10) {
+                    tmp += dayCount.replaceAll('{hour}', '0'+i)
+                                    .replaceAll('{idx1}', i*7+1)
+                                    .replaceAll('{idx2}', i*7+2)
+                                    .replaceAll('{idx3}', i*7+3)
+                                    .replaceAll('{idx4}', i*7+4)
+                                    .replaceAll('{idx5}', i*7+5)
+                                    .replaceAll('{idx6}', i*7+6)
+                                    .replaceAll('{idx7}', i*7+7)
+                                    .replaceAll('{sun}', response3.data[i].sun)
+                                    .replaceAll('{mon}', response3.data[i].mon)
+                                    .replaceAll('{tue}', response3.data[i].tue)
+                                    .replaceAll('{wed}', response3.data[i].wed)
+                                    .replaceAll('{thu}', response3.data[i].thu)
+                                    .replaceAll('{fri}', response3.data[i].fri)
+                                    .replaceAll('{sat}', response3.data[i].sat);
+                } else {
+                    tmp += dayCount.replaceAll('{hour}', i)
+                                    .replaceAll('{idx1}', i*7+1)
+                                    .replaceAll('{idx2}', i*7+2)
+                                    .replaceAll('{idx3}', i*7+3)
+                                    .replaceAll('{idx4}', i*7+4)
+                                    .replaceAll('{idx5}', i*7+5)
+                                    .replaceAll('{idx6}', i*7+6)
+                                    .replaceAll('{idx7}', i*7+7)
+                                    .replaceAll('{sun}', response3.data[i].sun)
+                                    .replaceAll('{mon}', response3.data[i].mon)
+                                    .replaceAll('{tue}', response3.data[i].tue)
+                                    .replaceAll('{wed}', response3.data[i].wed)
+                                    .replaceAll('{thu}', response3.data[i].thu)
+                                    .replaceAll('{fri}', response3.data[i].fri)
+                                    .replaceAll('{sat}', response3.data[i].sat);
+                }
+            }
+            dayCounts.innerHTML = tmp;
+
+            dayFrm.addEventListener('submit', async (e)=>{
+                e.preventDefault();
+                const body = {
+                    day:day.value
+                };
+                const response = await axios.post('http://localhost:3000/api/admin/stats/day', body, option);
+                template = '';
+                response.data.forEach(v=>{
+                    template += board.replace('{idx}', v.idx)
+                                    .replace('{main}', v.main)
+                                    .replace('{sub}', v.sub)
+                                    .replace('{subject}', v.subject)
+                                    .replace('{nickname}', v.nickname)
+                                    .replace('{date}', v.date.split('T')[0])
+                                    .replace('{hit}', v.hit)
+                                    .replace('{good}', v.good)
+                                    .replace('{active}', v.active);
+                });
+                boards.innerHTML = template;
+                const subject = document.querySelectorAll('.subject');
+                let cnt = 0;
+                response.data.forEach(v=>{
+                    const aElement = document.createElement('a');
+                    aElement.href = '/admin/board/view/'+v.idx;
+                    aElement.innerHTML = v.subject;
+                    subject[cnt].appendChild(aElement);
+                    cnt++;
+                });
+            });
+
+            timeFrm.addEventListener('submit', async (e)=>{
+                e.preventDefault();
+                const body = {
+                    time:time.value
+                };
+                const response = await axios.post('http://localhost:3000/api/admin/stats/time', body, option);
+                template = '';
+                response.data.forEach(v=>{
+                    template += board.replace('{idx}', v.idx)
+                                    .replace('{main}', v.main)
+                                    .replace('{sub}', v.sub)
+                                    .replace('{subject}', v.subject)
+                                    .replace('{nickname}', v.nickname)
+                                    .replace('{date}', v.date.split('T')[0])
+                                    .replace('{hit}', v.hit)
+                                    .replace('{good}', v.good)
+                                    .replace('{active}', v.active);
+                });
+                boards.innerHTML = template;
+                const subject = document.querySelectorAll('.subject');
+                let cnt = 0;
+                response.data.forEach(v=>{
+                    const aElement = document.createElement('a');
+                    aElement.href = '/admin/board/view/'+v.idx;
+                    aElement.innerHTML = v.subject;
+                    subject[cnt].appendChild(aElement);
+                    cnt++;
+                });
             });
         });
     </script>
 </head>
 <body>
     <h1><a href="/admin/stats">Stats</a></h1>
-    <a href="/admin">Home</a>
-    <ul>
-        <li><strong>Total Hit : </strong>{hit}</li>
-        <li><strong>Total Good : </strong>{good}</li>
-    </ul>
+    <div id="menu"></div>
+    <table id="excel" cellspacing="0" cellpadding="0" border="1">
+        <thead>
+            <tr>
+                <th>시간/요일</th>
+                <th>Sun</th>
+                <th>Mon</th>
+                <th>Tue</th>
+                <th>Wed</th>
+                <th>Thu</th>
+                <th>Fri</th>
+                <th>Sat</th>
+            </tr>
+        </thead>
+        <tbody id="dayCounts"></tbody>
+    </table>
+    <form method="post" id="dayFrm" action="http://localhost:3000/api/admin/stats/day">
+        <select name="day" id="day">
+            <option value="7">요일 선택</option>
+            <option value="6">Sun</option>
+            <option value="0">Mon</option>
+            <option value="1">Tue</option>
+            <option value="2">Wed</option>
+            <option value="3">Thu</option>
+            <option value="4">Fri</option>
+            <option value="5">Sat</option>
+        </select>
+        <input type="submit" value="Select">
+    </form>
+    <form method="post" id="timeFrm" action="http://localhost:3000/api/admin/stats/time">
+        <select name="time" id="time">
+            <option value="-">시간 선택</option>
+            <option value="0">00:00 ~ 00:59</option>
+            <option value="1">01:00 ~ 01:59</option>
+            <option value="2">02:00 ~ 02:59</option>
+            <option value="3">03:00 ~ 03:59</option>
+            <option value="4">04:00 ~ 04:59</option>
+            <option value="5">05:00 ~ 05:59</option>
+            <option value="6">06:00 ~ 06:59</option>
+            <option value="7">07:00 ~ 07:59</option>
+            <option value="8">08:00 ~ 08:59</option>
+            <option value="9">09:00 ~ 09:59</option>
+            <option value="10">10:00 ~ 10:59</option>
+            <option value="11">11:00 ~ 11:59</option>
+            <option value="12">12:00 ~ 12:59</option>
+            <option value="13">13:00 ~ 13:59</option>
+            <option value="14">14:00 ~ 14:59</option>
+            <option value="15">15:00 ~ 15:59</option>
+            <option value="16">16:00 ~ 16:59</option>
+            <option value="17">17:00 ~ 17:59</option>
+            <option value="18">18:00 ~ 18:59</option>
+            <option value="19">19:00 ~ 19:59</option>
+            <option value="20">20:00 ~ 20:59</option>
+            <option value="21">21:00 ~ 21:59</option>
+            <option value="22">22:00 ~ 22:59</option>
+            <option value="23">23:00 ~ 23:59</option>
+        </select>
+        <input type="submit" value="Select">
+    </form>
+    <table cellspacing="0" cellpadding="0" border="1">
+        <thead>
+            <tr id="title">
+                <th>No.</th>
+                <th>Main Category</th>
+                <th>Sub Category</th>
+                <th>Subject</th>
+                <th>Nickname</th>
+                <th>Date</th>
+                <th>Hit</th>
+                <th>Good</th>
+                <th>Active</th>
+            </tr>
+        </thead>
+        <tbody id="boards"></tbody>
+    </table>
+    <div></div>
+    <template id="board">
+        <tr>
+            <td>{idx}</td>
+            <td>{main}</td>
+            <td>{sub}</td>
+            <td class="subject"></td>
+            <td>{nickname}</td>
+            <td>{date}</td>
+            <td>{hit}</td>
+            <td>{good}</td>
+            <td>{active}</td>
+        </tr>
+    </template>
+
+    <template id="dayCount">
+        <tr>
+            <td>{hour}:00 ~ {hour}:59</td>
+            <td><a href="/admin/stats/view/{idx1}">{sun}</a></td>
+            <td><a href="/admin/stats/view/{idx2}">{mon}</a></td>
+            <td><a href="/admin/stats/view/{idx3}">{tue}</a></td>
+            <td><a href="/admin/stats/view/{idx4}">{wed}</a></td>
+            <td><a href="/admin/stats/view/{idx5}">{thu}</a></td>
+            <td><a href="/admin/stats/view/{idx6}">{fri}</a></td>
+            <td><a href="/admin/stats/view/{idx7}">{sat}</a></td>
+        </tr>
+    </template>
+
+    <template id="menuIn">
+        <a href="/admin">Home</a>
+        <span><strong>Total Hit : </strong>{hits}</span>
+        <span><strong>Total Good : </strong>{goods}</span>
+    </template>
 </body>
 </html>
