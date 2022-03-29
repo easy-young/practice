@@ -5,6 +5,7 @@ const app = express()
 const router = require('./routes/index.js')
 const cookieParser = require('cookie-parser')
 
+
 app.set('view engine','html')
 nunjucks.configure('views',{
     express:app,
@@ -16,16 +17,14 @@ app.use(express.static('public'));
 
 
 app.get('/',(req,res)=>{
-    let userData;
-    if(req.headers.cookie == undefined){
-        userData = 0;
+
+    if(req.cookies.userData){
         res.render('main.html',{
-            userData,
+            userData:req.cookies.userData
         })
     } else {
-        userData = 1;
         res.render('main.html',{
-            userData,
+            userData:req.cookies.userData
         })
     }
 })

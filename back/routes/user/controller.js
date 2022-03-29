@@ -22,7 +22,7 @@ exports.join = async (req,res)=>{
         ?,?
     )`
 
-    const prepare = [ userid, userpw, userimage, name, nickname,
+    const prepare = [ userid, userpw, userimage, name, nickname,        
                      birth, address, gender, tel, phone, email,
                      intro ];
 
@@ -84,7 +84,7 @@ exports.login = async (req,res)=>{
             secure:true,
             domain:'localhost'
         })
-        res.cookie('userData',{userid:userid, nickname:nickname},{
+        res.cookie('userData',{userid:userid, nickname:nickname,isLogin:true},{
             path:'/',
             httpOnly:true,
             secure:true,
@@ -161,6 +161,7 @@ exports.profileUpdate = async (req,res)=>{
 exports.logout = (req,res) => {
     const cookie = req.headers.cookie.split('=')[0]
     res.clearCookie(cookie)
+    res.clearCookie('userData')
     res.json({})
 }
 
