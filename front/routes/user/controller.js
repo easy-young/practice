@@ -52,20 +52,21 @@ exports.oauthKakao = async (req,res)=>{
         const nickname = userinfo.data.kakao_account.profile.nickname
         const userimage = userinfo.data.kakao_account.profile.profile_image_url
         // nickname,userimage
-        // const result = {nickname,userimage,email}
-        // const jwt = createToken({...result})
+        const result = {nickname,userimage,email}
+        const jwt = createToken({...result})
         
-        // res.cookie('kakaoToken',jwt,{
-        //     path:'/',
-        //     httpOnly:true,
-        //     secure:true,
-        //     domain:'localhost',
-        //     maxAge: 1000
-        // })
+        res.cookie('kakaoToken',jwt,{
+            path:'/',
+            httpOnly:true,
+            secure:true,
+            domain:'localhost',
+            // maxAge: 5000
+        })
         // const userData = req.cookies.kakaoToken
         const body1 = {
             nickname,
             email,
+            userimage,
         }
         const option1 = {
             'Content-type':'application/json',
@@ -85,9 +86,10 @@ exports.oauthKakao = async (req,res)=>{
             res.render('main.html')
 
         } else{
-            res.render('./user/kakao_join.html',{
-                data:userinfo.data.kakao_account
-            })
+            // res.render('./user/kakao_join.html',{
+            //     data:userinfo.data.kakao_account
+            // })
+            res.render('./user/kakaoAgree')
         }
     } catch (e) {
         console.log(e)
@@ -98,8 +100,12 @@ exports.join = (req,res)=>{
     res.render('./user/join.html')
 }
 
-exports.kakaoJoin = (req,res)=>{
+exports.kakaoJoin = async (req,res)=>{    
     res.render('./user/kakao_join.html')
+}
+
+exports.agree = (req,res)=>{
+    res.render('./user/agree.html')
 }
 
 exports.profile = (req,res)=>{

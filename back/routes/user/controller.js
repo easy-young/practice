@@ -23,8 +23,7 @@ exports.join = async (req,res)=>{
     )`
 
     const prepare = [ userid, userpw, userimage, name, nickname,
-                     birth, address, gender, tel, phone, email,
-                     intro ];
+                     birth, address, gender, tel, phone, email, intro ];
 
     const [ result ] = await pool.execute(sql,prepare);
 
@@ -35,11 +34,9 @@ exports.join = async (req,res)=>{
         httpOnly:true,
         secure:true,
         domain:'localhost',
-        maxAge: 1000
     })
 
     try {
-
         const response = {
             result:{
                 userid,
@@ -175,8 +172,6 @@ exports.profile = async (req,res) => {
         
         res.json(result)
     } else if(cookie == 'kakaoToken'){
-        // console.log(cookie) // kakaoToken
-
         const {email} = user
         const sql = `SELECT * FROM user WHERE email=?`
         const prepare = [email]
@@ -213,8 +208,6 @@ exports.profileUpdate = async (req,res)=>{
         birth = birth[0]+birth[1]+birth[2]
         tel = tel[0]+tel[1]+tel[2]
         email = email[0]+'@'+email[1]
-        console.log('로컬',userid,userpw,userimage,name,nickname,address,gender,intro,phone, birth, tel, email)
-        
     
         try {
             const sql = `UPDATE user SET userpw=?, userimage=?, name=?, nickname=?, birth=?,
@@ -231,34 +224,37 @@ exports.profileUpdate = async (req,res)=>{
             console.log('중복된 닉네임 임다')
             res.redirect('http://localhost:3001/user/profileUpdate')
         }
-    } else if(cookie == 'kakaoToken'){
-        const {email} = user
-        const sql = `SELECT * FROM user WHERE email=?`
+    } else if (cookie == 'kakaoToken'){
+        let {email} = req.body
+        email = email[0]+'@'+email[1]
+
+        const sql = `SELECT userid FROM user WHERE email=?`
         const prepare = [email]
         let [[result]] = await pool.execute(sql,prepare)
 
-        const {userid,userpw,userimage,name,nickname,address,gender,intro} = result
-        let {phone, birth, tel} = result
-        birth = JSON.stringify(birth).split('"')[1].split('T')[0].split('-')
+        let {userid} = result
+
+        let {userpw,userimage,name,nickname,birth,address,gender,tel,phone,intro} = req.body
         birth = birth[0]+birth[1]+birth[2]
+        tel = tel[0]+tel[1]+tel[2]
+        phone = phone[0]+phone[1]+phone[2]
 
+        
 
-        try {
-            const sql = `UPDATE user SET userpw=?, userimage=?, name=?, nickname=?, birth=?,
-            address=?, gender=?, tel=?, phone=?, email=?, intro=? WHERE userid=?`
-            const prepare = [ userpw, userimage, name, nickname, birth,address,
-                              gender, tel, phone, email, intro, userid ]
-            const [[result]] = await pool.execute(sql,prepare)
+        const sql1 = `UPDATE user SET userpw=?, userimage=?, name=?,
+                                      nickname=?, birth=?, address=?,
+                                      gender=?, tel=?, phone=?,
+                                      intro=? WHERE userid=?`
 
-            res.json(result)
-        } catch(e){
-            console.log(e.message)
-            const err = 1062
-            res.json({err})
-            res.redirect('http://localhost:3001/user/profileUpdate')
-        }
+        const prepare1 = [ userpw, userimage, name,
+                           nickname, birth,address,
+                           gender, tel, phone,
+                           intro, userid ]
+
+        const [result1] = await pool.execute(sql1,prepare1)
+        
+        res.json(result1)
     }
-    
 }
 
 exports.logout = (req,res) => {
@@ -268,15 +264,29 @@ exports.logout = (req,res) => {
 }
 
 exports.resign = async (req,res) => {
-    const {userid} = req.user
-    const sql = `DELETE FROM user WHERE userid=?`
-    const prepare = [userid]
-    const [result] = await pool.execute(sql,prepare)
+    const token = req.headers.cookie.split('=')[0]
 
-    res.clearCookie('token')
-    res.clearCookie('userData')
+    if(token ==='token'){
+        const {userid} = req.user
+        const sql = `DELETE FROM user WHERE userid=?`
+        const prepare = [userid]
+        const [result] = await pool.execute(sql,prepare)
 
-    res.json({})
+        res.clearCookie('token')
+        res.clearCookie('userData')
+        res.json({})
+
+    } else if(token ==='kakaoToken'){
+        const cookie = req.headers.cookie.split('=')[1].split('.')[1]
+        const user = JSON.parse(Buffer.from(cookie,'base64').toString('utf-8'))
+        const {email} = user
+        const sql = `DELETE FROM user WHERE email=?`
+        const prepare = [email]
+        const [result] = await pool.execute(sql,prepare)
+
+        res.clearCookie('kakaoToken')
+        res.json({})
+    }
 }
 
 exports.welcome = async (req,res) => {
@@ -355,7 +365,6 @@ exports.Auth = async (req,res)=>{
             try{
                 const cookie = req.body.cookie.split('=')[1].split('.')[1]
                 const user = JSON.parse(Buffer.from(cookie,'base64').toString('utf-8'))
-                console.log(user)
                 
                 const response = {
                     errno:0,
@@ -384,8 +393,8 @@ exports.Auth = async (req,res)=>{
 }
 
 exports.kakaoJoinAuth = async (req,res)=>{
-    const {nickname,email} = req.body
-    const sql = `SELECT userid FROM user WHERE nickname=? and email=?`
+    const {nickname,email,userimage} = req.body
+    const sql = `SELECT * FROM user WHERE nickname=? and email=?`
     const prepare = [nickname, email]
     const [[result]] = await pool.execute(sql,prepare)
     let response
@@ -398,5 +407,18 @@ exports.kakaoJoinAuth = async (req,res)=>{
             errno:1
         }
     }
+    res.json(response)
+}
+
+exports.kakaoJoinAuth2 = async (req,res)=>{
+    const cookie = req.headers.cookie.split('=')[1].split('.')[1]
+    const user = JSON.parse(Buffer.from(cookie,'base64').toString('utf-8'))
+    const {email,nickname,userimage} = user
+    const response = {
+        email,
+        nickname,
+        userimage
+    }
+    // res.clearCookie(cookie)
     res.json(response)
 }

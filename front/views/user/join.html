@@ -30,11 +30,11 @@
             </li>
             <li>
                 <strong>이름</strong>
-                <input type="text" name="name" id="name" minlength="4" maxlength="10">
+                <input type="text" name="name" id="name" minlength="2" maxlength="10">
             </li>
             <li>
                 <strong>닉네임</strong>
-                <input type="text" name="nickname" id="nickname" minlength="4" maxlength="10">
+                <input type="text" name="nickname" id="nickname" minlength="2" maxlength="10">
             </li>
             <li>
                 <strong>생년월일 :</strong>
@@ -126,34 +126,45 @@
             const email2 = document.querySelector('#email2').value
             const intro = document.querySelector('#intro').value
 
-            const body = {
-                userid,
-                userpw,
-                userimage,
-                name,
-                nickname,
-                birth:[year,month,day],
-                address,
-                gender,
-                tel:[tel1,tel2,tel3],
-                phone:[phone1,phone2,phone3],
-                email:[email1,email2],
-                intro
-            }
-
-            const option = {
-                'Content-type':'application/json',
-                withCredentials:true,
-            }
-
             try {
-                const response = await axios.post('http://localhost:3000/user/join',body,option)
-                if(response.data.errno !==0) throw new Error('Error')
-                
-                location.href='http://localhost:3001/user/welcome'
-            } catch (e) {
-                alert('ID 나 닉네임이 중복입니다.')
+                if(userid=='' || userpw=='' || name=='' || nickname=='' || year=='' || month=='' ||
+                   day=='' || gender=='' || email1=='' || email2=='' || intro=='') throw new Error
+
+                const body = {
+                    userid,
+                    userpw,
+                    userimage,
+                    name,
+                    nickname,
+                    birth:[year,month,day],
+                    address,
+                    gender,
+                    tel:[tel1,tel2,tel3],
+                    phone:[phone1,phone2,phone3],
+                    email:[email1,email2],
+                    intro
+                }
+
+                const option = {
+                    'Content-type':'application/json',
+                    withCredentials:true,
+                }
+
+                try {
+                    const response = await axios.post('http://localhost:3000/user/join',body,option)
+                    if(response.data.errno !==0) throw new Error('Error')
+                    
+                    location.href='http://localhost:3001/user/welcome'
+                } catch (e) {
+                    console.log(e.message)
+                    alert('ID 나 닉네임이 중복입니다.')
+                }
+
+            } catch(e){
+                console.log(e.message)
+                alert('빈값 다 채워라 디지기싫으면')
             }
+            
         })
     </script>
 </body>

@@ -5,6 +5,7 @@ const controller = require('./controller.js')
 router.post('/join',controller.join);
 router.post('/kakaoJoin',controller.kakaoJoin);
 router.post('/kakaoJoinAuth',controller.kakaoJoinAuth);
+router.post('/kakaoJoinAuth2',controller.kakaoJoinAuth2);
 router.post('/welcome',controller.welcome);
 router.post('/kakaoWelcome',controller.kakaoWelcome);
 router.post('/login',controller.login);
