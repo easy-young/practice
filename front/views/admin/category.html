@@ -7,10 +7,8 @@
     <title>Admin</title>
     <script type="text/javascript" src="https://unpkg.com/axios@0.26.0/dist/axios.min.js"></script>
     <link type="text/css" rel="stylesheet" href="/admin/category.css">
-    <link href='https://fonts.googleapis.com/css?family=Arvo' rel='stylesheet' type='text/css'>
-    <style>
-        @import url('https://cdn.rawgit.com/moonspam/NanumSquare/master/nanumsquare.css');
-    </style>
+    <link type="text/css" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Arvo">
+    <link type="text/css" rel="stylesheet" href="https://cdn.rawgit.com/moonspam/NanumSquare/master/nanumsquare.css">
     <script type="text/javascript">
         document.addEventListener('DOMContentLoaded', init);
         async function init() {
@@ -25,13 +23,15 @@
             const trHead = document.querySelector('#trHead');
             const thDelete = document.querySelector('#delete');
             let template = '';
+            let code = 1;
 
             submitBtn.style.visibility = 'hidden';
             const response = await axios.post('http://localhost:3000/api/admin/category', null, option);
             response.data.forEach(v=>{
-                template += category.replace('{code}', v.code)
+                template += category.replace('{code}', code)
                                     .replace('{main}', v.main)
                                     .replace('{sub}', v.sub);
+                code++;
             });
             categories.innerHTML = template;
 
@@ -42,7 +42,10 @@
                     main:main.value,
                     sub:sub.value
                 };
+                // console.log(body);
+                // console.log(template);
                 const response = await axios.post('http://localhost:3000/api/admin/categoryAdd', body, option);
+                // console.log(response.data);
                 let arr = response.data;
                 if (response.data === 'duplicate') {
                     alert('이미 존재하는 카테고리입니다.');
@@ -50,58 +53,50 @@
                     const main2 = arr[0];
                     const sub2 = arr[1];
                     alert(`
-                            카테고리가 추가되었습니다.\n
+                            카테고리가 추가되었습니다.
                             메인 카테고리 : ${main2}
                             서브 카테고리 : ${sub2}`);
-                    init();
+                    template += category.replace('{code}', code)
+                                        .replace('{main}', main2)
+                                        .replace('{sub}', sub2);
+                    categories.innerHTML = template;
+                    code++;
+                    // location.href = 'http://localhost:3001/admin/category';
                 }
             });
 
-            let cnt = 1;
             modifybtn.addEventListener('click', modifyFunc);
             async function modifyFunc() {
-                if (cnt%2 === 1) {
-                    submitBtn.style.visibility = 'visible';
-                    trHead.innerHTML += thDelete.innerHTML;
-                    const response = await axios.post('http://localhost:3000/api/admin/category', null, option);
-                    let num = 1;
-                    template = '';
-                    response.data.forEach(v=>{
-                        template += categoryModify.replaceAll('{num}', num)
-                                                .replace('{code}', v.code)
-                                                .replace('{main}', v.main)
-                                                .replace('{sub}', v.sub);
-                        num++;
-                    });
-                    categories.innerHTML = template;
-
-                    const del = document.querySelectorAll('.del');
-                    for (let i = 0; i < del.length; i++) {
-                        del[i].addEventListener('click', async (e)=>{
-                            e.preventDefault();
-                            let delNum = del[i].id.split('l')[1];
-                            const body = {
-                                num:delNum
-                            };
-                            const response = await axios.post('http://localhost:3000/api/admin/categoryDelete', body, option);
-                            modifyFunc();
-                        });
-                    }
-                } else {
-                    submitBtn.style.visibility = 'hidden';
-                    template = '';
-                    const response = await axios.post('http://localhost:3000/api/admin/category', null, option);
-                    response.data.forEach(v=>{
-                        template += category.replace('{code}', v.code)
+                submitBtn.style.visibility = 'visible';
+                trHead.innerHTML += thDelete.innerHTML;
+                const response = await axios.post('http://localhost:3000/api/admin/category', null, option);
+                let num = 1;
+                template = '';
+                response.data.forEach(v=>{
+                    template += categoryModify.replaceAll('{num}', num)
+                                            .replace('{code}', num)
                                             .replace('{main}', v.main)
                                             .replace('{sub}', v.sub);
+                    num++;
+                });
+                categories.innerHTML = template;
+
+                const del = document.querySelectorAll('.del');
+                for (let i = 0; i < del.length; i++) {
+                    del[i].addEventListener('click', async (e)=>{
+                        e.preventDefault();
+                        let delNum = del[i].id.split('l')[1];
+                        const body = {
+                            num:delNum
+                        };
+                        const response = await axios.post('http://localhost:3000/api/admin/categoryDelete', body, option);
+                        modifyFunc();
                     });
-                    categories.innerHTML = template;
-                    trHead.innerHTML = `<th>Code</th>
-                                        <th>Main Category</th>
-                                        <th>Sub Category</th>`;
                 }
-                cnt++;
+                trHead.innerHTML = `<th>Code</th>
+                                    <th>Main Category</th>
+                                    <th>Sub Category</th>
+                                    <th>Delete</th>`;
             };
 
             num = 1;
@@ -121,6 +116,9 @@
                     sub:subModify
                 };
                 const response = await axios.post('http://localhost:3000/api/admin/categoryModify', body, option);
+                trHead.innerHTML = `<th>Code</th>
+                                        <th>Main Category</th>
+                                        <th>Sub Category</th>`;
                 init();
             });
         };
@@ -137,7 +135,7 @@
         <table cellspacing="0" cellpadding="0" border="1">
             <thead>
                 <tr id="trHead">
-                    <th>Code</th>
+                    <th>No.</th>
                     <th>Main Category</th>
                     <th>Sub Category</th>
                     <template id="delete">
@@ -151,8 +149,8 @@
 
     <form method="post" id="add" action="http://localhost:3000/api/admin/categoryAdd">
         <strong>Add</strong>
-        <div><strong>Main Category :</strong><input type="text" name="main" id="main" placeholder="Main Category"></div>
-        <div><strong>Sub Category :</strong><input type="text" name="sub" id="sub" placeholder="Sub Category"></div>
+        <div><strong>Main Category :</strong><input type="text" name="main" id="main" placeholder="Main Category" maxlength="10"></div>
+        <div><strong>Sub Category :</strong><input type="text" name="sub" id="sub" placeholder="Sub Category" maxlength="10"></div>
         <input type="submit" id="addBtn" value="Submit">
     </form>
 
