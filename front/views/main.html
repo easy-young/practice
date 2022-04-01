@@ -7,7 +7,7 @@
     <title>Document</title>
     {% include "./header.html" %}
    
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>]
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="https://momentjs.com/downloads/moment.min.js"></script>
     <script type="text/javascript">
   
@@ -35,18 +35,15 @@
                 let list= response.data.data
                 list.map((item)=>{
                     console.log(JSON.parse(item.imageName).upload[0].path.replace('public/','') )
-                    
-                    // <img src="http://localhost:3000/uploades/${item.imageName}" alt="post image"/>
-                    //${JSON.parse(item.imageName).length!==0?`<div class="image"><img src="http://localhost:3000/${JSON.parse(item.imageName)[0].path}" alt="post image"/></div>`:''}
                     const url=`http://localhost:3000/${JSON.parse(item.imageName).upload[0].path.replace('public/','')}`
                     innerData+=`<div class="">
-                        <div class="card post-wrapper" onclick="moveHandler(${item.idx} , ${item.hit})">
+                        <div class="" onclick="moveHandler(${item.idx} , ${item.hit})">
                             <div class="image"><img src="${url}" alt="post image"/></div>
-                        <div class="card-header subject">${item.subject.substr(0,20)}</div>
+                        <div class="">${item.subject.substr(0,20)}</div>
                         
-                        <div class=" card-body content">${item.content.length>20? `${item.content.substr(0,20)}...`:item.content}</div>
+                        <div class=" ">${item.content.length>20? `${item.content.substr(0,20)}...`:item.content}</div>
                         <hr/>
-                        <div class="card-footer">
+                        <div class="">
                             <div class="date"> ${moment(item.date).format('YYYY MM-DD hh:mm:s')}</div>
                         <div class="hit">${item.hit}</div>
                         <div class="good">${item.good}</div>
@@ -76,30 +73,31 @@
         padding:20px 20px;
       
     }
-
+    .post-wrapper{
+        cursor: pointer;
+        width:400px;
+        float: left;
+        border: 1px solid #999999;
+        padding:20px 20px;
+        margin:5px 5px;
+        border-radius: 8px;
+    }
+    .post-wrapper .image img{
+        width:100%;
+        height:200px;
+        object-fit: cover;
+    }
+    .post-wrapper .subject{}
+    .post-wrapper .content{}
+    .post-wrapper .nickname{}
+    .post-wrapper .hit{}
+    .post-wrapper .good{}
+    .post-wrapper .date{}
 </style>
 
  
 </head>
 <body>
-    <!-- <div>
-        <h1>
-            <a href="/">Logo</a>    
-        </h1>
-        {% if userData == 0 %}
-        <a href="/user/login">로그인</a>
-        <a href="/user/join">회원가입</a>
-
-        {% else %}
-        <a href="/board/write">글쓰기</a>
-        <a href="" id="logout">로그아웃</a>
-        <a href="/user/profile">My Profile</a>
-        
-        {% endif %}
-  
-        
-   
-    </div> -->
     {% include "./nav.html" %}
    
       
@@ -134,7 +132,7 @@
 
 
 
-{% include "./footer.html" %}
+
 
 </body>
 </html>

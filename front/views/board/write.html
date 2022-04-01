@@ -25,30 +25,26 @@
     </h1>
 
     <div class="container">
-        <div class="d-flex justify-content-between">
-            <!-- 드롭다운 그룹 -->
-            <div class="btn-group">
-                <!-- 메인 드롭다운 -->
-                <div class="dropdown">
-                    <button class="btn btn-secondary dropdown-toggle" type="button" id="main-category"
-                        data-bs-toggle="dropdown" aria-expanded="false">
+        <div class="">
+            <div class="">
+                <div class="">
+                    <button class="" type="button" id="main-category">
                         카테고리
                     </button>
 
-                    <ul class="dropdown-menu" aria-labelledby="main-category">
-                        <li><a class="dropdown-item" href="#" onclick="categoryHandler('중고장터')">중고장터</a></li>
-                        <li><a class="dropdown-item" href="#" onclick="categoryHandler('동네친구찾기')">동네 친구 찾기</a></li>
-                        <li><a class="dropdown-item" href="#" onclick="categoryHandler('자기자랑')">자기자랑</a></li>
-                        <li><a class="dropdown-item" href="#" onclick="categoryHandler('Hit게시판')">Hit 게시판</a></li>
-                        <li><a class="dropdown-item" href="#" onclick="categoryHandler('채팅')">채팅</a></li>
-                        <li><a class="dropdown-item" href="#" onclick="categoryHandler('신고하기')">신고하기(사기)</a></li>
+                    <ul class="" >
+                        <li><a class="" href="#" onclick="categoryHandler('중고장터')">중고장터</a></li>
+                        <li><a class="" href="#" onclick="categoryHandler('동네친구찾기')">동네 친구 찾기</a></li>
+                        <li><a class="" href="#" onclick="categoryHandler('자기자랑')">자기자랑</a></li>
+                        <li><a class="" href="#" onclick="categoryHandler('Hit게시판')">Hit 게시판</a></li>
+                        <li><a class="" href="#" onclick="categoryHandler('채팅')">채팅</a></li>
+                        <li><a class="" href="#" onclick="categoryHandler('신고하기')">신고하기(사기)</a></li>
                     </ul>
                 </div>
                 <!-- 서브드롭다운 -->
-                <div class="dropdown" style="display:none" id="sub-dropdown">
-                    <button class="btn btn-secondary dropdown-toggle" type="button" id="sub-category"
-                        data-bs-toggle="dropdown" aria-expanded="false"> </button>
-                    <ul class="dropdown-menu" aria-labelledby="sub-category" id="main-category-item">
+                <div class=""  id="sub-dropdown">
+                    <button class="" type="button" id="sub-category"> </button>
+                    <ul class=""  id="main-category-item">
                     </ul>
                 </div>
             </div>
@@ -57,34 +53,32 @@
 
 
         </div>
-        <div class="card">
-            <div class="card-header"> 글 작성 페이지 입니다.</div>
+        <div class="">
+            <div class=""> 글 작성 페이지 입니다.</div>
             <form method="post" action="/board/write" id="frm_write" enctype="multipart/form-data">
-                <div class="card-body">
-                    <div class="row mb-3">
-                        <label class="col-sm-2" for="subject" class="fw-bold">제목 :</label>
-                        <div class="col-sm-10">
+                <div class="">
+                    <div class="">
+                        <label class="" for="subject" class="">제목 :</label>
+                        <div class="">
                             <input class="form-control" type="text" name="subject" id="subject" required>
                         </div>
                     </div>
 
-                    <div class="row mb-3">
-                        <label for="upload" class="fw-bold btn btn-primary btn-block">IMAGE</label>
-                        <input type="file" name="upload" id="upload" required multiple accept="image/*"
-                            style="display:none">
+                    <div class="">
+                        <input type="file" name="upload" id="upload" required multiple accept="image/*">
                     </div>
 
 
-                    <div class="row mb-3">
-                        <label class="col-sm-2" for="content" class="fw-bold">내용 :</label>
-                        <div class="col-sm-10">
-                            <textarea class="form-control" name="content" id="content" required></textarea>
+                    <div class="">
+                        <label class="" for="content" class="">내용 :</label>
+                        <div class="">
+                            <textarea class="" name="content" id="content" required></textarea>
                         </div>
                     </div>
 
                 </div>
-                <div class="card-footer">
-                    <input class="btn btn-primary btn-sm" type="submit" value="글 게시하기">
+                <div class="">
+                    <input class="" type="submit" value="글 게시하기">
                 </div>
             </form>
         </div>
@@ -159,7 +153,7 @@
             }
             for (let i = 0; i < array.length; i++) {
                 const item = array[i];
-                innerHTML += `<li><a class="dropdown-item" onclick="subHandler('${item.value}')">${item.label}</a></li> `
+                innerHTML += `<li><a class="" onclick="subHandler('${item.value}')">${item.label}</a></li> `
             }
             subCategory.innerText=subButtonText
             items.innerHTML = innerHTML
@@ -225,7 +219,6 @@
 
 
 
-{% include "../footer.html" %}
 </body>
 
 </html>
