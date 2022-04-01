@@ -7,7 +7,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-    {% include "../header.html" %}
 
     <style>
         .image-wrapper img {
@@ -287,12 +286,9 @@
             async  function submitHandler(e) {
                 e.preventDefault()
                 const { input } = e.target
-                // const { replay: { length } } = state
                 const counting = e.target.querySelector('h4 > span')
 
-                // // 삼항연산자
-                // const idx_ = length != 0 ? parseInt(state.replay[length - 1].idx + 1) : 1
-                const [, , , idx] = location.pathname.split('/') // []
+                const [, , , idx] = location.pathname.split('/')
                 const result = {  userid: '{{  userData.userid  }}',nickname: '{{  userData.nickname  }}', comment: input.value }
             
 
@@ -315,10 +311,7 @@
                
                 commentView()
                 }
-           
 
-
-         
             }
         
 
@@ -439,7 +432,7 @@
     
     <script>
         async function view() {
-            const [, , , idx] = location.pathname.split('/') // []
+            const [, , , idx] = location.pathname.split('/')
             const subjectBox = document.querySelector('#subject')
             const nicknameBox = document.querySelector('#nickname')
             const contentBox = document.querySelector('#content')

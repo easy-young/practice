@@ -4,31 +4,19 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    {% include "./header.html" %}
-   
+    <title>52market</title>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="https://momentjs.com/downloads/moment.min.js"></script>
     <script type="text/javascript">
-  
-
-
-
         const moveHandler=(idx,hit)=>{
             location.href="/board/view/"+idx
         }
-
-
         document.addEventListener('DOMContentLoaded',async ()=>{
             try {
                   // 요청에대한 코드를 작성해서 결과물을 받아와야합니다.
             const response = await axios.post('http://localhost:3000/board/list',{
                 withCredentials:true,
-            }).then((res)=>{
-                return res
-            }).catch((err)=>{
-                return err
-            })
+            });
             const _list = document.getElementById('list')
             let innerData =''
             if(response.data.status){
@@ -63,76 +51,28 @@
             } catch (error) {
                 console.log(error)
             }
-          
+
+            const logout = document.querySelector('#logout')
+        
+            logout.addEventListener('click', async (e)=>{
+                e.preventDefault()
+
+                const option = {
+                        'Content-type':'application/json',
+                        withCredentials:true,
+                }
+
+                const response = await axios.post('http://localhost:3000/user/logout',null,option)
+                
+                alert(`로그아웃 되었습니다!!!!`)
+                location.href = 'http://localhost:3001'
+            })
         })
     </script>
-<style>
-    /* 프론트 보고싶다...*/
-    #list{
-        width:100%;
-        padding:20px 20px;
-      
-    }
-    .post-wrapper{
-        cursor: pointer;
-        width:400px;
-        float: left;
-        border: 1px solid #999999;
-        padding:20px 20px;
-        margin:5px 5px;
-        border-radius: 8px;
-    }
-    .post-wrapper .image img{
-        width:100%;
-        height:200px;
-        object-fit: cover;
-    }
-    .post-wrapper .subject{}
-    .post-wrapper .content{}
-    .post-wrapper .nickname{}
-    .post-wrapper .hit{}
-    .post-wrapper .good{}
-    .post-wrapper .date{}
-</style>
-
- 
 </head>
 <body>
-    {% include "./nav.html" %}
-   
-      
-
-  <div class="mt-5">
-    <div id="list" class="row"></div>
-  </div>
-
-
-
- 
-<script type="text/javascript">
-    const logout = document.querySelector('#logout')
-    
-    logout.addEventListener('click', async (e)=>{
-        e.preventDefault()
-
-        const option = {
-                'Content-type':'application/json',
-                withCredentials:true,
-        }
-
-        const response = await axios.post('http://localhost:3000/user/logout',null,option)
-        // const kakaoResponse = await axios.post('http://localhost:3000/user/kakaoLogout',null,option)
-        
-        alert(`로그아웃 되었습니다!!!!`)
-        location.href = 'http://localhost:3001'
-    })
-</script>
-
-
-
-
-
-
-
+    <div>
+    <div id="list"></div>
+    </div>
 </body>
 </html>
