@@ -10,7 +10,5 @@ router.get('/list',controller.list)
 router.get('/view/:idx',controller.view)
 router.get('/write',controller.write)
 router.get('/modify',controller.modify)
-router.get('/chat',controller.chat)
-
 
 module.exports = router

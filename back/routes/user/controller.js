@@ -273,7 +273,6 @@ exports.logout = async (req,res) => {
         res.clearCookie(cookie)
         res.json({})
     }
-    
 }
 
 exports.resign = async (req,res) => {

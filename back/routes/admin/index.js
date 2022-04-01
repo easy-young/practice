@@ -39,5 +39,10 @@ router.post('/board/good', controller.good);
 router.post('/board/view/:idx', controller.view);
 
 router.post('/stats', controller.stats);
+router.post('/stats/hitNgood', controller.hitNgood);
+router.post('/stats/dayCount', controller.dayCount);
+router.post('/stats/view/:idx', controller.statsView);
+router.post('/stats/day', controller.day);
+router.post('/stats/time', controller.time);
 
 module.exports = router;

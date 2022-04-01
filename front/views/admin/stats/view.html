@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin</title>
+    <script type="text/javascript" src="https://unpkg.com/axios@0.26.0/dist/axios.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="/admin/stats_view.css">
+    <link type="text/css" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Arvo">
+    <link type="text/css" rel="stylesheet" href="https://cdn.rawgit.com/moonspam/NanumSquare/master/nanumsquare.css">
+    <script type="text/javascript">
+        document.addEventListener('DOMContentLoaded', async ()=>{
+            const option = {withCredentials:true};
+            const boards = document.querySelector('#boards');
+            const board = document.querySelector('#board').innerHTML;
+            const [,,,,idx] = location.pathname.split('/');
+            const body = {idx};
+            const response = await axios.post(`http://localhost:3000/api/admin/stats/view/${idx}`, body, option);
+            console.log(response.data);
+            let template = '';
+            response.data.forEach(v=>{
+                template += board.replace('{idx}', v.idx)
+                                .replace('{main}', v.main)
+                                .replace('{sub}', v.sub)
+                                .replace('{subject}', v.subject)
+                                .replace('{nickname}', v.nickname)
+                                .replace('{date}', v.date)
+                                .replace('{hit}', v.hit)
+                                .replace('{good}', v.good)
+                                .replace('{active}', v.active);
+            });
+            boards.innerHTML = template;
+            const subject = document.querySelectorAll('.subject');
+            let cnt = 0;
+            response.data.forEach(v=>{
+                const aElement = document.createElement('a');
+                aElement.href = '/admin/board/view/'+v.idx;
+                aElement.innerHTML = v.subject;
+                subject[cnt].appendChild(aElement);
+                cnt++;
+            });
+        });
+    </script>
+</head>
+<body>
+    <h1>Stats Board</h1>
+    <table cellspacing="0" cellpadding="0" border="1">
+        <thead>
+            <tr id="title">
+                <th>No.</th>
+                <th>Main Category</th>
+                <th>Sub Category</th>
+                <th>Subject</th>
+                <th>Nickname</th>
+                <th>Date</th>
+                <th>Hit</th>
+                <th>Good</th>
+                <th>Active</th>
+            </tr>
+        </thead>
+        <tbody id="boards"></tbody>
+    </table>
+    <template id="board">
+        <tr>
+            <td>{idx}</td>
+            <td>{main}</td>
+            <td>{sub}</td>
+            <td class="subject"></td>
+            <td>{nickname}</td>
+            <td>{date}</td>
+            <td>{hit}</td>
+            <td>{good}</td>
+            <td>{active}</td>
+        </tr>
+    </template>
+</body>
+</html>

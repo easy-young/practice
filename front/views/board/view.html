@@ -1,186 +1,487 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<<<<<<< HEAD
+=======
    
-   
- <style>
-        *{margin:0; padding:10px;}
-ul,li{
-    list-style:none;
-}
+>>>>>>> origin/wow
 
-.comment{
-    display:flex;
-    flex-direction: column;
-    flex-wrap: nowrap;
-    padding:30px;
-    width:600px;
-    margin:0 auto;
-    
-}
-
-.comment > li{ margin-top:20px; }
-.comment > li:nth-child(1){ margin:0px;}
-
-.comment-row{
-    display:flex;
-    justify-content: space-between;
-    flex-direction: row;
-}
-
-.comment-row{
-    margin-top:20px;
-    width:100%;
-}
-
-.comment-row > li:nth-child(1){
-    display:flex;
-    align-items: center;
-}
-.comment-row > li:nth-child(2){
-    flex-shrink: 0;
-    flex-grow: 1;
-    padding-left:25px;
-    z-index:1;
-    width:100%;
-}
-
-.comment-row > li:nth-child(2){
-    width:85px;
-}
-
-.comment-form > form{
-    display:flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: space-between;
-}
-
-.comment-form > form > h4{
-    width:100%;
-    margin:14px 0 14px 0;
-}
-
-.comment-content{
-    word-break:break-all;
-    padding-right:25px;
-}
-
-.ps_box{
-    display: block;
-    position: relative;
-    width: 80%;
-    height: 51px;
-    border: solid 1px #dadada;
-    padding: 10px 14px 10px 14px;
-    background: #fff;
-    box-sizing: border-box;
-}
-
-.ps_box > input{
-    outline:none;
-}
-
-.int{
-    display: block;
-    position: relative;
-    width: 100%;
-    height: 29px;
-    padding-right: 25px;
-    line-height: 29px;
-    border: none;
-    background: #fff;
-    font-size: 15px;
-    box-sizing: border-box;
-    z-index: 10;
-}
-
-.btn{
-    width:18%;
-    padding: 18px 0 16px;
-    text-align: center;
-    box-sizing: border-box;
-    text-decoration: none;
-    border:none;
-    background:#333;
-    color:#fff;
-    font-size:14px;
-}
-
-.comment-delete-btn{
-    display:inline-block;
-    margin-left:7px;
-    cursor: pointer;
-}
-
-.comment-update-input{
-    border:none;
-    border-bottom: 1px solid #333;
-    font-size:16px;
-    color:#666;
-    outline: none;
-}
-.image-wrapper img{
-    width:900px;
-}
+    <style>
+        .image-wrapper img {
+            max-width: 100%;
+        }
     </style>
 </head>
-<body>
-    제목 : <span id="subject"></span><br/>
-    닉네임 : <span id="nickname"></span> <br />
-    내용 : <br/>
-    <div id="hit"></div>
-    <div id="image"></div>
-    <div id="content"></div>
-    <script>
 
-          async function view(){
-            const [,,,idx] = location.pathname.split('/') // []
+<body>
+
+
+
+    <div class="container">
+        <div class="card">
+            <div class="card-header">
+                제목 : <span id="subject"></span>
+            </div>
+            <div class="card-body">
+                닉네임 : <span id="nickname"></span>
+                <div id="hit"></div>
+            </div>
+            <div class="card-body">
+                <div id="image" class="card-image"></div>
+            </div>
+            <div class="card-body">
+                <div id="content"></div>
+            </div>
+        </div>
+
+
+        <!-- 여기서부터 댓글시작 -->
+        <style>
+            * {
+                margin: 0;
+                padding: 10px;
+            }
+
+            ul,
+            li {
+                list-style: none;
+            }
+
+            .comment {
+                display: flex;
+                flex-direction: column;
+                flex-wrap: nowrap;
+                padding: 30px;
+                width: 600px;
+                margin: 0 auto;
+
+            }
+
+            .comment>li {
+                margin-top: 20px;
+            }
+
+            .comment>li:nth-child(1) {
+                margin: 0px;
+            }
+
+            .comment-row {
+                display: flex;
+                justify-content: space-between;
+                flex-direction: row;
+            }
+
+            .comment-row {
+                margin-top: 20px;
+                width: 100%;
+            }
+
+            .comment-row>li:nth-child(1) {
+                display: flex;
+                align-items: center;
+            }
+
+            .comment-row>li:nth-child(2) {
+                flex-shrink: 0;
+                flex-grow: 1;
+                padding-left: 25px;
+                z-index: 1;
+                width: 100%;
+            }
+
+            .comment-row>li:nth-child(2) {
+                width: 85px;
+            }
+
+            .comment-form>form {
+                display: flex;
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: space-between;
+            }
+
+            .comment-form>form>h4 {
+                width: 100%;
+                margin: 14px 0 14px 0;
+            }
+
+            .comment-content {
+                word-break: break-all;
+                padding-right: 25px;
+            }
+
+            .ps_box {
+                display: block;
+                position: relative;
+                width: 80%;
+                height: 51px;
+                border: solid 1px #dadada;
+                padding: 10px 14px 10px 14px;
+                background: #fff;
+                box-sizing: border-box;
+            }
+
+            .ps_box>input {
+                outline: none;
+            }
+
+            .int {
+                display: block;
+                position: relative;
+                width: 100%;
+                height: 29px;
+                padding-right: 25px;
+                line-height: 29px;
+                border: none;
+                background: #fff;
+                font-size: 15px;
+                box-sizing: border-box;
+                z-index: 10;
+            }
+
+            .btn {
+                width: 18%;
+                padding: 18px 0 16px;
+                text-align: center;
+                box-sizing: border-box;
+                text-decoration: none;
+                border: none;
+                background: #333;
+                color: #fff;
+                font-size: 14px;
+            }
+
+            .comment-delete-btn {
+                display: inline-block;
+                margin-left: 7px;
+                cursor: pointer;
+            }
+
+            .comment-update-input {
+                border: none;
+                border-bottom: 1px solid #333;
+                font-size: 16px;
+                color: #666;
+                outline: none;
+            }
+        </style>
+
+        </head>
+
+
+        <!-- 여기서부터 댓글-->
+        <div>
+            <ul id="commentApp">
+
+
+            </ul>
+        </div>
+
+        <template id="commentForm">
+            <li class="comment-form">
+                <form action="post" action="">
+                    <h4>댓글쓰기 <span></span></h4>
+                    <span class="ps_box">
+                        <input type="text" placeholder="댓글 내용을 입력해주세요." class="int" value="" name="input">
+                    </span>
+                    <input type="submit" class="btn" value="등록" />
+                </form>
+            </li>
+        </template>
+
+        <template id="commentList">
+            <li>
+                <ul class="comment-row">
+                    <li class="comment-id"></li>
+                    <li class="comment-content">
+
+                        <input type="hidden" name="uuid" value="" />
+                        <span class="comment-delete-btn">X</span>
+                    </li>
+                    <li class="comment-date"></li>
+                </ul>
+            </li>
+        </template>
+
+        <template id="commentInput">
+            <span>
+                <input type="text" class="comment-update-input" value="">
+            </span>
+        </template>
+
+        
+        <script type="text/javascript">
+            async function view() {
+                const [, , , idx] = location.pathname.split('/') // []
+                const subjectBox = document.querySelector('#subject')
+                const nicknameBox = document.querySelector('#nickname')
+                const contentBox = document.querySelector('#content')
+
+                const response = await axios.post(`http://localhost:3000/board/view/${idx}`, {
+                    withCredentials: true,
+                })
+
+                if (response.data.errno === 0) {
+                    const [{ subject, nickname, content }] = response.data.result
+                    console.log(response.data)
+                    subjectBox.innerHTML = subject
+                    nicknameBox.innerHTML = nickname
+                    contentBox.innerHTML = content
+                } else {
+
+                }
+            }
+            view()
+        </script>
+
+  
+        <script type="text/javascript">
+
+          
+            let state = {
+                replay: [
+                ],
+                value: '',
+                length: ''
+            }
+            
+            async function getComment() {
+
+                const [, , , idx] = location.pathname.split('/') 
+                const response = await axios.post(`http://localhost:3000/board/comment/${idx}`, {
+                    withCredentials: true,
+                })
+                if(response.data.status){
+                        state = {
+                        ...state,
+                        replay: response.data.commentList,
+                        length: response.data.commentList.length
+                    }
+                    commentView()
+                }
+               
+            }
+
+            getComment()
+
+
+            const commentApp = document.querySelector('#commentApp')
+            const commentForm = document.querySelector('#commentForm')
+            const commentList = document.querySelector('#commentList')
+            const commentInput = document.querySelector('#commentInput')
+
+            function createForm() {
+                const clone = document.importNode(commentForm.content, true)
+                const form = clone.querySelector('form')
+
+                const counting = form.querySelector('h4 > span')
+                counting.innerHTML = `(${state.length})`
+
+                form.addEventListener('submit', submitHandler)
+                commentApp.append(clone)
+            }
+     
+            async  function submitHandler(e) {
+                e.preventDefault()
+                const { input } = e.target
+                const counting = e.target.querySelector('h4 > span')
+
+                const [, , , idx] = location.pathname.split('/')
+                const result = {  userid: '{{  userData.userid  }}',nickname: '{{  userData.nickname  }}', comment: input.value }
+            
+
+               
+          
+                const response = await axios.post(`http://localhost:3000/board/comment-write/${idx}`,result, {
+                    withCredentials: true,
+                })
+      
+                if(response.data.status){
+
+                    state = {
+                    ...state,
+                    replay: response.data.commentList,
+                    length: response.data.commentList.length
+                }
+
+                input.value = ''
+                counting.innerHTML = `(${state.length})`
+               
+                commentView()
+                }
+
+            }
+        
+
+         
+
+
+            function commentView() {
+                commentApp.innerHTML = ''
+                createForm()
+               
+                state.replay.forEach((v,i) => {
+                  
+                    const clone = document.importNode(commentList.content, true)
+                    const row = clone.querySelectorAll('.comment-row > li')
+               
+                    row[0].innerText = v.nickname
+                    row[1].querySelector('input').value = v.uuid
+                    const deleteBtn = row[1].querySelector('.comment-delete-btn')
+                    console.log( deleteBtn)
+                    if (v.updateFlag === true) {
+                        const spanElement = document.createElement('span')
+                   
+                        spanElement.innerText = v.comment
+                      
+                  
+                        spanElement.addEventListener('click', updateHandler)
+                        deleteBtn.addEventListener('click', deleteHandler)
+                        row[1].prepend(spanElement)
+                    } else {
+                        const clone = document.importNode(commentInput.content, true)
+                        clone.querySelector('input').value = v.comment
+                        clone.querySelector('input').addEventListener('keypress', updateSubmitHandler)
+                        deleteBtn.addEventListener('click', deleteHandler)
+                        row[1].prepend(clone)
+                    }
+
+                     row[2].innerHTML = moment(v.updatedAt).format('YYYY MM-DD hh:mm:ss')
+
+                    commentApp.appendChild(clone)
+                })
+            }
+ 
+            function updateHandler(e) {
+
+                console.log('update handler')
+
+
+                const idx = parseInt(e.target.parentNode.querySelector('input').value)
+            
+                const newReply = [...state.replay]
+                let index
+                for (let i = 0; i < newReply.length; i++) {
+                    if (newReply[i].idx === idx) {
+                        index = i
+                    }
+                }
+
+              
+
+                newReply[index].updateFlag = false
+           
+                state = {
+                    ...state,
+                    replay: newReply
+                }
+
+                commentView()
+            }
+ 
+           async function updateSubmitHandler(e) {
+
+                    if (e.keyCode === 13) {
+
+                        const uuid = e.target.parentNode.parentNode.querySelector('input[type=hidden]').value
+                        const response = await axios.post(`http://localhost:3000/board/comment-update/${uuid}`, { comment: e.target.value }, {
+                            withCredentials: true,
+                        })
+                        console.log(response)
+                        if (response.data.status) {
+                            const newReplay = Array.from(state.replay)
+                            const i = newReplay.findIndex(f => f.uuid === uuid)
+                            newReplay.splice(i, 1, response.data.comment)
+                            state = {
+                                ...state,
+                                replay: newReplay
+                            }
+                           
+                        }
+                        commentView()
+                    }
+                }
+ 
+                    async function deleteHandler(e) {
+                            console.log('delete')
+                            const uuid = e.target.parentNode.parentNode.querySelector('input[type=hidden]').value
+                            const response = await axios.post(`http://localhost:3000/board/comment-delete/${uuid}`, {
+                                withCredentials: true,
+                            })
+
+                            if (response.data.status) {
+                                const newReply = state.replay.filter(v => v.uuid !== uuid)
+                                state = {
+                                    ...state,
+                                    replay: newReply,
+                                    length: newReply.length
+                                }
+                            }
+
+
+
+                            commentView()
+                        }
+
+            commentView()
+        </script>
+        <div id="private_chat"> </div>
+    </div>
+    
+    <script>
+        async function view() {
+            const [, , , idx] = location.pathname.split('/')
             const subjectBox = document.querySelector('#subject')
             const nicknameBox = document.querySelector('#nickname')
             const contentBox = document.querySelector('#content')
             const imageBox = document.querySelector('#image')
             const hitBox = document.querySelector('#hit')
 
-            const response = await axios.post(`http://localhost:3000/board/view/${idx}`,{
-                withCredentials:true,
+            const private_chat = document.querySelector('#private_chat')
+
+
+            const response = await axios.post(`http://localhost:3000/board/view/${idx}`, {
+                withCredentials: true,
             })
-            if(response.data.status){
-                const {subject,nickname,content,imageName,hit} = response.data.data              
-                const array=JSON.parse(imageName).upload
-                let carousel=''
+            if (response.data.status) {
+                const { subject, nickname, content, imageName, hit } = response.data.data
+                console.log(response.data.data)
+                const array = JSON.parse(imageName).upload
+                let carousel = ''
                 for (let i = 0; i < array.length; i++) {
                     const image = array[i];
-                    const url=`http://localhost:3000/${image.path.replace('public/','')}`
+                    const url = `http://localhost:3000/${image.path.replace('public/', '')}`
 
-                   imageBox.innerHTML += `<div class="image-wrapper"><img src="${url} "/></div>`
-                    
+                    imageBox.innerHTML += `<div class="image-wrapper"><img src="${url} "/></div>`
+
                 }
                 subjectBox.innerHTML = subject
                 nicknameBox.innerHTML = nickname
                 contentBox.innerHTML = content
                 hitBox.innerHTML = `hit : ${hit}`
-              
+                private_chat.innerHTML = `<a href="http://localhost:3001/board/private_chat/${nickname}" >1:1채팅</a>`
             }
-            
+
         }
         view()
     </script>
 
-    <!-- <div onclick="deleteHandler({{idx}})" style="cursor:pointer;">delete</div> -->
     
-<script>
-    const deleteHandler = async(idx)=>{
-        await axios.post(`http://localhost:3000/board/delete/${idx}`)
-    }
-    
-</script>
+    <script>
+        const deleteHandler = async (idx) => {
+            await axios.post(`http://localhost:3000/board/delete/${idx}`)
+        }
 
+    </script>
+
+<<<<<<< HEAD
+=======
 
     <!-- 여기서부터 댓글-->
     <!-- <div>
@@ -405,6 +706,8 @@ ul,li{
         commentView()
     </script> -->
 
-   
+
+>>>>>>> origin/wow
 </body>
+
 </html>

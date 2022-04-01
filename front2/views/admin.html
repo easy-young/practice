@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin</title>
+    <script type="text/javascript" src="https://unpkg.com/axios@0.26.0/dist/axios.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="/admin/admin.css">
+    <link type='text/css' rel='stylesheet' href='https://fonts.googleapis.com/css?family=Arvo'>
+    <link type="text/css" rel="stylesheet" href="https://cdn.rawgit.com/moonspam/NanumSquare/master/nanumsquare.css">
+    <script type="text/javascript">
+        document.addEventListener('DOMContentLoaded', init);
+        async function init() {
+            const option = {withCredentials:true};
+            const login = document.querySelector('#login');
+            const logout = document.querySelector('#logout');
+            if (login !== null) {
+                login.addEventListener('submit', async (e)=>{
+                    e.preventDefault();
+                    const {userid, userpw} = e.target;
+                    const body = {
+                        userid:userid.value,
+                        userpw:userpw.value
+                    };
+                    const response = await axios.post('http://localhost:3000/api/admin/login', body, option);
+                    if (response.data === 'Login Fail') alert('Check your ID or Password.');
+                    else location.href = 'http://localhost:3001/admin';
+                });
+            } else {
+                let go;
+                let cnt = parseInt(20*60);
+                let counter = document.querySelector('#counter');
+                let more = document.querySelector('#more');
+                let hour = 0;
+                let min = 0;
+                let sec = 0;
+                function counter_init() {
+                    go = setInterval(async ()=>{
+                        counter.innerHTML = time_format(cnt);
+                        cnt--;
+                        if (cnt <= 0) {
+                            clearInterval(go);
+                            const response = await axios.post('http://localhost:3001/admin/logout', null, option);
+                            location.href = 'http://localhost:3001/admin';
+                        }
+                    }, 1000);
+                }
+                function time_format(v) {
+                    if (v > 0) {
+                        min = parseInt(v/60);
+                        sec = v%60;
+                        if (min > 60) {
+                            hour = parseInt(min/60);
+                            min = min%60;
+                        }
+                    }
+                    if (sec < 10) sec = '0' + sec;
+                    if (min < 10) min = '0' + min;
+                    return min + ':' + sec;
+                }
+                counter_init();
+
+                more.addEventListener('click', ()=> cnt = 20 * 60);
+
+                logout.addEventListener('click', async (e)=>{
+                    e.preventDefault();
+                    const response = await axios.post('http://localhost:3001/admin/logout', null, option);
+                    location.href = 'http://localhost:3001/admin';
+                });
+            }
+        };
+    </script>
+</head>
+<body>
+    <div id="container">
+        <h1>Admin Page</h1>
+        {% if isLogin %}
+        <div id="timer">
+            <span id="counter">20:00</span><button id="more">Reset</button>
+        </div>
+        <nav>
+            <a href="/admin/user"><strong>Users</strong></a>
+            <a href="/admin/category"><strong>Categories</strong></a>
+            <a href="/admin/board"><strong>Board</strong></a>
+            <a href="/admin/stats"><strong>Stats</strong></a>
+            <button id="logout">Logout</button>
+        </nav>
+        {% else %}
+        <h3>Login</h3>
+        <form method="post" id="login" action="http://localhost:3000/api/admin">
+            <ul>
+                <li><strong>ID : </strong><input type="text" name="userid" id="userid" placeholder="admin ID"></li>
+                <li><strong>PW : </strong><input type="password" name="userpw" id="userpw" placeholder="admin PW"></li>
+                <input type="submit" value="Login">
+            </ul>
+        </form>
+        {% endif %}
+    </div>
+</body>
+</html>
