@@ -4,22 +4,14 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    {% include "./header.html" %}
-   
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>]
-    <script src="https://momentjs.com/downloads/moment.min.js"></script>
+    <title>52market</title>
+    <link type="text/css" rel="stylesheet" href="/main/main.css">
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script type="text/javascript">
-  
-
-
-
-        const moveHandler=(idx,hit)=>{
-            location.href="/board/view/"+idx
-        }
-
-
-        document.addEventListener('DOMContentLoaded',async ()=>{
+        const moveHandler = (idx, hit) => {
+            location.href = "/board/view/"+idx;
+        };
+        document.addEventListener('DOMContentLoaded', async ()=>{
             try {
                   // 요청에대한 코드를 작성해서 결과물을 받아와야합니다.
             const response = await axios.post('http://localhost:3000/board/list',{
@@ -66,23 +58,11 @@
             } catch (error) {
                 console.log(error)
             }
-          
         })
     </script>
-<style>
-    /* 프론트 보고싶다...*/
-    #list{
-        width:100%;
-        padding:20px 20px;
-      
-    }
-
-</style>
-
- 
 </head>
 <body>
-    <!-- <div>
+    <div>
         <h1>
             <a href="/">Logo</a>    
         </h1>
@@ -96,45 +76,27 @@
         <a href="/user/profile">My Profile</a>
         
         {% endif %}
-  
+    </div>
+    <div class="mt-5">
+        <div id="list" class="row"></div>
+    </div>
+    <script type="text/javascript">
+        const logout = document.querySelector('#logout')
         
-   
-    </div> -->
-    {% include "./nav.html" %}
-   
-      
+        logout.addEventListener('click', async (e)=>{
+            e.preventDefault()
 
-  <div class="mt-5">
-    <div id="list" class="row"></div>
-  </div>
-
-
-
- 
-<script type="text/javascript">
-    const logout = document.querySelector('#logout')
-    
-    logout.addEventListener('click', async (e)=>{
-        e.preventDefault()
-
-        const option = {
+            const option = {
                 'Content-type':'application/json',
                 withCredentials:true,
-        }
+            }
 
-        const response = await axios.post('http://localhost:3000/user/logout',null,option)
-        // const kakaoResponse = await axios.post('http://localhost:3000/user/kakaoLogout',null,option)
-        
-        alert(`로그아웃 되었습니다!!!!`)
-        location.href = 'http://localhost:3001'
-    })
-</script>
-
-
-
-
-
-{% include "./footer.html" %}
-
+            const response = await axios.post('http://localhost:3000/user/logout',null,option)
+            // const kakaoResponse = await axios.post('http://localhost:3000/user/kakaoLogout',null,option)
+            
+            alert(`로그아웃 되었습니다!!!!`)
+            location.href = 'http://localhost:3001'
+        })
+    </script>
 </body>
 </html>
