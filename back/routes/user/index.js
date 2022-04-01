@@ -12,7 +12,7 @@ router.post('/kakaoWelcome',controller.kakaoWelcome);
 router.post('/login',controller.login);
 router.post('/logout',controller.logout);
 router.post('/profile',controller.profile);
-router.post('/profileUpdate',controller.profileUpdate);
+router.post('/profileUpdate',uploadsUser.single('userimage'),controller.profileUpdate);
 router.post('/resign',controller.resign);
 router.post('/auth',controller.Auth);
 

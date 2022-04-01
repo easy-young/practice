@@ -118,13 +118,6 @@ exports.login = async (req,res)=>{
             secure:true,
             domain:'localhost'
         })
-        res.cookie('userData',{userid:userid, nickname:nickname},{
-            path:'/',
-            httpOnly:true,
-            secure:true,
-            domain:'localhost'
-        })
-    
        
         const response = {
             result,
@@ -169,6 +162,7 @@ exports.profile = async (req,res) => {
         result.date = b
         
         res.json(result)
+
     } else if(cookie == 'kakaoToken'){
         const {email} = user
         const sql = `SELECT * FROM user WHERE email=?`
@@ -197,22 +191,22 @@ exports.profile = async (req,res) => {
 }
 
 exports.profileUpdate = async (req,res)=>{
+    
     const cookie = req.headers.cookie.split('=')[0]
     const cookie1 = req.headers.cookie.split('=')[1].split('.')[1]
     const user = JSON.parse(Buffer.from(cookie1,'base64').toString('utf-8'))
     if(cookie == 'token'){
+        let userimage = req.file.filename
+        userimage = `http://localhost:3000/uploadsUser/${userimage}`
+        
         const {userid} = req.user
-        const {userpw,userimage,name,nickname,address,gender,intro} = req.body
+        const {userpw,name,nickname,address,gender,intro} = req.body
         let {phone, birth, tel, email} = req.body
-        phone = phone[0]+phone[1]+phone[2]
-        birth = birth[0]+birth[1]+birth[2]
-        tel = tel[0]+tel[1]+tel[2]
-        email = email[0]+'@'+email[1]
-    
+        
         try {
             const sql = `UPDATE user SET userpw=?, userimage=?, name=?, nickname=?, birth=?,
             address=?, gender=?, tel=?, phone=?, email=?, intro=? WHERE userid=?`
-            const prepare = [ userpw, userimage, name, nickname, birth,address,
+            const prepare = [ userpw, userimage, name, nickname, birth, address,
                               gender, tel, phone, email, intro, userid ]
             const [result] = await pool.execute(sql,prepare)
             
@@ -267,16 +261,15 @@ exports.logout = async (req,res) => {
         res.clearCookie(cookie)
         res.json({})
     } else if(cookie == 'kakaoToken') {
-        access_token = kakao.access_token
-        console.log(access_token)
+        // access_token = kakao.access_token
         
-        let logout = await axios({
-            method:'post',
-            url:'https://kapi.kakao.com/v1/user/unlink',
-            headers:{
-              'Authorization': `Bearer ${access_token}`
-            }
-        });
+        // let logout = await axios({
+        //     method:'post',
+        //     url:'https://kapi.kakao.com/v1/user/unlink',
+        //     headers:{
+        //       'Authorization': `Bearer ${access_token}`
+        //     }
+        // });
         res.clearCookie(cookie)
         res.json({})
     }

@@ -20,6 +20,7 @@ const uploadsUser = multer({
     storage:multer.diskStorage({
         destination:(req,file,done)=>{
             done(null, 'public/uploadsUser/')
+            
          
         },
         filename:(req,file,done)=>{

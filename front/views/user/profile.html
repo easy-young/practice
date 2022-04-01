@@ -27,10 +27,6 @@
 
             let {tel,phone,gender} = response.data
             
-            console.log('유저아이디',userid)
-            console.log('네임',name)
-            
-            
             if(tel.substring(0,2)==='02'){
                 tel = tel.substring(0,2)+'-'+tel.substring(2,6)+'-'+tel.substring(6,10)
             } else {
