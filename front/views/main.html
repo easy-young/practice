@@ -6,12 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     {% include "./header.html" %}
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
-
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
    
-    
-    
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>]
     <script src="https://momentjs.com/downloads/moment.min.js"></script>
     <script type="text/javascript">
   
@@ -43,7 +39,7 @@
                     // <img src="http://localhost:3000/uploades/${item.imageName}" alt="post image"/>
                     //${JSON.parse(item.imageName).length!==0?`<div class="image"><img src="http://localhost:3000/${JSON.parse(item.imageName)[0].path}" alt="post image"/></div>`:''}
                     const url=`http://localhost:3000/${JSON.parse(item.imageName).upload[0].path.replace('public/','')}`
-                    innerData+=`<div class="col-sm-12 col-md-6 col-lg-4 col-xl-3">
+                    innerData+=`<div class="">
                         <div class="card post-wrapper" onclick="moveHandler(${item.idx} , ${item.hit})">
                             <div class="image"><img src="${url}" alt="post image"/></div>
                         <div class="card-header subject">${item.subject.substr(0,20)}</div>
@@ -80,26 +76,7 @@
         padding:20px 20px;
       
     }
-    .post-wrapper{
-        cursor: pointer;
-        width:400px;
-        float: left;
-        border: 1px solid #999999;
-        padding:20px 20px;
-        margin:5px 5px;
-        border-radius: 8px;
-    }
-    .post-wrapper .image img{
-        width:100%;
-        height:200px;
-        object-fit: cover;
-    }
-    .post-wrapper .subject{}
-    .post-wrapper .content{}
-    .post-wrapper .nickname{}
-    .post-wrapper .hit{}
-    .post-wrapper .good{}
-    .post-wrapper .date{}
+
 </style>
 
  
