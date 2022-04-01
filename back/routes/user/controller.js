@@ -1,16 +1,13 @@
 const pool = require('../../db.js').pool
-const session = require('express-session')
 const {createToken} = require('../../utils/jwt.js')
+const axios = require('axios')
 
 exports.join = async (req,res)=>{
-    const { userid, userpw, userimage, name,
-            nickname, address, gender, intro } = req.body
 
-    let {email, birth, phone, tel} = req.body
-    email = email[0]+'@'+email[1]
-    birth = birth[0]+birth[1]+birth[2]
-    phone = phone[0]+phone[1]+phone[2]
-    tel = tel[0]+tel[1]+tel[2]
+    let userimage = req.file.filename
+    userimage = `http://localhost:3000/uploadsUser/${userimage}`
+    const { userid, userpw, name, nickname, address, gender,
+            intro, email, birth, phone,tel } = req.body
 
     const sql = `INSERT INTO user (
         userid, userpw, userimage, name,
@@ -58,11 +55,13 @@ exports.join = async (req,res)=>{
 }
 
 exports.kakaoJoin = async (req,res)=>{
-    const {userid,userpw,userimage,name,nickname,address,gender,email,intro} = req.body
-    let {birth, tel, phone} = req.body
+    const {userid,userpw,name,nickname,address,gender,email,intro} = req.body
+    let {birth, tel, phone, userimage} = req.body
     birth = birth[0]+birth[1]+birth[2]
     tel = tel[0]+tel[1]+tel[2]
     phone = phone[0]+phone[1]+phone[2]
+    
+    userimage = userimage.split(`"`)[1]
 
     const sql = `INSERT INTO user (
         userid, userpw, userimage, name,
@@ -92,7 +91,6 @@ exports.kakaoJoin = async (req,res)=>{
     const response = {
         errno:0
     }
-    
     res.json(response)
 }
 
@@ -191,6 +189,8 @@ exports.profile = async (req,res) => {
         result.birth = a
         result.date = b
 
+        // console.log(result.userimage)
+
         res.json(result)
     }
     
@@ -257,10 +257,30 @@ exports.profileUpdate = async (req,res)=>{
     }
 }
 
-exports.logout = (req,res) => {
+exports.logout = async (req,res) => {
     const cookie = req.headers.cookie.split('=')[0]
-    res.clearCookie(cookie)
-    res.json({})
+    const cookiePayload = req.headers.cookie.split('=')[1].split('.')[1]
+    const kakao = JSON.parse(Buffer.from(cookiePayload,'base64').toString('utf-8'))
+    let access_token
+    
+    if(cookie == 'token'){
+        res.clearCookie(cookie)
+        res.json({})
+    } else if(cookie == 'kakaoToken') {
+        access_token = kakao.access_token
+        console.log(access_token)
+        
+        let logout = await axios({
+            method:'post',
+            url:'https://kapi.kakao.com/v1/user/unlink',
+            headers:{
+              'Authorization': `Bearer ${access_token}`
+            }
+        });
+        res.clearCookie(cookie)
+        res.json({})
+    }
+    
 }
 
 exports.resign = async (req,res) => {
@@ -403,6 +423,7 @@ exports.kakaoJoinAuth = async (req,res)=>{
             errno:0
         }
     } else {
+        
         response = {
             errno:1
         }
@@ -411,14 +432,14 @@ exports.kakaoJoinAuth = async (req,res)=>{
 }
 
 exports.kakaoJoinAuth2 = async (req,res)=>{
-    const cookie = req.headers.cookie.split('=')[1].split('.')[1]
-    const user = JSON.parse(Buffer.from(cookie,'base64').toString('utf-8'))
-    const {email,nickname,userimage} = user
-    const response = {
-        email,
-        nickname,
-        userimage
-    }
-    // res.clearCookie(cookie)
-    res.json(response)
+    // const cookie = req.headers.cookie.split('=')[1].split('.')[1]
+    // const user = JSON.parse(Buffer.from(cookie,'base64').toString('utf-8'))
+    // const {email,nickname,userimage} = user
+    // const response = {
+    //     email,
+    //     nickname,
+    //     userimage
+    // }
+    // // res.clearCookie(cookie)
+    // res.json(response)
 }

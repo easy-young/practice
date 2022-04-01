@@ -21,48 +21,47 @@ exports.kakaoLogin = (req,res)=>{
 
 exports.oauthKakao = async (req,res)=>{
     const code = req.query.code
-    const token_url = host+'/oauth/token'
+    res.render('./user/kakao_agree.html',{
+        code,
+    })
+}
 
+exports.join = (req,res)=>{
+    res.render('./user/join.html')
+}
+
+exports.kakaoJoin = async (req,res)=>{
+    const code = req.query.code
+    const token_url = host+'/oauth/token'
     const body = qs.stringify({    
         grant_type:'authorization_code',
         client_id,
         redirect_uri,
         code,
-        client_secret, 
+        client_secret,
     })
 
     const headers = {
         'Content-type':'application/x-www-form-urlencoded'
     }
 
-    // 2. 토큰 받기 (여기가 진짜!)
+    // // 2. 토큰 받기
     const response = await axios.post(token_url,body,headers)
 
-    // 3. 토큰활용하여 사용자정보 가져오기
-    try {
-        const {access_token} = response.data
-        const url = 'https://kapi.kakao.com/v2/user/me'
-     
-        const userinfo  = await axios.get(url,{
-            headers:{
-                'Authorization':`Bearer ${access_token}`
-            }
-        })
-        const email = userinfo.data.kakao_account.email
-        const nickname = userinfo.data.kakao_account.profile.nickname
-        const userimage = userinfo.data.kakao_account.profile.profile_image_url
-        // nickname,userimage
-        const result = {nickname,userimage,email}
-        const jwt = createToken({...result})
-        
-        res.cookie('kakaoToken',jwt,{
-            path:'/',
-            httpOnly:true,
-            secure:true,
-            domain:'localhost',
-            // maxAge: 5000
-        })
-        // const userData = req.cookies.kakaoToken
+    // // 3. 토큰활용하여 사용자정보 가져오기
+    const {access_token} = response.data
+    const url = 'https://kapi.kakao.com/v2/user/me'
+    
+    const userinfo  = await axios.get(url,{
+        headers:{
+            'Authorization':`Bearer ${access_token}`
+        }
+    })
+    const email = userinfo.data.kakao_account.email
+    const nickname = userinfo.data.kakao_account.profile.nickname
+    let userimage = userinfo.data.kakao_account.profile.profile_image_url
+
+    // 카카오회원가입을 이미 가입한 회원 걸러주기
         const body1 = {
             nickname,
             email,
@@ -72,48 +71,37 @@ exports.oauthKakao = async (req,res)=>{
             'Content-type':'application/json',
             withCredentials:true,
         }
-        
-        const response1 = await axios.post('http://localhost:3000/user/kakaoJoinAuth',body1,option1)
-        if(response1.data.errno == 1){
-            const tokenResult = {nickname,email}
-            const jwt = createToken({...tokenResult})
-                res.cookie('kakaoToken',jwt,{
-                path:'/',
-                httpOnly:true,
-                secure:true,
-                domain:'localhost'
-            })
-            res.render('main.html')
+    const response1 = await axios.post('http://localhost:3000/user/kakaoJoinAuth',body1,option1)
 
-        } else{
-            // res.render('./user/kakao_join.html',{
-            //     data:userinfo.data.kakao_account
-            // })
-            res.render('./user/kakaoAgree')
-        }
-    } catch (e) {
-        console.log(e)
+    if(response1.data.errno==0){
+        res.render('./user/kakao_join.html',{
+            email,
+            nickname,
+            userimage
+        })
+    } else {
+        const tokenResult = {nickname, email, access_token}
+        const jwt = createToken({...tokenResult})
+          res.cookie('kakaoToken',jwt,{
+            path:'/',
+            httpOnly:true,
+            secure:true,
+            domain:'localhost'
+        })
+        res.redirect('/')
     }
-}
-
-exports.join = (req,res)=>{
-    res.render('./user/join.html')
-}
-
-exports.kakaoJoin = async (req,res)=>{    
-    res.render('./user/kakao_join.html')
 }
 
 exports.agree = (req,res)=>{
     res.render('./user/agree.html')
 }
 
-exports.profile = (req,res)=>{
-    res.render('./user/profile.html')
+exports.kakaoAgree = (req,res)=>{
+    res.render('./user/kakao_agree.html')
 }
 
-exports.kakaoProfile = (req,res)=>{
-    res.render('./user/kakao_profile.html')
+exports.profile = (req,res)=>{
+    res.render('./user/profile.html')
 }
 
 exports.profileUpdate = (req,res)=>{

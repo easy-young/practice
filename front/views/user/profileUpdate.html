@@ -12,7 +12,6 @@
         document.addEventListener('DOMContentLoaded',async ()=>{
         const profile = document.querySelector('#profile')
         const profileUpdate = document.querySelector('#profileUpdate').innerHTML
-
         
         const option = {
             "Content-type":"application/json",
@@ -68,7 +67,6 @@
                                 .replace('{active}',active)
                                 .replace('{date}',date.substring(0,10))
 
-                                
         profile.innerHTML = template
         
         const profilefrm = document.querySelector('#profilefrm')
@@ -87,7 +85,6 @@
             let email2Value = document.querySelector('#email2')
             email2Value.value = e.target.value
         })
-
 
         profilefrm.addEventListener('submit', async (e)=>{
             e.preventDefault();
@@ -144,12 +141,6 @@
                 alert(`회원정보가 수정되었습니다!`)
                 location.href = 'http://localhost:3001/user/profile'
             }
-            
-            
-
-            
-            
-            
         })
 
         const resign = document.querySelector('#resign')
@@ -163,7 +154,6 @@
 
             const resignResponse = await axios.post('http://localhost:3000/user/resign',null,option)
             
-
             alert('회원 탈퇴가 완료되었습니다...ㅠ')
             location.href = 'http://localhost:3001'
         })

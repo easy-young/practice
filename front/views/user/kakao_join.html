@@ -5,32 +5,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link href="/user/kakao_join.css" type="text/css" rel="stylesheet">
+
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-
-    <script type="text/javascript">
-        document.addEventListener('DOMContentLoaded', async ()=>{
-
-            const option = {
-                'Content-type':'application/json',
-                withCredentials:true,
-            }
-            const response = await axios.post('http://localhost:3000/user/kakaoJoinAuth2',null,option)
-            
-            const {email,nickname,userimage} = response.data
-            
-            const join = document.querySelector('#join')
-            const temJoin = document.querySelector('#tem_join').innerHTML
-
-            templete = ''
-
-            template = temJoin.replace('{email}',email)
-                              .replace('{nickname}',nickname)
-                              .replace('{userimage}',userimage)
-
-            join.innerHTML = template
-        })
-        
-    </script>
 </head>
 <body>
     <h1>
@@ -40,86 +17,79 @@
         카카오회원 가입페이지 입니다.
     </h2>
 
+    <form method="post" action="http://localhost:3000/user/kakaoJoin" id="join_frm" enctype="multipart/form-data">
+        <ul>
+            <li>
+                <strong>아이디</strong>
+                <input type="text" name="userid" id="userid" minlength="4" maxlength="10">
+            </li>
+            <li>
+                <strong>비밀번호</strong>
+                <input type="text" name="userpw" id="userpw" minlength="4" maxlength="10">
+            </li>
+            <li>
+                <strong>사진</strong>
+                <span id="userimage"><img src="{{userimage}}"></span>
+            </li>
+            <li>
+                <strong>이름</strong>
+                <input type="text" name="name" id="name" minlength="2" maxlength="10">
+            </li>
+            <li>
+                <strong>닉네임</strong>
+                <span id="nickname">{{nickname}}</span>
+            </li>
+            <li>
+                <strong>생년월일 :</strong>
+                    <select id="year">
+                        <option value="1999">1999년</option>
+                        <option value="2000">2000년</option>
+                        <option value="2001">2001년</option>
+                        <option value="2002">2002년</option>
+                    </select>
+                    <select id="month">
+                        <option value="01">1월</option>
+                        <option value="02">2월</option>
+                    </select>
+                    <select id="day">
+                        <option value="01">1일</option>
+                        <option value="02">2일</option>
+                        <option value="03">3일</option>
+                    </select>
+            </li>
+            <li>
+                <strong>주소</strong>
+                <input type="text" name="address" minlength="4" id="address">
+            </li>
+            <li>
+                <strong>성별</strong>
+                <input type="radio" name="gender" id="genderM" value="M">남자
+                <input type="radio" name="gender" id="genderF" value="F" checked="checked">여자
+            </li>
+            <li>
+                <strong>집전화 :</strong>
+                <input type="text" name="tel" id="tel1" minlength="2" maxlength="3"> -
+                <input type="text" name="tel" id="tel2" minlength="3" maxlength="4"> -
+                <input type="text" name="tel" id="tel3" minlength="4" maxlength="4">
+            </li>
+            <li>
+                <strong>핸드폰번호 :</strong>
+                <input type="text" name="phone" id="phone1" minlength="3" maxlength="3"> -
+                <input type="text" name="phone" id="phone2" minlength="4" maxlength="4"> -
+                <input type="text" name="phone" id="phone3" minlength="4" maxlength="4">
+            </li>
+            <li>
+                <strong>E-mail</strong>
+                <span id="email">{{email}}</span>
+            </li>
+            <li>
+                <strong>소개글</strong>
+                <input type="text" name="intro" id="intro" minlength="4" >
+            </li>
+        </ul>
+        <input type="submit" value="회원가입하기">
+    </form>
 
-    <div id="join">
-
-    </div>
-
-
-    <template id="tem_join">
-        <form method="post" action="http://localhost:3000/user/kakaoJoin" id="join_frm" enctype="multipart/form-data">
-            <ul>
-                <li>
-                    <strong>아이디</strong>
-                    <input type="text" name="userid" id="userid" minlength="4" maxlength="10">
-                </li>
-                <li>
-                    <strong>비밀번호</strong>
-                    <input type="text" name="userpw" id="userpw" minlength="4" maxlength="10">
-                </li>
-                <li>
-                    <strong>사진</strong>
-                    <span id="userimage">{userimage}</span>
-                </li>
-                <li>
-                    <strong>이름</strong>
-                    <input type="text" name="name" id="name" minlength="2" maxlength="10">
-                </li>
-                <li>
-                    <strong>닉네임</strong>
-                    <span id="nickname">{nickname}</span>
-                </li>
-                <li>
-                    <strong>생년월일 :</strong>
-                        <select id="year">
-                            <option value="1999">1999년</option>
-                            <option value="2000">2000년</option>
-                            <option value="2001">2001년</option>
-                            <option value="2002">2002년</option>
-                        </select>
-                        <select id="month">
-                            <option value="01">1월</option>
-                            <option value="02">2월</option>
-                        </select>
-                        <select id="day">
-                            <option value="01">1일</option>
-                            <option value="02">2일</option>
-                            <option value="03">3일</option>
-                        </select>
-                </li>
-                <li>
-                    <strong>주소</strong>
-                    <input type="text" name="address" minlength="4" id="address">
-                </li>
-                <li>
-                    <strong>성별</strong>
-                    <input type="radio" name="gender" id="genderM" value="M">남자
-                    <input type="radio" name="gender" id="genderF" value="F" checked="checked">여자
-                </li>
-                <li>
-                    <strong>집전화 :</strong>
-                    <input type="text" name="tel" id="tel1" minlength="2" maxlength="3"> -
-                    <input type="text" name="tel" id="tel2" minlength="3" maxlength="4"> -
-                    <input type="text" name="tel" id="tel3" minlength="4" maxlength="4">
-                </li>
-                <li>
-                    <strong>핸드폰번호 :</strong>
-                    <input type="text" name="phone" id="phone1" minlength="3" maxlength="3"> -
-                    <input type="text" name="phone" id="phone2" minlength="4" maxlength="4"> -
-                    <input type="text" name="phone" id="phone3" minlength="4" maxlength="4">
-                </li>
-                <li>
-                    <strong>E-mail</strong>
-                    <span id="email">{email}</span>
-                </li>
-                <li>
-                    <strong>소개글</strong>
-                    <input type="text" name="intro" id="intro" minlength="4" >
-                </li>
-            </ul>
-            <input type="submit" value="회원가입하기">
-        </form>
-    </template>
     <script type="text/javascript">
         const frm = document.querySelector('#join_frm')
 

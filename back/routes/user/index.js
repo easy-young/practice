@@ -1,9 +1,10 @@
 const express = require('express')
 const router = express.Router()
 const controller = require('./controller.js')
+const { uploadsUser } = require('../../utils/upload.js')
 
-router.post('/join',controller.join);
-router.post('/kakaoJoin',controller.kakaoJoin);
+router.post('/join',uploadsUser.single('userimage'),controller.join);
+router.post('/kakaoJoin',uploadsUser.single('userimage'),controller.kakaoJoin);
 router.post('/kakaoJoinAuth',controller.kakaoJoinAuth);
 router.post('/kakaoJoinAuth2',controller.kakaoJoinAuth2);
 router.post('/welcome',controller.welcome);
