@@ -151,8 +151,7 @@ exports.board = async (req, res) => {
 
 exports.boardSearch = async (req, res) => {
     const {search} = req.body;
-    const sql = `SELECT * FROM board
-                WHERE subject LIKE '%${search}%'`;
+    const sql = `SELECT * FROM board WHERE subject LIKE '%${search}%'`;
     try {
         const [result] = await pool.execute(sql);
         res.send(result);
@@ -273,11 +272,8 @@ exports.dayCount = async (req, res) => {
 exports.statsView = async (req, res) => {
     const {idx} = req.params;
     let weekday;
-    if (idx % 7 === 1) {
-        weekday = 6;
-    } else {
-        weekday = idx % 7 - 2;
-    }
+    if (idx % 7 === 1) weekday = 6;
+    else weekday = idx % 7 - 2;
     const hour = parseInt(idx/7);
     const sql = `SELECT * FROM board WHERE weekday(date)=? AND hour(date)=?`;
     const prepare = [weekday, hour];

@@ -6,15 +6,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin</title>
     <script type="text/javascript" src="https://unpkg.com/axios@0.26.0/dist/axios.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="/admin/stats_view.css">
+    <link type="text/css" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Arvo">
+    <link type="text/css" rel="stylesheet" href="https://cdn.rawgit.com/moonspam/NanumSquare/master/nanumsquare.css">
     <script type="text/javascript">
         document.addEventListener('DOMContentLoaded', async ()=>{
             const option = {withCredentials:true};
             const boards = document.querySelector('#boards');
             const board = document.querySelector('#board').innerHTML;
             const [,,,,idx] = location.pathname.split('/');
-            const body = {
-                idx
-            };
+            const body = {idx};
             const response = await axios.post(`http://localhost:3000/api/admin/stats/view/${idx}`, body, option);
             console.log(response.data);
             let template = '';
@@ -43,7 +44,7 @@
     </script>
 </head>
 <body>
-    <h1>Stats Board View</h1>
+    <h1>Stats Board</h1>
     <table cellspacing="0" cellpadding="0" border="1">
         <thead>
             <tr id="title">
