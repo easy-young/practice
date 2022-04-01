@@ -10,9 +10,9 @@
 
     <script type="text/javascript">
         document.addEventListener('DOMContentLoaded',async ()=>{
+            
         const profile = document.querySelector('#profile')
         const profileUpdate = document.querySelector('#profileUpdate').innerHTML
-
         
         const option = {
             "Content-type":"application/json",
@@ -68,7 +68,6 @@
                                 .replace('{active}',active)
                                 .replace('{date}',date.substring(0,10))
 
-                                
         profile.innerHTML = template
         
         const profilefrm = document.querySelector('#profilefrm')
@@ -88,7 +87,6 @@
             email2Value.value = e.target.value
         })
 
-
         profilefrm.addEventListener('submit', async (e)=>{
             e.preventDefault();
 
@@ -96,15 +94,17 @@
             
             // const gender = document.querySelector('input[name="gender"]:checked').value;
             // const {userimage:userimage1} = e.target.userimage
-
+          
             const userpw1 = e.target.userpw.value
-            const userimage1 = e.target.userimage.value
+            const userimage1 = e.target.userimage.files[0]
+            console.log('alskdjflkajsf',userimage1)
             const name1 = e.target.name.value
             const nickname1 = e.target.nickname.value
 
             const year = e.target.year.value
             const month = e.target.month.value
             const day = e.target.day.value
+            const birth = year+month+day
 
             const address1 = e.target.address.value
             const gender1 = e.target.gender.value
@@ -112,29 +112,34 @@
             const tel1 = e.target.tel1.value
             const tel2 = e.target.tel2.value
             const tel3 = e.target.tel3.value
+            const tel11 = tel1+tel2+tel3
 
             const phone1 = e.target.phone1.value
             const phone2 = e.target.phone2.value
             const phone3 = e.target.phone3.value
+            const phone11 = phone1+phone2+phone3
 
             const email1 = e.target.email1.value
             const email2 = e.target.email2.value
+            const email11 = email1+'@'+email2
 
             const intro1 = e.target.intro.value
             
-            const body = {
-                userpw:userpw1,
-                userimage:userimage1,
-                name:name1,
-                nickname:nickname1,
-                birth:[year,month,day],
-                address:address1,
-                gender:gender1,
-                tel:[tel1,tel2,tel3],
-                phone:[phone1,phone2,phone3],
-                email:[email1,email2],
-                intro:intro1
-            }
+            const formData = new FormData()
+            formData.append('userimage',userimage1)
+            formData.append('userpw',userpw1)
+            formData.append('name',name1)
+            formData.append('nickname',nickname)
+            formData.append('birth',birth)
+            formData.append('address',address1)
+            formData.append('gender',gender1)
+            formData.append('tel',tel11)
+            formData.append('phone',phone11)
+            formData.append('email',email11)
+            formData.append('intro',intro1)
+
+
+            const body = formData
 
             const response2 = await axios.post('http://localhost:3000/user/profileUpdate', body, option)
 
@@ -144,12 +149,6 @@
                 alert(`회원정보가 수정되었습니다!`)
                 location.href = 'http://localhost:3001/user/profile'
             }
-            
-            
-
-            
-            
-            
         })
 
         const resign = document.querySelector('#resign')
@@ -163,7 +162,6 @@
 
             const resignResponse = await axios.post('http://localhost:3000/user/resign',null,option)
             
-
             alert('회원 탈퇴가 완료되었습니다...ㅠ')
             location.href = 'http://localhost:3001'
         })
@@ -183,11 +181,11 @@
     </div>
     
     <template id="profileUpdate">
-        <form method="post" action="http://localhost:3000/user/profileUpdate" id="profilefrm">
+        <form method="post" action="http://localhost:3000/user/profileUpdate" id="profilefrm" enctype="multipart/form-data">
             <ul>
                 <li>
                     <strong>ID :</strong>
-                    {userid}
+                    <span id=userid>{userid}</span>
                 </li>
                 <li>
                     <strong>비밀번호 :</strong>
@@ -195,7 +193,7 @@
                 </li>
                 <li>
                     <strong>사진 :</strong>
-                    <input type="text" value="{userimage}" name="userimage" id="userimage" minlength="3" maxlength="10">       
+                    <input type="file" value="{userimage}" name="userimage" id="userimage" minlength="3" maxlength="10">       
                 </li>
                 <li>
                     <strong>이름 :</strong>

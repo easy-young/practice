@@ -19,12 +19,10 @@
                 withCredentials:true,
             }
 
-            const response = await axios.post('http://localhost:3000/user/welcome',null,option);
+            const response = await axios.post('http://localhost:3000/user/kakaoWelcome',null,option);
             const { level, userid, userpw, userimage, name, nickname,
                     address, gender, tel, phone, email, intro,
                     point, active, date } = response.data;
-
-            console.log('kajnjkns;aldkknb;lksbalksb',userimage)
 
             let {birth}=response.data   // 1998-12-31T15:00:00.000Z
             // let dateObj = new Date(timeSource);
@@ -67,7 +65,7 @@
         로그인 후에 프로필 수정이가능하니 잘못 작성했다고 당황하지마세요~_~
     </h3>
     <h3>
-        로그인이 되었습니다!
+        로그인 되었습니다!!!
     </h3>
 
     <div id="welcome">

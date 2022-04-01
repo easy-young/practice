@@ -5,6 +5,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link href="/user/join.css" type="text/css" rel="stylesheet">
+
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 </head>
 <body>
@@ -30,25 +32,25 @@
             </li>
             <li>
                 <strong>이름</strong>
-                <input type="text" name="name" id="name" minlength="4" maxlength="10">
+                <input type="text" name="name" id="name" minlength="2" maxlength="10">
             </li>
             <li>
                 <strong>닉네임</strong>
-                <input type="text" name="nickname" id="nickname" minlength="4" maxlength="10">
+                <input type="text" name="nickname" id="nickname" minlength="2" maxlength="10">
             </li>
             <li>
                 <strong>생년월일 :</strong>
-                    <select id="year">
+                    <select id="year" name="year">
                         <option value="1999">1999년</option>
                         <option value="2000">2000년</option>
                         <option value="2001">2001년</option>
                         <option value="2002">2002년</option>
                     </select>
-                    <select id="month">
+                    <select id="month" name="month">
                         <option value="01">1월</option>
                         <option value="02">2월</option>
                     </select>
-                    <select id="day">
+                    <select id="day" name="day">
                         <option value="01">1일</option>
                         <option value="02">2일</option>
                         <option value="03">3일</option>
@@ -65,20 +67,20 @@
             </li>
             <li>
                 <strong>집전화 :</strong>
-                <input type="text" name="tel" id="tel1" minlength="2" maxlength="3"> -
-                <input type="text" name="tel" id="tel2" minlength="3" maxlength="4"> -
-                <input type="text" name="tel" id="tel3" minlength="4" maxlength="4">
+                <input type="text" name="tel1" id="tel1" minlength="2" maxlength="3"> -
+                <input type="text" name="tel2" id="tel2" minlength="3" maxlength="4"> -
+                <input type="text" name="tel3" id="tel3" minlength="4" maxlength="4">
             </li>
             <li>
                 <strong>핸드폰번호 :</strong>
-                <input type="text" name="phone" id="phone1" minlength="3" maxlength="3"> -
-                <input type="text" name="phone" id="phone2" minlength="4" maxlength="4"> -
-                <input type="text" name="phone" id="phone3" minlength="4" maxlength="4">
+                <input type="text" name="phone1" id="phone1" minlength="3" maxlength="3"> -
+                <input type="text" name="phone2" id="phone2" minlength="4" maxlength="4"> -
+                <input type="text" name="phone3" id="phone3" minlength="4" maxlength="4">
             </li>
             <li>
                 <strong>E-mail</strong>
-                <input type="text" name="email" id="email1" minlength="4"> @
-                <input type="text" name="email" id="email2" minlength="4">
+                <input type="text" name="email1" id="email1" minlength="4"> @
+                <input type="text" name="email2" id="email2" minlength="4">
                 <select id="email_select">
                     <option id="hanmail.net">hanmail.net</option>
                     <option id="gmail.com">gmail.com</option>
@@ -108,7 +110,7 @@
             e.preventDefault()
             const userid = document.querySelector('#userid').value
             const userpw = document.querySelector('#userpw').value
-            const userimage = document.querySelector('#userimage').value
+            const userimage = document.querySelector('#userimage').files[0]
             const name = document.querySelector('#name').value
             const nickname = document.querySelector('#nickname').value
             const year = document.querySelector('#year').value
@@ -126,34 +128,55 @@
             const email2 = document.querySelector('#email2').value
             const intro = document.querySelector('#intro').value
 
-            const body = {
-                userid,
-                userpw,
-                userimage,
-                name,
-                nickname,
-                birth:[year,month,day],
-                address,
-                gender,
-                tel:[tel1,tel2,tel3],
-                phone:[phone1,phone2,phone3],
-                email:[email1,email2],
-                intro
-            }
+            // console.log('asdjfklajefaef',userid,userpw,userimage,name,nickname,year,month,day,address,gender,tel1,tel2,tel3,phone1,phone2,phone3,email1,email2,intro)
+            const email = email1+'@'+email2
+            const birth = year+month+day
+            const tel = tel1+tel2+tel3
+            const phone = phone1+phone2+phone3
 
-            const option = {
-                'Content-type':'application/json',
-                withCredentials:true,
-            }
+                        
+            const formData = new FormData();
+            formData.append('userimage', userimage);
+            formData.append('userid', userid);
+            formData.append('userpw', userpw);
+            formData.append('name', name);
+            formData.append('nickname', nickname);
+            formData.append('birth', birth);
+            formData.append('address', address);
+            formData.append('gender', gender);
+            formData.append('tel', tel);
+            formData.append('phone', phone);
+            formData.append('email', email);
+            formData.append('intro', intro);
+
+            console.log('폼데이타',formData)
 
             try {
-                const response = await axios.post('http://localhost:3000/user/join',body,option)
-                if(response.data.errno !==0) throw new Error('Error')
-                
-                location.href='http://localhost:3001/user/welcome'
-            } catch (e) {
-                alert('ID 나 닉네임이 중복입니다.')
+                if(userid=='' || userpw=='' || name=='' || nickname=='' || year=='' || month=='' ||
+                   day=='' || gender=='' || email1=='' || email2=='' || intro=='') throw new Error
+
+                try {
+                    const body = formData
+
+                    const option = {
+                        'Content-type':'application/json',
+                        withCredentials:true,
+                    }
+
+                    const response = await axios.post('http://localhost:3000/user/join',body,option)
+                    if(response.data.errno !==0) throw new Error('Error')
+                    
+                    location.href='http://localhost:3001/user/welcome'
+                } catch (e) {
+                    console.log(e.message)
+                    alert('ID 나 닉네임이 중복입니다.')
+                }
+
+            } catch(e){
+                console.log(e.message)
+                alert('빈값 다 채워라 디지기싫으면')
             }
+            
         })
     </script>
 </body>

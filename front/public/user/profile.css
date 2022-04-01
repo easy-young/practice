@@ -1,0 +1,53 @@
+* {
+    margin : 0;
+    padding : 0;
+}
+
+ul,li {
+    list-style : none;
+}
+
+#wrap {
+    width : 100%;
+}
+
+#header {
+    width : 100%;
+    height: 200px;
+    margin: 0 auto;
+}
+
+#logo {
+    width : 1200px;
+    height: 100px;
+    margin: 0 auto;
+}
+
+#category {
+    width : 100%;
+    height: 40px;
+    background : #ded9d1;
+    margin : 0 auto;
+    text-align: center;
+}
+
+#content {
+    width : 1000px;
+    height: 1000px;
+    background : red;
+    margin: 0 auto;
+}
+
+#content > #info {
+    width : 800px;
+    height : 800px;
+    background-color : green;
+    margin : 0 auto;
+}
+
+#content > #info > tr > td{
+    width : 30px;
+    height: 30px;
+    background-color: yellow;
+    border-right : 3px solid blue;
+}
