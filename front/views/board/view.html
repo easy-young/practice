@@ -7,7 +7,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-    {% include "../header.html" %}
+<<<<<<< HEAD
+=======
+   
+>>>>>>> origin/wow
 
     <style>
         .image-wrapper img {
@@ -18,7 +21,7 @@
 
 <body>
 
-    {% include "../nav.html" %}
+
 
     <div class="container">
         <div class="card">
@@ -287,12 +290,9 @@
             async  function submitHandler(e) {
                 e.preventDefault()
                 const { input } = e.target
-                // const { replay: { length } } = state
                 const counting = e.target.querySelector('h4 > span')
 
-                // // 삼항연산자
-                // const idx_ = length != 0 ? parseInt(state.replay[length - 1].idx + 1) : 1
-                const [, , , idx] = location.pathname.split('/') // []
+                const [, , , idx] = location.pathname.split('/')
                 const result = {  userid: '{{  userData.userid  }}',nickname: '{{  userData.nickname  }}', comment: input.value }
             
 
@@ -315,10 +315,7 @@
                
                 commentView()
                 }
-           
 
-
-         
             }
         
 
@@ -439,7 +436,7 @@
     
     <script>
         async function view() {
-            const [, , , idx] = location.pathname.split('/') // []
+            const [, , , idx] = location.pathname.split('/')
             const subjectBox = document.querySelector('#subject')
             const nicknameBox = document.querySelector('#nickname')
             const contentBox = document.querySelector('#content')
@@ -483,6 +480,234 @@
 
     </script>
 
+<<<<<<< HEAD
+=======
+
+    <!-- 여기서부터 댓글-->
+    <!-- <div>
+        <ul id="commentApp">
+        </ul>
+    </div>
+
+    <template id="commentForm">
+        <li class="comment-form">
+            <form action="post" action="">
+                <h4>댓글쓰기 <span>()</span></h4>
+                <span class="ps_box">
+                    <input type="text" placeholder="댓글 내용을 입력해주세요." class="int" value="" name="input">
+                </span>
+                <input type="submit" class="btn" value="등록" />
+            </form>
+        </li>
+    </template>
+
+    <template id="commentList">
+        <li>
+            <ul class="comment-row">
+                <li class="comment-id"></li>
+                <li class="comment-content">
+                    
+                    <input type="hidden" name="idx" value="" />
+                    <span class="comment-delete-btn">X</span>
+                </li>
+                <li class="comment-date"></li>
+            </ul>
+        </li>
+    </template>
+
+    <template id="commentInput">
+        <span>
+            <input type="text" class="comment-update-input" value="">
+        </span>
+    </template>
+
+
+    <script type="text/javascript">
+        console.log(location.pathname)
+        // /board/view/9 -> 
+        
+
+
+        
+        async function view(){
+            const [,,,idx] = location.pathname.split('/') // []
+            const subjectBox = document.querySelector('#subject')
+            const nicknameBox = document.querySelector('#nickname')
+            const contentBox = document.querySelector('#content')
+            const imageBox = document.querySelector('#image')
+            const hitBox = document.querySelector('#hit')
+
+            const response = await axios.post(`http://localhost:3000/board/view/${idx}`,{
+                withCredentials:true,
+            })
+            if(response.data.status){
+                const {subject,nickname,content,imageName , hit} = response.data.data
+                console.log(response.data)
+                subjectBox.innerHTML = subject
+                nicknameBox.innerHTML = nickname
+                contentBox.innerHTML = content
+                hitBox.innerHTML = hit
+                imageBox.innerHTML = `<img src="http://localhost:3000/uploades/${imageName}" />`
+            }
+            
+        }
+        view()
+        // DB 요청해서 댓글리스트를 가져왔다고 가정할게요. 
+        let state = {
+            replay:[
+                {idx:1,userid:'web7722',content:'안녕하세요1',date:'2022-03-18',updateFlag:true},
+                {idx:2,userid:'web7722',content:'안녕하세요2',date:'2022-03-18',updateFlag:true},
+                {idx:3,userid:'web7722',content:'안녕하세요3',date:'2022-03-18',updateFlag:true},
+                {idx:4,userid:'web7722',content:'안녕하세요4',date:'2022-03-18',updateFlag:true},
+            ],
+            value:'',
+            length:4,
+        }
+
+        const commentApp = document.querySelector('#commentApp')
+        const commentForm = document.querySelector('#commentForm')
+        const commentList = document.querySelector('#commentList')
+        const commentInput = document.querySelector('#commentInput')
+
+        function createForm(){
+            const clone = document.importNode(commentForm.content, true)
+            const form = clone.querySelector('form')
+
+            const counting = form.querySelector('h4 > span')
+            counting.innerHTML = `(${state.length})`
+
+            form.addEventListener('submit',submitHandler)
+            commentApp.append(clone)
+        }
+
+        function submitHandler(e){
+            e.preventDefault()
+            const { input } = e.target
+            const { replay:{ length } } = state
+            const counting = e.target.querySelector('h4 > span')
+            
+            // 삼항연산자
+            const idx = length != 0 ? parseInt( state.replay[length-1].idx + 1 ) : 1
+            const result = {idx,userid:'web7722',content:input.value,date:'2022-03-18',updateFlag:true}
+            
+            state = {
+                ...state,
+                replay:[
+                    ...state.replay,
+                    result
+                ],
+                length:state.replay.length + 1
+            }
+
+            input.value = ''
+            counting.innerHTML = `(${state.length})`
+            console.log(state)
+
+            commentView()
+        }
+
+        function commentView(){
+            commentApp.innerHTML = ''
+            createForm()
+
+            state.replay.forEach(v => {
+                const clone = document.importNode(commentList.content, true)
+                const row = clone.querySelectorAll('.comment-row > li')
+                row[0].innerHTML = v.userid
+                row[1].querySelector('input').value = v.idx
+
+                if ( v.updateFlag === true) {
+                    const spanElement = document.createElement('span')
+                    spanElement.innerHTML = v.content
+                    const deleteBtn = row[1].querySelector('.comment-delete-btn')
+                    spanElement.addEventListener('click',updateHandler)
+                    deleteBtn.addEventListener('click',deleteHandler)
+                    row[1].prepend(spanElement)
+                } else {
+                    const clone = document.importNode(commentInput.content,true)
+                    clone.querySelector('input').value = v.content
+                    clone.querySelector('input').addEventListener('keypress',updateSubmitHandler)
+                    row[1].prepend(clone)
+                }
+
+                row[2].innerHTML = v.date
+
+                commentApp.appendChild(clone)
+            })
+        }
+
+        function updateHandler(e){
+            const idx = parseInt( e.target.parentNode.querySelector('input').value )
+            const newReply = [...state.replay]
+            let index 
+            for(let i =0; i < newReply.length; i++){
+                if(newReply[i].idx === idx){
+                    index = i
+                }
+            }
+
+            console.log(index)
+
+            newReply[index].updateFlag = false
+            console.log(idx,newReply)
+            state = {
+                ...state,
+                replay:newReply
+            }
+
+            commentView()
+        }
+
+        function updateSubmitHandler(e){
+            
+            if(e.keyCode === 13){
+                
+                const idx = parseInt( e.target.parentNode.parentNode.querySelector('input[type=hidden]').value )
+                const newReplay = [...state.replay]
+
+                let index 
+                for(let i =0; i < newReplay.length; i++){
+                    if(newReplay[i].idx === idx){
+                        index = i
+                    }
+                }
+
+                newReplay[index].updateFlag = true
+                newReplay[index].content = e.target.value
+
+                state = {
+                    ...state,
+                    replay:newReplay
+                }
+
+                commentView()
+            }
+        }
+
+        function deleteHandler(e){
+            const idx = parseInt( e.target.parentNode.querySelector('input').value )
+            // DB 요청 
+            // let newReply = []
+            // for(let i=0; i<state.replay.length; i++){
+            //     if(state.replay[i].idx !== idx){
+            //         newReply.push(state.replay[i])
+            //     }
+            // }
+            const newReply = state.replay.filter(v => v.idx !== idx)
+            state = {
+                ...state,
+                replay:newReply,
+                length:newReply.length
+            }
+
+            commentView()
+        }
+
+        commentView()
+    </script> -->
+
+
+>>>>>>> origin/wow
 </body>
 
 </html>

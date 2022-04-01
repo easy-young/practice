@@ -7,19 +7,83 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-    {% include "../header.html" %}
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
-
-    <script type="text/javascript">
-           localStorage.removeItem('current_page')
-        localStorage.setItem('current_page',document.location.href)
-        </script>
-
 </head>
 
 <body>
 
- {% include "../nav.html" %}
+<div>
+    <nav class="">
+        <div class="">
+          <a class="" href="/"><img src="http://localhost:3000/logo-light.png"/></a>
+          <button class="">
+            <span class=""></span>
+          </button>
+          <div class="" id="">
+            <ul class="">
+              <li class="">
+                  <a class="" href="/board/write">글쓰기</a>
+                </li>
+
+            
+                  <li class="">
+                    <a class="" href="#" onclick="publicChatHandler(true)">전체채팅하기</a>
+                  </li>
+
+                  
+              <li class="">
+                <a class="" href="#" id="" >
+                  Account
+                </a>
+                <ul class="" >
+                  <li><a class=""  id="logout" href="">로그아웃</a></li>
+
+                </ul>
+            </li>
+          
+              <li class="">
+                  <a class="" href="#" id="" role="">
+                    Account
+                  </a>
+                  <ul class="">
+                    <li><a class=""  href="/user/login">로그인</a></li>
+                  </ul>
+                </li>
+            </ul>
+          
+          </div>
+        </div>
+      </nav>
+
+      <div class="">
+        <div class="" id="">
+            <div class="">
+                <div class="">
+                    <span>Public Chat </span>
+                    <button class="" onclick="publicChatHandler(false)">close</button>
+                </div>
+                <div class="" id="chat-msg-box">
+                    <ul id="chat" class="">
+
+                    </ul>
+                </div>
+                <div class="card-footer">
+                    <form action="/" method="get">
+                        <div class="">
+                            <input class="" type="text" name="input" id="input"/>
+                            <button class="" type="submit">send</button>
+                        </div>
+                    </form>
+                  
+                 
+                </div>
+            </div>
+        </div>
+        <div class="private-chat-wrapper" id="private-chat-wrapper">
+         1:1 chat
+      </div>
+      </div>
+</div>
+
     <h1>
         <a href="/">Logo</a>
     </h1>
@@ -48,10 +112,6 @@
                     </ul>
                 </div>
             </div>
-
-
-
-
         </div>
         <div class="">
             <div class=""> 글 작성 페이지 입니다.</div>
@@ -64,8 +124,15 @@
                         </div>
                     </div>
 
+<<<<<<< HEAD
                     <div class="">
                         <input type="file" name="upload" id="upload" required multiple accept="image/*">
+=======
+                    <div class="row mb-3">
+                        <label for="upload" class="fw-bold btn btn-primary btn-block">IMAGE</label>
+                        <input type="file" name="upload" id="upload" required multiple accept="image/*"
+                           >
+>>>>>>> origin/wow
                     </div>
 
 
@@ -84,141 +151,114 @@
         </div>
     </div>
 
-
-
-
-
-
-
-
-
     <a href="/board/list">목록 보기</a>
 
     <script type="text/javascript">
-        let main, sub
-        const jungo = [
-            { label: '디지털기기', value: '디지털기기' },
-            { label: '생활가전', value: '생활가전' },
-            { label: '가구/인테리어', value: '가구/인테리어' },
-            { label: '유아동', value: '유아동' },
-            { label: '생활/가공식품', value: '생활/가공식품' },
-            { label: '유아도서', value: '유아도서' },
-            { label: '스포츠/레저', value: '스포츠/레저' },
-            { label: '여성잡화', value: '여성잡화' },
-            { label: '여성의류', value: '여성의류' },
-            { label: '남성패션/잡화', value: '남성패션/잡화' },
-            { label: '게임/취미', value: '게임/취미' },
-            { label: '뷰티/미용', value: '뷰티/미용' },
-            { label: '반려동물용품', value: '반려동물용품' },
-            { label: '도서/티켓/음반', value: '도서/티켓/음반' },
-            { label: '식물', value: '식물' },
-            { label: '기타 중고물품', value: '기타 중고물품' },
-            { label: '삽니다', value: '삽니다' },
+        function dropCategory() {
+            let main, sub
+            const jungo = [
+                { label: '디지털기기', value: '디지털기기' },
+                { label: '생활가전', value: '생활가전' },
+                { label: '가구/인테리어', value: '가구/인테리어' },
+                { label: '유아동', value: '유아동' },
+                { label: '생활/가공식품', value: '생활/가공식품' },
+                { label: '유아도서', value: '유아도서' },
+                { label: '스포츠/레저', value: '스포츠/레저' },
+                { label: '여성잡화', value: '여성잡화' },
+                { label: '여성의류', value: '여성의류' },
+                { label: '남성패션/잡화', value: '남성패션/잡화' },
+                { label: '게임/취미', value: '게임/취미' },
+                { label: '뷰티/미용', value: '뷰티/미용' },
+                { label: '반려동물용품', value: '반려동물용품' },
+                { label: '도서/티켓/음반', value: '도서/티켓/음반' },
+                { label: '식물', value: '식물' },
+                { label: '기타 중고물품', value: '기타 중고물품' },
+                { label: '삽니다', value: '삽니다' },
+            ]
+            const area = [
+            {label:"서울", value:"서울"},
+            {label:"대전", value:"대전"},
+            {label:"대구", value:"대구"},
+            {label:"부산", value:"부산"},
+            {label:"경기", value:"경기"},
+            {label:"인천", value:"인천"},
+            {label:"강원", value:"강원"},
+            {label:"충청", value:"충청"},
+            {label:"전라", value:"전라"},
+            {label:"경상", value:"경상"},
         ]
-        const area = [
-        {label:"서울", value:"서울"},
-        {label:"대전", value:"대전"},
-        {label:"대구", value:"대구"},
-        {label:"부산", value:"부산"},
-        {label:"경기", value:"경기"},
-        {label:"인천", value:"인천"},
-        {label:"강원", value:"강원"},
-        {label:"충청", value:"충청"},
-        {label:"전라", value:"전라"},
-        {label:"경상", value:"경상"},
-    ]
-        const subCategory=  document.getElementById('sub-category')
-        const subDropdown = document.getElementById('sub-dropdown')
-        const categoryHandler = (type) => {
-            main = type
-            const items = document.getElementById('main-category-item')
-            document.getElementById('main-category').innerText = type 
-            let innerHTML=''
-            let array=[]
-            let subButtonText=''
-            switch (type) {
-                case "중고장터":
-                array=jungo
-                subDropdown.style.display="block"
-                subButtonText="상품 목록을 선택하세요"
-                    break;
-                    case "동네친구찾기":
-                    array=area
+            const subCategory=  document.getElementById('sub-category')
+            const subDropdown = document.getElementById('sub-dropdown')
+            const categoryHandler = (type) => {
+                main = type
+                const items = document.getElementById('main-category-item')
+                document.getElementById('main-category').innerText = type 
+                let innerHTML=''
+                let array=[]
+                let subButtonText=''
+                switch (type) {
+                    case "중고장터":
+                    array=jungo
                     subDropdown.style.display="block"
-                    subButtonText="지역을 선택하세요"
-                    break;
-                default:
-                subDropdown.style.display="none"
-                    break;
+                    subButtonText="상품 목록을 선택하세요"
+                        break;
+                        case "동네친구찾기":
+                        array=area
+                        subDropdown.style.display="block"
+                        subButtonText="지역을 선택하세요"
+                        break;
+                    default:
+                    subDropdown.style.display="none"
+                        break;
+                }
+                for (let i = 0; i < array.length; i++) {
+                    const item = array[i];
+                    innerHTML += `<li><a class="" onclick="subHandler('${item.value}')">${item.label}</a></li> `
+                }
+                subCategory.innerText=subButtonText
+                items.innerHTML = innerHTML
             }
-            for (let i = 0; i < array.length; i++) {
-                const item = array[i];
-                innerHTML += `<li><a class="" onclick="subHandler('${item.value}')">${item.label}</a></li> `
+            const subHandler = (type) => {
+                sub = type
+                subCategory.innerText = type
             }
-            subCategory.innerText=subButtonText
-            items.innerHTML = innerHTML
-        }
-        const subHandler = (type) => {
-            sub = type
-            subCategory.innerText = type
         }
     </script>
 
     <script type="text/javascript">
+        function write() {
+            const frm = document.querySelector('#frm_write')
+            frm.addEventListener('submit', async (e) => {
+                e.preventDefault()
+                const subject = document.querySelector('#subject').value
+                const content = document.querySelector('#content').value
+                const files = document.querySelector('#upload').files;
+                const formData = new FormData()
 
+                for (let i = 0; i < files.length; i++) {
+                    const file = files[i];
+                    formData.append('upload', file)
+                }
 
-        var getCookie = function (name) {
-            var value = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
-            return value ? value[2] : null;
-        };
+                formData.append('subject', subject)
+                formData.append('content', content)
+                formData.append('main', main)
+                formData.append('sub', sub)
 
+                const option = {
+                    "Content-type": "application/json",
+                    withCredentials: true,
+                    Authorization: '',// user Token?
+                }
 
-
-
-        const frm = document.querySelector('#frm_write')
-        frm.addEventListener('submit', async (e) => {
-            e.preventDefault()
-            const subject = document.querySelector('#subject').value
-            const content = document.querySelector('#content').value
-            const files = document.querySelector('#upload').files;
-            const formData = new FormData()
-
-
-            for (let i = 0; i < files.length; i++) {
-                const file = files[i];
-                formData.append('upload', file)
-            }
-
-           
-
-            formData.append('subject', subject)
-            formData.append('content', content)
-            formData.append('main', main)
-            formData.append('sub', sub)
-
-
-            const option = {
-                "Content-type": "application/json",
-                withCredentials: true,
-                Authorization: '',// user Token?
-            }
-
-            
-
-           if (files.length < 6) {
-            const response = await axios.post('http://localhost:3000/board/write', formData, option)
-            location.href=('/')
-           }else {
-            alert("이미지의 최대 갯수는 5장입니다 확인해주세요")
-           }
-        })
-
-        
+                if (files.length < 6) {
+                    const response = await axios.post('http://localhost:3000/board/write', formData, option)
+                    location.href=('/')
+                } else {
+                    alert("이미지의 최대 갯수는 5장입니다 확인해주세요")
+                }
+            })
+        }
     </script>
-
-
-
-
 </body>
-
 </html>

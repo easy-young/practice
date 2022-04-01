@@ -1,0 +1,103 @@
+* {
+    margin: 0;
+    padding: 0;
+    font-family: 'Arvo', 'nanumsquare', serif;
+    background-color: #eee;
+}
+
+a {
+    text-decoration: none;
+    color: black;
+}
+
+h1, #menu {
+    display: flex;
+    justify-content: center;
+}
+
+h1 {
+    margin-top: 15px;
+}
+
+#menu {
+    width: 1000px;
+    margin: 15px 0px 15px 500px;
+}
+
+#menu > a {
+    width: 65px;
+    height: 25px;
+    line-height: 25px;
+    border-radius: 5px;
+    background-color: rgb(200, 200, 200);
+}
+
+button {
+    width: 65px;
+    height: 25px;
+    font-size: 15px;
+    margin: 0 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: rgb(200, 200, 200);
+}
+
+#searchFrm {
+    display: block;
+    margin-left: 230px;
+}
+
+#search {
+    height: 22px;
+    background-color: white;
+    border: 2px solid rgb(100, 100, 100);
+    border-radius: 5px;
+}
+
+#searchBtn {
+    width: 65px;
+    height: 25px;
+    margin-left: 5px;
+    font-size: 15px;
+    background-color: rgb(200, 200, 200);
+    border: none;
+    border-radius: 5px;
+}
+
+a {
+    text-decoration: none;
+    text-align: center;
+    color: black;
+}
+
+table {
+    width: 98%;
+    margin: 0 auto;
+}
+
+td, th {
+    padding: 3px 5px;
+    text-align: center;
+}
+
+td, td > label {
+    background-color: white;
+}
+
+th {
+    background-color: rgb(253, 253, 120);
+}
+
+#level {
+    width: 70px;
+}
+
+#submit {
+    width: 60px;
+    height: 25px;
+    display: inline-block;
+    margin: 5px 0px 5px 1430px;
+    background-color: rgb(160, 160, 160);
+    border: none;
+    border-radius: 5px;
+}
