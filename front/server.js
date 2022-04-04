@@ -16,18 +16,7 @@ app.use(express.static('public'));
 
 
 app.get('/',(req,res)=>{
-    let userData;
-    if(req.headers.cookie == undefined){
-        userData = 0;
-        res.render('main.html',{
-            userData,
-        })
-    } else {
-        userData = 1;
-        res.render('main.html',{
-            userData,
-        })
-    }
+    res.render('main.html')
 })
 
 app.use(router)

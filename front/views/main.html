@@ -104,20 +104,24 @@
         <h1>
             <a href="/">Logo</a>    
         </h1>
-        {% if userData == 0 %}
-        <a href="/user/login">로그인</a>
-        <a href="/user/agree">회원가입</a>
+    </div>
 
-        {% else %}
+    <div id="loginCheck">
+        
+    </div>
+
+    <template id="userCheck">
         <a href="/board/write">글쓰기</a>
         <a href="" id="logout">로그아웃</a>
         <a href="/user/profile">My Profile</a>
-        
-        {% endif %}
-  
-        
-   
-    </div>
+    </template>
+
+    <template id="noUser">
+        <a href="/user/login">로그인</a>
+        <a href="/user/agree">회원가입</a>
+    </template>
+
+    
 
 <nav class="navbar navbar-expand-md navbar-light bg-light">
   <div class="container-fluid">
@@ -160,21 +164,48 @@
 
  
 <script type="text/javascript">
-    const logout = document.querySelector('#logout')
-    
-    logout.addEventListener('click', async (e)=>{
-        e.preventDefault()
 
+    async function loginCheck(){
+        const loginCheck = document.querySelector('#loginCheck')
+        const userCheck = document.querySelector('#userCheck').innerHTML
+        const noUser = document.querySelector('#noUser').innerHTML
         const option = {
                 'Content-type':'application/json',
                 withCredentials:true,
         }
 
-        const response = await axios.post('http://localhost:3000/user/logout',null,option)
-        
-        alert(`로그아웃 되었습니다!!!!`)
-        location.href = 'http://localhost:3001'
-    })
+        const response = await axios.post('http://localhost:3000/logincheck',null,option)
+        const errno = response.data.errno
+
+        if(errno == 0){
+            loginCheck.innerHTML = userCheck
+        } else if(errno == 1){
+            loginCheck.innerHTML = noUser
+        }
+
+
+        const logout = document.querySelector('#logout')
+
+        logout.addEventListener('click', async (e)=>{
+            e.preventDefault()
+
+            const option = {
+                    'Content-type':'application/json',
+                    withCredentials:true,
+            }
+            const response = await axios.post('http://localhost:3000/user/logout',null,option)
+            
+            alert(`로그아웃 되었습니다!!!!`)
+            location.href = 'http://localhost:3001'
+        })
+    }
+    loginCheck()
+
+
+
+
+// 로그아웃
+    
 </script>
 
 

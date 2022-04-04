@@ -183,8 +183,6 @@ exports.profile = async (req,res) => {
         result.birth = a
         result.date = b
 
-        // console.log(result.userimage)
-
         res.json(result)
     }
     
@@ -202,10 +200,10 @@ exports.profileUpdate = async (req,res)=>{
         const {userid} = req.user
         const {userpw,name,nickname,address,gender,intro} = req.body
         let {phone, birth, tel, email} = req.body
-        
+
         try {
             const sql = `UPDATE user SET userpw=?, userimage=?, name=?, nickname=?, birth=?,
-            address=?, gender=?, tel=?, phone=?, email=?, intro=? WHERE userid=?`
+                         address=?, gender=?, tel=?, phone=?, email=?, intro=? WHERE userid=?`
             const prepare = [ userpw, userimage, name, nickname, birth, address,
                               gender, tel, phone, email, intro, userid ]
             const [result] = await pool.execute(sql,prepare)
@@ -232,9 +230,7 @@ exports.profileUpdate = async (req,res)=>{
         birth = birth[0]+birth[1]+birth[2]
         tel = tel[0]+tel[1]+tel[2]
         phone = phone[0]+phone[1]+phone[2]
-
         
-
         const sql1 = `UPDATE user SET userpw=?, userimage=?, name=?,
                                       nickname=?, birth=?, address=?,
                                       gender=?, tel=?, phone=?,
@@ -251,29 +247,32 @@ exports.profileUpdate = async (req,res)=>{
     }
 }
 
-exports.logout = async (req,res) => {
-    const cookie = req.headers.cookie.split('=')[0]
-    const cookiePayload = req.headers.cookie.split('=')[1].split('.')[1]
-    const kakao = JSON.parse(Buffer.from(cookiePayload,'base64').toString('utf-8'))
-    let access_token
-    
-    if(cookie == 'token'){
-        res.clearCookie(cookie)
-        res.json({})
-    } else if(cookie == 'kakaoToken') {
-        // access_token = kakao.access_token
+exports.logout = (req,res) => {
+    try{
+        const cookie = req.headers.cookie.split('=')[0]
+        // const cookiePayload = req.headers.cookie.split('=')[1].split('.')[1]
+        // const kakao = JSON.parse(Buffer.from(cookiePayload,'base64').toString('utf-8'))
+        // let access_token
         
-        // let logout = await axios({
-        //     method:'post',
-        //     url:'https://kapi.kakao.com/v1/user/unlink',
-        //     headers:{
-        //       'Authorization': `Bearer ${access_token}`
-        //     }
-        // });
-        res.clearCookie(cookie)
-        res.json({})
+        if(cookie == 'token'){
+            res.clearCookie(cookie)
+            res.json({})
+        } else if(cookie == 'kakaoToken') {
+            // access_token = kakao.access_token
+            
+            // let logout = await axios({
+            //     method:'post',
+            //     url:'https://kapi.kakao.com/v1/user/unlink',
+            //     headers:{
+            //       'Authorization': `Bearer ${access_token}`
+            //     }
+            // });
+            res.clearCookie(cookie)
+            res.json({})
+        }
+    } catch(e){
+        console.log(e)
     }
-    
 }
 
 exports.resign = async (req,res) => {
@@ -422,17 +421,4 @@ exports.kakaoJoinAuth = async (req,res)=>{
         }
     }
     res.json(response)
-}
-
-exports.kakaoJoinAuth2 = async (req,res)=>{
-    // const cookie = req.headers.cookie.split('=')[1].split('.')[1]
-    // const user = JSON.parse(Buffer.from(cookie,'base64').toString('utf-8'))
-    // const {email,nickname,userimage} = user
-    // const response = {
-    //     email,
-    //     nickname,
-    //     userimage
-    // }
-    // // res.clearCookie(cookie)
-    // res.json(response)
 }
