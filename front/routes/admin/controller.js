@@ -63,6 +63,17 @@ exports.stats = (req, res)=>{
     }
 };
 
+exports.statsView = (req, res) => {
+    try {
+        if (req.headers.cookie === undefined) throw new Error;
+        if (req.headers.cookie.includes('connect.sid') === false) throw new Error;
+        res.render('admin/stats/view.html');
+    } catch (e) {
+        console.log(e.message);
+        res.render('admin.html');
+    }
+};
+
 exports.logout = (req, res) => {
     res.clearCookie('connect.sid');
     res.send();

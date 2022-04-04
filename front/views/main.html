@@ -4,52 +4,34 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
-
+    <title>52market</title>
+    <link type="text/css" rel="stylesheet" href="/main/main.css">
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-   
-    
-    
-    <script src="https://momentjs.com/downloads/moment.min.js"></script>
     <script type="text/javascript">
-  
-
-
-
-        const moveHandler=(idx,hit)=>{
-            location.href="/board/view/"+idx
-        }
-
-
-        document.addEventListener('DOMContentLoaded',async ()=>{
-            // 요청에대한 코드를 작성해서 결과물을 받아와야합니다.
+        const moveHandler = (idx, hit) => {
+            location.href = "/board/view/"+idx;
+        };
+        document.addEventListener('DOMContentLoaded', async ()=>{
+            try {
+                  // 요청에대한 코드를 작성해서 결과물을 받아와야합니다.
             const response = await axios.post('http://localhost:3000/board/list',{
                 withCredentials:true,
-            }).then((res)=>{
-                return res
-            }).catch((err)=>{
-                return err
-            })
+            });
             const _list = document.getElementById('list')
             let innerData =''
             if(response.data.status){
                 let list= response.data.data
                 list.map((item)=>{
                     console.log(JSON.parse(item.imageName).upload[0].path.replace('public/','') )
-                    
-                    // <img src="http://localhost:3000/uploades/${item.imageName}" alt="post image"/>
-                    //${JSON.parse(item.imageName).length!==0?`<div class="image"><img src="http://localhost:3000/${JSON.parse(item.imageName)[0].path}" alt="post image"/></div>`:''}
                     const url=`http://localhost:3000/${JSON.parse(item.imageName).upload[0].path.replace('public/','')}`
-                    innerData+=`<div class="col-sm-12 col-md-6 col-lg-4 col-xl-3">
-                        <div class="card post-wrapper" onclick="moveHandler(${item.idx} , ${item.hit})">
+                    innerData+=`<div class="">
+                        <div class="" onclick="moveHandler(${item.idx} , ${item.hit})">
                             <div class="image"><img src="${url}" alt="post image"/></div>
-                        <div class="card-header subject">${item.subject.substr(0,20)}</div>
+                        <div class="">${item.subject.substr(0,20)}</div>
                         
-                        <div class=" card-body content">${item.content.length>20? `${item.content.substr(0,20)}...`:item.content}</div>
+                        <div class=" ">${item.content.length>20? `${item.content.substr(0,20)}...`:item.content}</div>
                         <hr/>
-                        <div class="card-footer">
+                        <div class="">
                             <div class="date"> ${moment(item.date).format('YYYY MM-DD hh:mm:s')}</div>
                         <div class="hit">${item.hit}</div>
                         <div class="good">${item.good}</div>
@@ -66,7 +48,11 @@
                 innerData+=`<div class="post-wrapper">데이터가 없습니다. 첫번째 글을 작성해주세요</div>`
             }
             _list.innerHTML=innerData
+            } catch (error) {
+                console.log(error)
+            }
         })
+<<<<<<< HEAD
     </script>
 <style>
     /* 프론트 보고싶다...*/
@@ -215,5 +201,8 @@
    <!-- JavaScript Bundle with Popper -->
    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 
+=======
+    
+>>>>>>> 6fbeecf0ce9e09645b538a47b38c6dbd8987a480
 </body>
 </html>

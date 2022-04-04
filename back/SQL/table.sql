@@ -36,8 +36,13 @@ CREATE TABLE board(
 );
 
 CREATE TABLE reply(
-    idx INT NOT NULL AUTO_INCREMENT,
-    content TEXT NOT NULL,
+    idx INT NOT NULL,
+    comment text NOT NULL,
+    uuid varchar(255) NOT NULL,
+    userid varchar(255) NOT NULL,
+    nickname varchar(255) NOT NULL,
+    createdAt date DEFAULT NULL,
+    updatedAt date DEFAULT NULL,
     FOREIGN KEY (idx) REFERENCES board (idx)
 );
 

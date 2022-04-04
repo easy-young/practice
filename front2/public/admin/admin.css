@@ -1,0 +1,98 @@
+* {
+    margin: 0;
+    padding: 0;
+    font-family: 'Arvo', 'nanumsquare', serif;
+}
+
+ul,li {list-style: none;}
+
+body {
+    display: flex;
+    height: 720px;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(10, 10, 10);
+}
+
+#container {
+    width: 500px;
+    height: 360px;
+    background-color: whitesmoke;
+    border-radius: 20px;
+}
+
+h1, h3, #timer, nav, form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+h1 {
+    margin: 15px auto;
+}
+
+#timer {
+    margin-bottom: 10px;
+}
+
+#more {
+    width: 50px;
+    height: 24px;
+    margin-left: 10px;
+    border: 1px solid rgb(0, 0, 0);
+    border-radius: 8px;
+    background-color: whitesmoke;
+}
+
+nav {
+    flex-direction: column;
+}
+
+a {
+    width: 120px;
+    height: 30px;
+    text-align: center;
+    line-height: 30px;
+    text-decoration: none;
+    color: black;
+    background-color: rgb(200, 200, 200);
+    display: block;
+    margin: 10px 10px;
+    border-radius: 10px;
+}
+
+#logout {
+    background-color: rgb(139, 139, 139);
+    margin-top: 10px;
+    width: 80px;
+    height: 25px;
+    border: none;
+    border-radius: 6px;
+}
+
+h3 {
+    margin-top: 50px;
+    margin-bottom: 20px;
+}
+
+li {
+    margin: 20px auto;
+}
+
+input:nth-child(1), input:nth-child(2) {
+    width: 75%;
+    height: 18px;
+    float: right;
+    border: 2px solid rgb(100, 100, 100);
+    border-radius: 5px;
+}
+
+input:nth-child(3) {
+    display: block;
+    width: 80px;
+    height: 25px;
+    margin: 60px auto 0;
+    border: none;
+    border-radius: 5px;
+    background-color: rgb(158, 158, 158);
+}
