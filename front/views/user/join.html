@@ -128,7 +128,6 @@
             const email2 = document.querySelector('#email2').value
             const intro = document.querySelector('#intro').value
 
-            // console.log('asdjfklajefaef',userid,userpw,userimage,name,nickname,year,month,day,address,gender,tel1,tel2,tel3,phone1,phone2,phone3,email1,email2,intro)
             const email = email1+'@'+email2
             const birth = year+month+day
             const tel = tel1+tel2+tel3
@@ -148,8 +147,6 @@
             formData.append('phone', phone);
             formData.append('email', email);
             formData.append('intro', intro);
-
-            console.log('폼데이타',formData)
 
             try {
                 if(userid=='' || userpw=='' || name=='' || nickname=='' || year=='' || month=='' ||
@@ -174,7 +171,7 @@
 
             } catch(e){
                 console.log(e.message)
-                alert('빈값 다 채워라 디지기싫으면')
+                alert('빈값 다 채워라')
             }
             
         })

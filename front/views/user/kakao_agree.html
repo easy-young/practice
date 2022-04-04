@@ -5,7 +5,37 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link href="/user/kakao_agree.css" type="text/css" rel="stylesheet">
+
+    <script type="text/javascript">
+        document.addEventListener('DOMContentLoaded',()=>{
+            const check1 = document.querySelector('#check1')
+            const check2 = document.querySelector('#check2')
+            const check3 = document.querySelector('#check3')
+            const agree = document.querySelector('#agree')
+
+            check1.addEventListener('click',()=>{
+                check1.setAttribute('checked','')
+            })
+
+            check2.addEventListener('click',()=>{
+                    check2.setAttribute('checked','')
+            })
+
+            check3.addEventListener('click',()=>{
+                    check3.setAttribute('checked','')
+            })
+
+            agree.addEventListener('click',(e)=>{
+                e.preventDefault()
+
+                if(check1.checked == true && check2.checked == true && check3.checked == true){
+                    location.href = agree.href
+                } else {
+                    alert('다 체크 하세요')
+                }
+            })
+        })
+    </script>
 
 </head>
 <body>
@@ -31,21 +61,26 @@
                     체크박스 체크 후 아래의 확인 버튼을 클릭하시면 동의 절차가 완료됩니다.
                 </li>
             </ul>
+
             <ul>
                 <li>
-                    <input type="checkbox" name="check">
+                    <input type="checkbox" name="check1" id="check1">
                 </li>
                 <li>
-                    <input type="checkbox" name="check">
+                    <input type="checkbox" name="check2" id="check2">
                 </li>
                 <li>
-                    <input type="checkbox" name="check">
+                    <input type="checkbox" name="check3" id="check3">
                 </li>
             </ul>
         </div>
-        <a href="/user/kakaoJoin?code={{code}}">동의하기</a>
+        <a href="/user/kakaoJoin?code={{code}}" id="agree">동의하기</a>
         <br>
-        <a href="/user/kakaoJoin?code={{code}}">이미 옛날에 동의했는데요? 회원가입 옛날에했는데? 말이점점 짧아진다? 디질래?</a>
+        <br>
+        <a href="/user/kakaoJoin?code={{code}}" id="agree">이미 옛날에 동의했는데요? 회원가입 옛날에했는데? 말이점점 짧아진다? 디질래?</a>
+        <br>
+        <br>
+        <a href="/">동의하기 싫은데요?</a>
     </div>
     
 </body>

@@ -17,6 +17,9 @@ app.use(express.static('public'));
 
 
 app.get('/',(req,res)=>{
+<<<<<<< HEAD
+    res.render('main.html')
+=======
 
     if(req.cookies.userData){
         res.render('main.html',{
@@ -27,6 +30,7 @@ app.get('/',(req,res)=>{
             userData:req.cookies.userData
         })
     }
+>>>>>>> 6fbeecf0ce9e09645b538a47b38c6dbd8987a480
 })
 
 app.use(router)
