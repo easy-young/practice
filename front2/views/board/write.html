@@ -1,93 +1,76 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>52market</title>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 </head>
-
 <body>
-
-<div>
-    <nav class="">
-        <div class="">
-          <a class="" href="/"><img src="http://localhost:3000/logo-light.png"/></a>
-          <button class="">
-            <span class=""></span>
-          </button>
-          <div class="" id="">
-            <ul class="">
-              <li class="">
-                  <a class="" href="/board/write">글쓰기</a>
-                </li>
-
-            
-                  <li class="">
-                    <a class="" href="#" onclick="publicChatHandler(true)">전체채팅하기</a>
-                  </li>
-
-                  
-              <li class="">
-                <a class="" href="#" id="" >
-                  Account
-                </a>
-                <ul class="" >
-                  <li><a class=""  id="logout" href="">로그아웃</a></li>
-
-                </ul>
-            </li>
-          
-              <li class="">
-                  <a class="" href="#" id="" role="">
-                    Account
-                  </a>
-                  <ul class="">
-                    <li><a class=""  href="/user/login">로그인</a></li>
-                  </ul>
-                </li>
-            </ul>
-          
-          </div>
-        </div>
-      </nav>
-
-      <div class="">
-        <div class="" id="">
+    <div>
+        <nav class="">
             <div class="">
-                <div class="">
-                    <span>Public Chat </span>
-                    <button class="" onclick="publicChatHandler(false)">close</button>
-                </div>
-                <div class="" id="chat-msg-box">
-                    <ul id="chat" class="">
-
+                <a class="" href="/"><img src="http://localhost:3000/logo-light.png"/></a>
+                <button class="">
+                    <span class=""></span>
+                </button>
+                <div class="" id="">
+                    <ul class="">
+                        <li class="">
+                            <a class="" href="/board/write">글쓰기</a>
+                        </li>
+                        <li class="">
+                            <a class="" href="#" onclick="publicChatHandler(true)">전체채팅하기</a>
+                        </li>
+                        <li class="">
+                            <a class="" href="#" id="" >Account</a>
+                            <ul class="" >
+                                <li>
+                                    <a class=""  id="logout" href="">로그아웃</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="">
+                            <a class="" href="#" id="" role="">Account</a>
+                            <ul class="">
+                                <li>
+                                    <a class=""  href="/user/login">로그인</a>
+                                </li>
+                            </ul>
+                        </li>
                     </ul>
                 </div>
-                <div class="card-footer">
-                    <form action="/" method="get">
-                        <div class="">
-                            <input class="" type="text" name="input" id="input"/>
-                            <button class="" type="submit">send</button>
-                        </div>
-                    </form>
-                  
-                 
+            </div>
+        </nav>
+
+        <div class="">
+            <div class="" id="">
+                <div class="">
+                    <div class="">
+                        <span>Public Chat</span>
+                        <button class="" onclick="publicChatHandler(false)">close</button>
+                    </div>
+                    <div class="" id="chat-msg-box">
+                        <ul id="chat" class=""></ul>
+                    </div>
+                    <div class="card-footer">
+                        <form action="/" method="get">
+                            <div class="">
+                                <input class="" type="text" name="input" id="input"/>
+                                <button class="" type="submit">send</button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
+            <div class="private-chat-wrapper" id="private-chat-wrapper">1:1 chat</div>
         </div>
-        <div class="private-chat-wrapper" id="private-chat-wrapper">
-         1:1 chat
-      </div>
-      </div>
-</div>
+    </div>
 
     <h1>
         <a href="/">Logo</a>
     </h1>
-
     <div class="container">
         <div class="">
             <div class="">
@@ -95,7 +78,6 @@
                     <button class="" type="button" id="main-category">
                         카테고리
                     </button>
-
                     <ul class="" >
                         <li><a class="" href="#" onclick="categoryHandler('중고장터')">중고장터</a></li>
                         <li><a class="" href="#" onclick="categoryHandler('동네친구찾기')">동네 친구 찾기</a></li>
@@ -105,16 +87,14 @@
                         <li><a class="" href="#" onclick="categoryHandler('신고하기')">신고하기(사기)</a></li>
                     </ul>
                 </div>
-                <!-- 서브드롭다운 -->
                 <div class=""  id="sub-dropdown">
                     <button class="" type="button" id="sub-category"> </button>
-                    <ul class=""  id="main-category-item">
-                    </ul>
+                    <ul class=""  id="main-category-item"></ul>
                 </div>
             </div>
         </div>
         <div class="">
-            <div class=""> 글 작성 페이지 입니다.</div>
+            <div class="">글 작성 페이지 입니다.</div>
             <form method="post" action="/board/write" id="frm_write" enctype="multipart/form-data">
                 <div class="">
                     <div class="">
@@ -128,14 +108,12 @@
                         <input type="file" name="upload" id="upload" required multiple accept="image/*">
                     </div>
 
-
                     <div class="">
                         <label class="" for="content" class="">내용 :</label>
                         <div class="">
                             <textarea class="" name="content" id="content" required></textarea>
                         </div>
                     </div>
-
                 </div>
                 <div class="">
                     <input class="" type="submit" value="글 게시하기">

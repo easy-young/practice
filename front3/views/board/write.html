@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>오이마켓</title>
+    <link rel="shortcut icon" href="/favicon.png">
+    <link rel="stylesheet" href="http://localhost:3001/css/board/write.css">
+    <script type="text/javascript">
+        document.addEventListener('DOMContentLoaded', ()=>{
+            //
+        });
+    </script>
+</head>
+<body>
+    <h1>글쓰기</h1>
+    <form method="post" action="">
+        <div>
+            <span>메인 카테고리 : 
+                <select name="main" id="main">
+                    <option value="buy">중고거래</option>
+                    <option value="friends">동네친구찾기</option>
+                    <option value="question">Q&A</option>
+                    <option value="ban">신고</option>
+                </select>
+            </span>
+            <span>서브 카테고리 : 
+                <select name="sub" id="sub">
+                    <option value="a">a</option>
+                    <option value="a">a</option>
+                    <option value="a">a</option>
+                    <option value="a">a</option>
+                </select>
+            </span>
+        </div>
+        <div>제목 :
+            <input type="text" name="subject" id="subject">
+        </div>
+        <div>사진 :
+            <input type="file" name="image" id="image">
+        </div>
+        <div>내용 :
+            <input type="textarea" name="content" id="content">
+        </div>
+        <input type="submit" value="글쓰기">
+    </form>
+</body>
+</html>

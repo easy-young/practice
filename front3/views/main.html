@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>오이마켓</title>
+    <link rel="shortcut icon" href="favicon.png">
+    <link type="text/css" rel="stylesheet" href="http://localhost:3001/css/main.css">
+    <script type="text/javascript">
+        document.addEventListener('DOMContentLoaded', ()=>{
+            const ul = document.querySelector('header > ul');
+            const beforeLogin = document.querySelector('#beforeLogin').innerHTML;
+            const afterLogin = document.querySelector('#afterLogin').innerHTML;
+            const like = document.querySelectorAll('#like');
+            const beforeLike = document.querySelectorAll('#beforeLike');
+            const afterLike = document.querySelectorAll('#afterLike');
+            const scrap = document.querySelectorAll('#scrap');
+            const befoerScrap = document.querySelectorAll('#beforeScrap');
+            const afterScrap = document.querySelectorAll('#afterScrap');
+            // ul.innerHTML = beforeLogin;
+            ul.innerHTML = afterLogin;
+            
+            const cnt = [];
+            const cnt2 = [];
+            for (let i = 0; i < like.length; i++) {
+                afterLike[i].style.display = 'none';
+                afterScrap[i].style.display = 'none';
+                cnt.push(1);
+                cnt2.push(1);
+            }
+            for (let j = 0; j < like.length; j++) {
+                like[j].addEventListener('click', ()=>{
+                    if (cnt[j]%2 === 1) {
+                        beforeLike[j].style.display = 'none';
+                        afterLike[j].style.display = 'block';
+                    } else {
+                        beforeLike[j].style.display = 'block';
+                        afterLike[j].style.display = 'none';
+                    }
+                    cnt[j]++;
+                });
+                scrap[j].addEventListener('click', ()=>{
+                    if (cnt2[j]%2 === 1) {
+                        befoerScrap[j].style.display = 'none';
+                        afterScrap[j].style.display = 'block';
+                    } else {
+                        befoerScrap[j].style.display = 'block';
+                        afterScrap[j].style.display = 'none';
+                    }
+                    cnt2[j]++;
+                });
+            }
+        });
+    </script>
+</head>
+<body>
+    <h2>오세요~ 이쪽이에요!</h2>
+    <h1><a href="/">오이마켓</a></h1>
+    <header>
+        <ul>
+            <template id="beforeLogin">
+                <li><a href="#">회원가입</a></li>
+                <li><a href="#">로그인</a></li>
+            </template>
+            <template id="afterLogin">
+                <li><a href="board/write">글쓰기</a></li>
+                <li><a href="#">로그아웃</a></li>
+            </template>
+        </ul>
+        <div id="category">
+            <span><a href="#">중고거래</a></span>
+            <span><a href="#">동네친구찾기</a></span>
+            <span><a href="#">Q&A</a></span>
+            <span><a href="#">신고</a></span>
+        </div>
+    </header>
+
+    <div id="container">
+        <!-- <template> -->
+            <div id="contentBox">
+                <img src="#" width="280px" height="200px">
+                <strong><a href="#">맥북 프로 팝니다.</a></strong>
+                <div>작성일 : 2022-04-04</div>
+                <div>조회수 : 7</div>
+                <div>좋아요 : 10</div>
+                <div id="author">
+                    <img src="/검정색.jpg" width="25px" height="25px">
+                    <span>
+                        by <strong><a href="#">leejy230698</a></strong>
+                    </span>
+                    <button id="scrap">
+                        <img id="beforeScrap" src="/star.png" width="20px" height="20px">
+                        <img id="afterScrap" src="/star2.png" width="20px" height="20px">
+                    </button>
+                    <button id="like">
+                        <img id="beforeLike" src="/heart.png" width="20px" height="20px">
+                        <img id="afterLike" src="/heart2.png" width="20px" height="20px">
+                    </button>
+                </div>
+            </div>
+            <span id="contentBox">
+                <img src="#" width="280px" height="200px">
+                <strong><a href="#">맥북 프로 팝니다.</a></strong>
+                <div>작성일 : 2022-04-04</div>
+                <div>조회수 : 7</div>
+                <div>좋아요 : 10</div>
+                <div id="author">
+                    <img src="/검정색.jpg" width="25px" height="25px">
+                    <span>
+                        by <strong><a href="#">leejy230698</a></strong>
+                    </span>
+                    <button id="scrap">
+                        <img id="beforeScrap" src="/star.png" width="20px" height="20px">
+                        <img id="afterScrap" src="/star2.png" width="20px" height="20px">
+                    </button>
+                    <button id="like">
+                        <img id="beforeLike" src="/heart.png" width="20px" height="20px">
+                        <img id="afterLike" src="/heart2.png" width="20px" height="20px">
+                    </button>
+                </div>
+            </span>
+            <span id="contentBox">
+                <img src="#" width="280px" height="200px">
+                <strong><a href="#">맥북 프로 팝니다.</a></strong>
+                <div>작성일 : 2022-04-04</div>
+                <div>조회수 : 7</div>
+                <div>좋아요 : 10</div>
+                <div id="author">
+                    <img src="/검정색.jpg" width="25px" height="25px">
+                    <span>
+                        by <strong><a href="#">leejy230698</a></strong>
+                    </span>
+                    <button id="scrap">
+                        <img id="beforeScrap" src="/star.png" width="20px" height="20px">
+                        <img id="afterScrap" src="/star2.png" width="20px" height="20px">
+                    </button>
+                    <button id="like">
+                        <img id="beforeLike" src="/heart.png" width="20px" height="20px">
+                        <img id="afterLike" src="/heart2.png" width="20px" height="20px">
+                    </button>
+                </div>
+            </span>
+            <span id="contentBox">
+                <img src="#" width="280px" height="200px">
+                <strong><a href="#">맥북 프로 팝니다.</a></strong>
+                <div>작성일 : 2022-04-04</div>
+                <div>조회수 : 7</div>
+                <div>좋아요 : 10</div>
+                <div id="author">
+                    <img src="/검정색.jpg" width="25px" height="25px">
+                    <span>
+                        by <strong><a href="#">leejy230698</a></strong>
+                    </span>
+                    <button id="scrap">
+                        <img id="beforeScrap" src="/star.png" width="20px" height="20px">
+                        <img id="afterScrap" src="/star2.png" width="20px" height="20px">
+                    </button>
+                    <button id="like">
+                        <img id="beforeLike" src="/heart.png" width="20px" height="20px">
+                        <img id="afterLike" src="/heart2.png" width="20px" height="20px">
+                    </button>
+                </div>
+            </span>
+            <span id="contentBox">
+                <img src="#" width="280px" height="200px">
+                <strong><a href="#">맥북 프로 팝니다.</a></strong>
+                <div>작성일 : 2022-04-04</div>
+                <div>조회수 : 7</div>
+                <div>좋아요 : 10</div>
+                <div id="author">
+                    <img src="/검정색.jpg" width="25px" height="25px">
+                    <span>
+                        by <strong><a href="#">leejy230698</a></strong>
+                    </span>
+                    <button id="scrap">
+                        <img id="beforeScrap" src="/star.png" width="20px" height="20px">
+                        <img id="afterScrap" src="/star2.png" width="20px" height="20px">
+                    </button>
+                    <button id="like">
+                        <img id="beforeLike" src="/heart.png" width="20px" height="20px">
+                        <img id="afterLike" src="/heart2.png" width="20px" height="20px">
+                    </button>
+                </div>
+            </span>
+        <!-- </template> -->
+    </div>
+</body>
+</html>

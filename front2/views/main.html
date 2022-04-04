@@ -5,63 +5,51 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>52market</title>
-    <script type="text/javascript" src="http://localhost:3001/template/nav.js"></script>
-    <link rel="import" href="http://localhost:3001/template/nav.html" onload="handleLoad(event)" onerror="handleError(event)">
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script type="text/javascript">
-        console.log(nav);
-        const moveHandler=(idx,hit)=>{
-            location.href="/board/view/"+idx
-        }
-        document.addEventListener('DOMContentLoaded',async ()=>{
+        const moveHandler = (idx, hit) => location.href = "/board/view/" + idx;
+        document.addEventListener('DOMContentLoaded', async ()=>{
             try {
-                  // 요청에대한 코드를 작성해서 결과물을 받아와야합니다.
-            const response = await axios.post('http://localhost:3000/board/list',{
-                withCredentials:true,
-            });
-            const _list = document.getElementById('list')
-            let innerData =''
-            if(response.data.status){
-                let list= response.data.data
-                list.map((item)=>{
-                    console.log(JSON.parse(item.imageName).upload[0].path.replace('public/','') )
-                    const url=`http://localhost:3000/${JSON.parse(item.imageName).upload[0].path.replace('public/','')}`
-                    innerData+=`<div class="">
-                        <div class="" onclick="moveHandler(${item.idx} , ${item.hit})">
-                            <div class="image"><img src="${url}" alt="post image"/></div>
-                        <div class="">${item.subject.substr(0,20)}</div>
-                        
-                        <div class=" ">${item.content.length>20? `${item.content.substr(0,20)}...`:item.content}</div>
-                        <hr/>
-                        <div class="">
-                            <div class="date"> ${moment(item.date).format('YYYY MM-DD hh:mm:s')}</div>
-                        <div class="hit">${item.hit}</div>
-                        <div class="good">${item.good}</div>
-                       
-
-                        <div class="nickname">${item.nickname}</div>
-                        </div>
-                        
-                        </div>
-                        </div>`
-                })
-             
-            }else{
-                innerData+=`<div class="post-wrapper">데이터가 없습니다. 첫번째 글을 작성해주세요</div>`
-            }
-            _list.innerHTML=innerData
-            } catch (error) {
-                console.log(error)
-            }
-
-            // logout();
-        })
+                const response = await axios.post('http://localhost:3000/board/list',{
+                    withCredentials:true,
+                });
+                const _list = document.getElementById('list');
+                let innerData = '';
+                if (response.data.status) {
+                    let list = response.data.data;
+                    list.map((item) => {
+                        const url = `http://localhost:3000/${JSON.parse(item.imageName).upload[0].path.replace('public/','')}`;
+                        innerData += `<div class="">
+                                        <div class="" onclick="moveHandler(${item.idx} , ${item.hit})">
+                                            <div class="image"><img src="${url}" alt="post image"/></div>
+                                            <div class="">${item.subject.substr(0,20)}</div>
+                                            <div class=" ">${item.content.length>20? `${item.content.substr(0,20)}...`:item.content}</div>
+                                            <hr/>
+                                            <div class="">
+                                                <div class="date"> ${moment(item.date).format('YYYY MM-DD hh:mm:s')}</div>
+                                                <div class="hit">${item.hit}</div>
+                                                <div class="good">${item.good}</div>
+                                                <div class="nickname">${item.nickname}</div>
+                                            </div>
+                                        </div>
+                                    </div>`;
+                    });
+                } else {
+                    innerData += `<div class="post-wrapper">데이터가 없습니다. 첫번째 글을 작성해주세요</div>`;
+                }
+                _list.innerHTML = innerData;
+                } catch (e) {
+                    console.log(e.message);
+                }
+            logout();
+        });
     </script>
 </head>
 <body>
-      
     <div>
-    <div id="list"></div>
+        <div id="list"></div>
     </div>
+    <script type="text/javascript" src="http://localhost:3001/template/nav.js"></script>
+    <script type="text/javascript" src="http://localhost:3001/function/user.js"></script>
 </body>
 </html>
