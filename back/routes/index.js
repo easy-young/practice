@@ -5,7 +5,7 @@ const boardRouter = require('./board/index.js')
 const main = require('./main/index.js')
 const adminRouter = require('./admin/index.js')
 
-router.use('/',main)
+router.use('/', main);
 router.use('/user', userRouter);
 router.use('/board', boardRouter);
 router.use('/api/admin', adminRouter);

@@ -1,8 +1,15 @@
-const pool = require('../../db').pool;
+const {pool} = require('../../db');
 const {sqls} = require('./stat.js');
 
 exports.admin = async (req, res) => {
-    //
+    if (req.headers.cookie !== undefined) {
+        if (req.headers.cookie.includes('connect.sid') === true) res.send('1');
+    } else {
+        req.session.destroy(()=>{
+            req.session
+        });
+        res.send('0');
+    }
 };
 
 exports.login = async (req, res) => {

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin</title>
+    <script type="text/javascript" src="https://unpkg.com/axios@0.26.0/dist/axios.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="/css/admin/admin.css">
+    <link type="text/css" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Arvo">
+    <link type="text/css" rel="stylesheet" href="https://cdn.rawgit.com/moonspam/NanumSquare/master/nanumsquare.css">
+    <script type="text/javascript" src="http://localhost:3001/util/timer.js"></script>
+    <script type="text/javascript">
+        document.addEventListener('DOMContentLoaded', init);
+        async function init() {
+            const option = {withCredentials:true};
+            const container = document.querySelector('#container');
+            const afterLogin = document.querySelector('#afterLogin');
+            const beforeLogin = document.querySelector('#beforeLogin');
+
+            const response = await axios.post('http://localhost:3000/api/admin/', null, option);
+            if (response.data === 0) {
+                container.innerHTML = `<h1>Admin Page</h1>`;
+                container.innerHTML += beforeLogin.innerHTML;
+                const login = document.querySelector('#login');
+                login.addEventListener('submit', async (e)=>{
+                    e.preventDefault();
+                    const {userid, userpw} = e.target;
+                    const body = {
+                        userid:userid.value,
+                        userpw:userpw.value
+                    };
+                    const response = await axios.post('http://localhost:3000/api/admin/login', body, option);
+                    if (response.data === 'Login Fail') alert('Check your ID or Password.');
+                    else location.href = 'http://localhost:3001/admin';
+                });
+            } else {
+                container.innerHTML = `<h1>Admin Page</h1>`;
+                container.innerHTML += afterLogin.innerHTML;
+                const logout = document.querySelector('#logout');
+                const counter = document.querySelector('#counter');
+                const more = document.querySelector('#more');
+
+                counter_init();
+                more.addEventListener('click', ()=> cnt = 20 * 60);
+                logout.addEventListener('click', async (e)=>{
+                    e.preventDefault();
+                    const response = await axios.post('http://localhost:3001/admin/logout', null, option);
+                    location.href = 'http://localhost:3001/admin';
+                });
+            }
+        };
+    </script>
+</head>
+<body>
+    <div id="container">
+        <h1>Admin Page</h1>
+        <template id="afterLogin">
+            <div id="timer">
+                <span id="counter">20:00</span><button id="more">Reset</button>
+            </div>
+            <nav>
+                <a href="/admin/user"><strong>Users</strong></a>
+                <a href="/admin/category"><strong>Categories</strong></a>
+                <a href="/admin/board"><strong>Board</strong></a>
+                <a href="/admin/stats"><strong>Stats</strong></a>
+                <button id="logout">Logout</button>
+            </nav>
+        </template>
+        <template id="beforeLogin">
+            <h3>Login</h3>
+            <form method="post" id="login" action="http://localhost:3000/api/admin">
+                <ul>
+                    <li><strong>ID : </strong><input type="text" name="userid" id="userid" placeholder="admin ID"></li>
+                    <li><strong>PW : </strong><input type="password" name="userpw" id="userpw" placeholder="admin PW"></li>
+                    <input type="submit" value="Login">
+                </ul>
+            </form>
+        </template>
+    </div>
+</body>
+</html>

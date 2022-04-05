@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>오이마켓 - 로그인</title>
+    <link rel="shortcut icon" href="../favicon.png">
+    <link type="text/css" rel="stylesheet" href="/css/user/login.css">
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script type="text/javascript">
+        document.addEventListener('DOMContentLoaded', () => {
+            const frm = document.querySelector('#login_frm');
+            frm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const userid = document.querySelector('#userid').value;
+                const userpw = document.querySelector('#userpw').value;
+
+                const body = {
+                    userid,
+                    userpw
+                };
+
+                const option = {
+                    'Content-type':'application/json',
+                    withCredentials:true,
+                };
+
+                try {
+                    const response = await axios.post('http://localhost:3000/user/login', body, option);
+                    if(response.data.errno !== 0) throw new Error('로그인 에러!');
+            
+                    alert(`
+                        아이디는 ${response.data.result[0].userid}
+                        닉네임은 ${response.data.result[0].nickname}
+                        이름은 ${response.data.result[0].name}
+                        레벨은 ${response.data.result[0].level}
+                        현재 포인트는 ${response.data.result[0].point} 점 입니다.
+                    `);
+
+                    const lastPage = '{{pageName}}';
+                    if (lastPage) {
+                        location.href = lastPage;
+                    } else {
+                        location.href = 'http://localhost:3001';
+                    }
+                } catch (e) {
+                    alert('아이디나 비밀번호를 다시 입력해주세요.');
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+    <header>
+        <h1>
+            오세요~ 이쪽이에요!
+        </h1>
+        <h2>오이마켓 로그인</h2>
+    </header>
+    <div id="container">
+        <form method="post" action="http://localhost:3000/user/login" id="login_frm">
+            <ul>
+                <li>
+                    <div><strong>아이디</strong></div>
+                    <input type="text" name="userid" id="userid" minlength="4" maxlength="10" placeholder="아이디 입력">
+                </li>
+                <li>
+                    <div><strong>비밀번호</strong></div>
+                    <input type="password" name="userpw" id="userpw" minlength="4" maxlength="10" placeholder="비밀번호 입력">
+                </li>
+            </ul>
+            <input type="submit" value="로그인" id="submit">
+        </form>
+        <div id="else">
+            <a href="/user/kakao/login" id="kakao_login">카카오 로그인</a>
+            <div id="join">
+                아직 회원이 아니라면?
+                <a href="/user/agree">회원가입</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
