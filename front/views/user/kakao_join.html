@@ -114,29 +114,38 @@
             const email = document.querySelector('#email').innerHTML
             const intro = document.querySelector('#intro').value
 
-            const body = {
-                userid,
-                userpw,
-                userimage,
-                name,
-                nickname,
-                birth:[year,month,day],
-                address,
-                gender,
-                tel:[tel1,tel2,tel3],
-                phone:[phone1,phone2,phone3],
-                email,
-                intro
-            }
+            try {
+                if(userid=='' || userpw=='' || name=='' || year=='' || month=='' || day=='' ||
+                   gender=='' || address =='' || tel1=='' || tel2=='' || tel3=='' || phone1=='' ||
+                   phone2=='' || phone3=='' || intro=='') throw new Error
 
-            const option = {
-                'Content-type':'application/json',
-                withCredentials:true,
-            }
-            
-            const response = await axios.post('http://localhost:3000/user/kakaoJoin',body,option)
-            if(response.data.errno === 0){
-                location.href = 'http://localhost:3001/user/kakaoWelcome'
+                const body = {
+                    userid,
+                    userpw,
+                    userimage,
+                    name,
+                    nickname,
+                    birth:[year,month,day],
+                    address,
+                    gender,
+                    tel:[tel1,tel2,tel3],
+                    phone:[phone1,phone2,phone3],
+                    email,
+                    intro
+                }
+
+                const option = {
+                    'Content-type':'application/json',
+                    withCredentials:true,
+                }
+                
+                const response = await axios.post('http://localhost:3000/user/kakaoJoin',body,option)
+                if(response.data.errno === 0){
+                    location.href = 'http://localhost:3001/user/welcome'
+                }
+            } catch (e) {
+                console.log(e.messege)
+                alert('빈값 다 채우세요')
             }
         })
     </script>

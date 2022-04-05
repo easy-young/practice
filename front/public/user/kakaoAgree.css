@@ -128,14 +128,18 @@ ul,li {
     background-color: rgb(255,224,224);
     border-radius: 10px;
     border: 3px solid rgb(253, 199, 199);
+    box-sizing: border-box;
+    text-align: center;
+    padding-top: 15px;
 }
 
 #footer {
     width : 100%;
     height: 100%;
-    padding-left: 100px;
-    padding-bottom: 50px;
+    padding : 50px 0 50px 100px;
     box-sizing: border-box;
+    margin-top: 100px;
+    border-top: 1px solid #eeeeee;
 }
 
 #footer > #logo {
@@ -149,6 +153,10 @@ ul,li {
     display: flex;
     justify-content: space-between;
     /* background-color: burlywood; */
+}
+
+#footer > #footer_info > #intro2 {
+    margin-top: 20px;
 }
 
 #footer > #footer_info > #intro2 > li {
