@@ -111,7 +111,3 @@ exports.profileUpdate = (req,res)=>{
 exports.welcome = (req,res) => {
     res.render('./user/welcome')
 }
-
-exports.kakaoWelcome = (req,res) => {
-    res.render('./user/kakao_welcome.html')
-}

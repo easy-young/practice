@@ -1,0 +1,165 @@
+* {
+    margin: 0;
+    padding: 0;
+    font-family: 'GangwonEdu_OTFLightA';;
+    font-size: 20px;
+}
+
+a {
+    text-decoration: none;
+    color: black;
+}
+
+ul,li {
+    list-style : none;
+}
+
+#all {
+    width : 100%;
+    height: 100%;
+    background-color: rgba(221, 221, 221, 0.933);
+}
+
+#wrap {
+    width : 1200px;
+    height: 100%;
+    margin : 0 auto;
+    padding-top: 100px;
+    /* background-color: aquamarine; */
+}
+
+#content > #title {
+    width : 100%;
+    height : 200px;
+    background-color: white;
+    text-align: center;
+    padding-top: 15px;
+    border: 3px solid black;
+    border-radius: 20px;
+    box-sizing: border-box;
+}
+
+#content > #agree {
+    width : 100%;
+    height: 100%;
+    /* background-color: tomato; */
+    padding: 20px 0 ;
+    box-sizing: border-box;
+    padding-bottom: 100px;
+    border-bottom: 1px solid white;
+}
+
+#content > #agree > ul {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    width : 100%;
+    height: 100%;
+    border: 3px solid black;
+    padding: 80px;
+    margin: 0 auto;
+    border-radius: 20px;
+    background-color: white;
+    box-sizing: border-box;
+}
+
+#content > #agree > ul > li {
+    
+}
+
+#content > #agree > ul > li > #agree_div {
+    overflow: scroll;
+    width : 900px;
+    height: 400px;
+    margin: 0 auto;
+    padding: 30px;
+    border-top: 3px solid #e0d7d7;
+    border-left: 3px solid #e0d7d7;
+    border-top-left-radius: 15px;
+}
+
+#content > #agree > ul > li > #agree_div2 {
+    width : 800px;
+    height: 100px;
+    margin : 0 auto;
+}
+
+#content > #agree > ul > li > #agree_div2 > input {
+    width : 30px;
+    height: 30px;
+    margin: 0 auto;
+    margin-top: 20px;
+}
+
+#agree_all {
+    width : 300px;
+    height: 70px;
+    margin: 0 auto;
+    text-align: center;
+    padding-top: 15px;
+    box-sizing: border-box;
+    background-color: rgb(255,224,224);
+    border-radius: 10px;
+    border: 3px solid rgb(253, 199, 199);
+}
+
+
+
+#back {
+    display: flex;
+    justify-content: space-evenly;
+    width : 500px;
+    height: 60px;
+    margin: 0 auto;
+    margin-top: 40px;
+}
+
+#back > a {
+    width: 200px;
+    height: 60px;
+    background-color: rgb(173,173,173);
+    border: 3px solid rgb(131, 131, 131);
+    border-radius: 10px;
+    padding-top: 13px;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+#agree_a {
+    width : 200px;
+    height: 60px;
+    background-color: rgb(255,224,224);
+    border-radius: 10px;
+    border: 3px solid rgb(253, 199, 199);
+}
+
+
+#footer {
+    width : 100%;
+    height: 100%;
+    padding-left: 100px;
+    padding-bottom: 50px;
+    box-sizing: border-box;
+}
+
+#footer > #logo {
+    float: left;
+    margin-right: 40px;
+}
+
+#footer > #footer_info {
+    /* background-color: red; */
+}
+
+#footer > #footer_info > #intro {
+    width : 800px;
+    font: bold;
+    display: flex;
+    justify-content: space-between;
+    /* background-color: burlywood; */
+}
+
+#footer > #footer_info > #intro2 > li {
+    font-size: 16px;
+    color: gray;
+}
