@@ -65,109 +65,107 @@
     </script>
 </head>
 <body>
-    <div id="wrap">
-        <div id="header">
-            <div id="logo">
-                <h1>
-                    <a href="/">Logo</a>
-                </h1>
+    <div id="all">
+        <div id="wrap">
+            <div id="header">
+                <div id="logo">
+                    <h1>
+                        <a href="/">Logo</a>
+                    </h1>
+                </div>
+                <div id="category">
+                    <h2>
+                        나의 오이 페이지
+                    </h2>
+                </div>
             </div>
-            <div id="category">
+            <div id="profiles">
+
+            </div>
+            
+            <template id="profile">
+                <div id="content">
+                    <div id="content_top">
+                        <h3>
+                            기본정보
+                        </h3>
+                        <span>
+                            회원님의 소중한 개인정보는 52마켓 개인정보처리방침에 따라 안전하게 관리되고 있습니다.
+                        </span>
+                    </div>
+                    <table id="info">
+                        <tr>
+                            <td>프로필 사진</td>
+                            <td><img src="{userimage}" id="profile_img"></td>
+                        </tr>
+                        <tr>
+                            <td>ID</td>
+                            <td>{userid}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>이름</strong></td>
+                            <td>{name}</td>
+                        </tr>
+                        
+                        <tr>
+                            <td><strong>닉네임</strong></td>
+                            <td>{nickname}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>생년월일</strong></td>
+                            <td>{birth}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>주소</strong></td>
+                            <td>{address}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>성별</strong></td>
+                            <td>{gender}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>집전화</strong></td>
+                            <td>{tel}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>핸드폰번호</strong></td>
+                            <td>{phone}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>E-mail</strong></td>
+                            <td>{email}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>자기소개</strong></td>
+                            <td>{intro}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>나의 포인트</strong></td>
+                            <td>{point}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>나의 레벨</strong></td>
+                            <td>{active}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>가입일</strong></td>
+                            <td>{date}</td>
+                        </tr>
+                    </table>
+                </div>
+            </template>
+            <br>
+            <div id="profile_aa">
+                <a href="/user/profileUpdate" id="profile_a">프로필 수정하기</a>
+            </div>
+            
+            <div id="footer">
                 <h2>
-                    나의 오이 페이지
+                    
                 </h2>
             </div>
-        </div>
-        <div id="profiles">
 
         </div>
-        
-        <template id="profile">
-            <div id="content">
-                <div id="content_top">
-                    <h3>
-                        기본정보
-                    </h3>
-                    <span>
-                        회원님의 소중한 개인정보는 52마켓 개인정보처리방침에 따라 안전하게 관리되고 있습니다.
-                    </span>
-                </div>
-                <table id="info">
-                    <tr>
-                        <td>ID</td>
-                        <td>{userid}</td>
-                    </tr>
-                    <tr>
-                        <td><strong>이름</strong></td>
-                        <td>{name}</td>
-                    </tr>
-                    <tr>
-                        <td><strong>사진</strong></td>
-                        <td><img src="{userimage}"></td>
-                    </tr>
-                    <tr>
-                        <td><strong>닉네임</strong></td>
-                        <td>{nickname}</td>
-                    </tr>
-                    <tr>
-                        <td><strong>생년월일</strong></td>
-                        <td>{birth}</td>
-                    </tr>
-                    <tr>
-                        <td><strong>주소</strong></td>
-                        <td>{address}</td>
-                    </tr>
-                    <tr>
-                        <td><strong>성별</strong></td>
-                        <td>{gender}</td>
-                    </tr>
-                    <tr>
-                        <td><strong>집전화</strong></td>
-                        <td>{tel}</td>
-                    </tr>
-                    <tr>
-                        <td><strong>핸드폰번호</strong></td>
-                        <td>{phone}</td>
-                    </tr>
-                    <tr>
-                        <td><strong>E-mail</strong></td>
-                        <td>{email}</td>
-                    </tr>
-                    <tr>
-                        <td><strong>자기소개</strong></td>
-                        <td>{intro}</td>
-                    </tr>
-                    <tr>
-                        <td><strong>나의 포인트</strong></td>
-                        <td>{point}</td>
-                    </tr>
-                    <tr>
-                        <td><strong>나의 레벨</strong></td>
-                        <td>{active}</td>
-                    </tr>
-                    <tr>
-                        <td><strong>가입일</strong></td>
-                        <td>{date}</td>
-                    </tr>
-                            
-                            
-                            
-                            
-                            
-                            
-                            
-                            
-                </table>
-            </div>
-        </template>
-        <a href="/user/profileUpdate">프로필 수정하기</a>
-
-        <div id="footer">
-            <h2>
-                
-            </h2>
-        </div>
-
     </div>
 </body>
 </html>
