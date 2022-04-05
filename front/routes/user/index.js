@@ -12,6 +12,5 @@ router.get('/kakaoAgree',controller.kakaoAgree)
 router.get('/profile',controller.profile)
 router.get('/profileUpdate',controller.profileUpdate)
 router.get('/welcome',controller.welcome)
-router.get('/kakaoWelcome',controller.kakaoWelcome)
 
 module.exports = router

@@ -302,52 +302,57 @@ exports.resign = async (req,res) => {
 }
 
 exports.welcome = async (req,res) => {
-    const {userid} = req.user
-    const sql = `SELECT * FROM user WHERE userid=?`
-    const prepare = [userid]
+    const cookieAuth = req.headers.cookie.split('=')[0]
+    if(cookieAuth == 'token'){
+        const {userid} = req.user
+        const sql = `SELECT * FROM user WHERE userid=?`
+        const prepare = [userid]
+        
+        let [[result]] = await pool.execute(sql,prepare)
+        
+        let birth = JSON.stringify(result.birth)
+        let date = JSON.stringify(result.date)
+        
+        const sql1 = `SELECT DATE_ADD(${birth}, INTERVAL 9 HOUR)`
+        const sql2 = `SELECT DATE_ADD(${date}, INTERVAL 9 HOUR)`
+        let [[result1]] = await pool.execute(sql1)
+        let [[result2]] = await pool.execute(sql2)
     
-    let [[result]] = await pool.execute(sql,prepare)
+        let a = JSON.stringify(result1).split(`"`)[5].split(' ')[0]
+        let b = JSON.stringify(result2).split('"')[5]
+        result.birth = a
+        result.date = b
+        
+        res.json(result)
+    } else if(cookieAuth == 'kakaoToken'){
+        const cookie = req.headers.cookie.split('=')[1].split('.')[1]
+        const user = JSON.parse(Buffer.from(cookie,'base64').toString('utf-8'))
+        const {nickname, email} = user
     
-    let birth = JSON.stringify(result.birth)
-    let date = JSON.stringify(result.date)
+        const sql = `SELECT * FROM user WHERE nickname=? and email=?`
+        const prepare = [nickname, email]
+        let [[result]] = await pool.execute(sql, prepare)
     
-    const sql1 = `SELECT DATE_ADD(${birth}, INTERVAL 9 HOUR)`
-    const sql2 = `SELECT DATE_ADD(${date}, INTERVAL 9 HOUR)`
-    let [[result1]] = await pool.execute(sql1)
-    let [[result2]] = await pool.execute(sql2)
-
-    let a = JSON.stringify(result1).split(`"`)[5].split(' ')[0]
-    let b = JSON.stringify(result2).split('"')[5]
-    result.birth = a
-    result.date = b
+        let birth = JSON.stringify(result.birth)
+        let date = JSON.stringify(result.date)
+        
+        const sql1 = `SELECT DATE_ADD(${birth}, INTERVAL 9 HOUR)`
+        const sql2 = `SELECT DATE_ADD(${date}, INTERVAL 9 HOUR)`
+        let [[result1]] = await pool.execute(sql1)
+        let [[result2]] = await pool.execute(sql2)
     
-    res.json(result)
+        let a = JSON.stringify(result1).split(`"`)[5].split(' ')[0]
+        let b = JSON.stringify(result2).split('"')[5]
+        result.birth = a
+        result.date = b
+    
+        res.json(result)
+    }
 }
 
-exports.kakaoWelcome = async (req,res)=>{
-    const cookie = req.headers.cookie.split('=')[1].split('.')[1]
-    const user = JSON.parse(Buffer.from(cookie,'base64').toString('utf-8'))
-    const {nickname, email} = user
-
-    const sql = `SELECT * FROM user WHERE nickname=? and email=?`
-    const prepare = [nickname, email]
-    let [[result]] = await pool.execute(sql, prepare)
-
-    let birth = JSON.stringify(result.birth)
-    let date = JSON.stringify(result.date)
+// exports.kakaoWelcome = async (req,res)=>{
     
-    const sql1 = `SELECT DATE_ADD(${birth}, INTERVAL 9 HOUR)`
-    const sql2 = `SELECT DATE_ADD(${date}, INTERVAL 9 HOUR)`
-    let [[result1]] = await pool.execute(sql1)
-    let [[result2]] = await pool.execute(sql2)
-
-    let a = JSON.stringify(result1).split(`"`)[5].split(' ')[0]
-    let b = JSON.stringify(result2).split('"')[5]
-    result.birth = a
-    result.date = b
-
-    res.json(result)
-}
+// }
 
 exports.Auth = async (req,res)=>{
     try{
