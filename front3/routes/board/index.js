@@ -1,20 +1,14 @@
-const express = require('express');
-const router = express.Router();
+const express = require('express')
+const router = express.Router()
+const controller = require('./controller.js')
 
-router.get('/list', (req, res) => {
-    res.render('board/list.html');
-});
 
-router.get('/view/:idx', (req, res) => {
-    res.render('board/view.html');
-});
 
-router.get('/write', (req, res) => {
-    res.render('board/write.html');
-});
 
-router.get('/modify', (req, res) => {
-    res.render('board/modify.html');
-});
 
-module.exports = router;
+router.get('/list',controller.list)
+router.get('/view/:idx',controller.view)
+router.get('/write',controller.write)
+router.get('/modify/:idx',controller.modify)
+
+module.exports = router
