@@ -99,6 +99,22 @@
     <script type="text/javascript">
         const frm = document.querySelector('#join_frm')
 
+        async function asdf(){
+            const option = {
+                'Content-type':'application/json',
+                withCredentials:true,
+            }
+
+            const response = await axios.post('http://localhost:3000/user/auth',null,option)
+            const {errno} = response.data
+            if(errno == 1) location.href = 'http://localhost:3001/'
+        }
+        asdf()
+        
+
+
+
+
         const emailSelect = document.querySelector('#email_select')
         emailSelect.addEventListener('click',(e)=>{
             let email2Value = document.querySelector('#email2')
@@ -148,8 +164,9 @@
             formData.append('email', email);
             formData.append('intro', intro);
 
+
             try {
-                if(userid=='' || userpw=='' || name=='' || nickname=='' || year=='' || month=='' ||
+                if(userimage == undefined || userid=='' || userpw=='' || name=='' || nickname=='' || year=='' || month=='' ||
                    day=='' || gender=='' || email1=='' || email2=='' || intro=='') throw new Error
 
                 try {

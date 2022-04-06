@@ -10,7 +10,7 @@
 
     <script type="text/javascript">
         document.addEventListener('DOMContentLoaded',async ()=>{
-            
+
         const profile = document.querySelector('#profile')
         const profileUpdate = document.querySelector('#profileUpdate').innerHTML
         
@@ -68,6 +68,8 @@
                                 .replace('{active}',active)
                                 .replace('{date}',date.substring(0,10))
 
+        
+
         profile.innerHTML = template
         
         const profilefrm = document.querySelector('#profilefrm')
@@ -79,7 +81,6 @@
         if(gender==="F") F.checked = true 
 
         const default_birth = birth.substring(0,10)
-        // document.getElementById("birth").defaultValue = default_birth;
 
         const emailSelect = document.querySelector('#email_select')
         emailSelect.addEventListener('click',(e)=>{
@@ -120,10 +121,10 @@
             const intro1 = e.target.intro.value
             
             const formData = new FormData()
-            formData.append('userimage',userimage1)
             formData.append('userpw',userpw1)
+            formData.append('userimage',userimage1)
             formData.append('name',name1)
-            formData.append('nickname',nickname)
+            formData.append('nickname',nickname1)
             formData.append('birth',birth)
             formData.append('address',address1)
             formData.append('gender',gender1)
@@ -132,17 +133,27 @@
             formData.append('email',email11)
             formData.append('intro',intro1)
 
+            try{
+                if( userpw1=='' || userimage1==undefined || name1=='' || nickname1=='' || address1=='' ||
+                    gender1=='' || tel1=='' || tel2=='' || tel3=='' || phone1=='' || phone2=='' || phone3=='' ||
+                    email1=='' || email2=='' || intro1 =='') throw new Error
 
-            const body = formData
+                const body = formData
 
-            const response2 = await axios.post('http://localhost:3000/user/profileUpdate', body, option)
+                const response2 = await axios.post('http://localhost:3000/user/profileUpdate', body, option)
 
-            if(response2.data.err == 1062) {
-                alert('닉네임이 중복됩니다.')
-            } else {
-                alert(`회원정보가 수정되었습니다!`)
-                location.href = 'http://localhost:3001/user/profile'
+                if(response2.data.err == 1062) {
+                    alert('닉네임이 중복됩니다.')
+                } else {
+                    alert(`회원정보가 수정되었습니다!`)
+                    location.href = 'http://localhost:3001/user/profile'
+                }
+            }catch(e){
+                console.log(e)
+                alert('빈값 다 채우세요')
             }
+            
+            
         })
 
         const resign = document.querySelector('#resign')
@@ -187,6 +198,7 @@
                 </li>
                 <li>
                     <strong>사진 :</strong>
+                    <img src="{userimage}">
                     <input type="file" value="{userimage}" name="userimage" id="userimage" minlength="3" maxlength="10">       
                 </li>
                 <li>
