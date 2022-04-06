@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>오이마켓</title>
+    <link rel="shortcut icon" href="../favicon.png">
+    <link type="text/css" rel="stylesheet" href="http://localhost:3001/css/user/kakao_join.css">
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script type="text/javascript">
+        const frm = document.querySelector('#join_frm');
+        frm.addEventListener('submit', async (e)=>{
+            e.preventDefault();
+            const userid = document.querySelector('#userid').value;
+            const userpw = document.querySelector('#userpw').value;
+            const userimage = document.querySelector('#userimage').innerHTML;
+            const name = document.querySelector('#name').value;
+            const nickname = document.querySelector('#nickname').innerHTML;
+            const year = document.querySelector('#year').value;
+            const month = document.querySelector('#month').value;
+            const day = document.querySelector('#day').value;
+            const address = document.querySelector('#address').value;
+            const gender = document.querySelector('input[name="gender"]:checked').value;
+            const tel1= document.querySelector('#tel1').value;
+            const tel2 = document.querySelector('#tel2').value;
+            const tel3 = document.querySelector('#tel3').value;
+            const phone1 = document.querySelector('#phone1').value;
+            const phone2 = document.querySelector('#phone2').value;
+            const phone3 = document.querySelector('#phone3').value;
+            const email = document.querySelector('#email').innerHTML;
+            const intro = document.querySelector('#intro').value;
+
+            const body = {
+                userid,
+                userpw,
+                userimage,
+                name,
+                nickname,
+                birth:[year,month,day],
+                address,
+                gender,
+                tel:[tel1,tel2,tel3],
+                phone:[phone1,phone2,phone3],
+                email,
+                intro
+            };
+
+            const option = {
+                'Content-type':'application/json',
+                withCredentials:true,
+            };
+            
+            const response = await axios.post('http://localhost:3000/user/kakaoJoin', body, option);
+            if (response.data.errno === 0) {
+                location.href = 'http://localhost:3001/user/welcome';
+            }
+        });
+    </script>
+</head>
+<body>
+    <header>
+        <h1>
+            오세요~ 이쪽이에요!
+        </h1>
+        <h2>오이마켓 회원가입</h2>
+    </header>
+    <form method="post" action="http://localhost:3000/user/kakaoJoin" id="join_frm" enctype="multipart/form-data">
+        <ul>
+            <li>
+                <strong>아이디</strong>
+                <input type="text" name="userid" id="userid" minlength="4" maxlength="10">
+            </li>
+            <li>
+                <strong>비밀번호</strong>
+                <input type="password" name="userpw" id="userpw" minlength="4" maxlength="10">
+            </li>
+            <li>
+                <strong>사진</strong>
+                <span id="userimage"><img src="{{userimage}}"></span>
+            </li>
+            <li>
+                <strong>이름</strong>
+                <input type="text" name="name" id="name" minlength="2" maxlength="10">
+            </li>
+            <li>
+                <strong>닉네임</strong>
+                <span id="nickname">{{nickname}}</span>
+            </li>
+            <li>
+                <strong>생년월일 :</strong>
+                    <select id="year">
+                        <option value="1999">1999년</option>
+                        <option value="2000">2000년</option>
+                        <option value="2001">2001년</option>
+                        <option value="2002">2002년</option>
+                    </select>
+                    <select id="month">
+                        <option value="01">1월</option>
+                        <option value="02">2월</option>
+                    </select>
+                    <select id="day">
+                        <option value="01">1일</option>
+                        <option value="02">2일</option>
+                        <option value="03">3일</option>
+                    </select>
+            </li>
+            <li>
+                <strong>주소</strong>
+                <input type="text" name="address" minlength="4" id="address">
+            </li>
+            <li>
+                <strong>성별</strong>
+                <input type="radio" name="gender" id="genderM" value="M">남자
+                <input type="radio" name="gender" id="genderF" value="F" checked="checked">여자
+            </li>
+            <li>
+                <strong>집전화 :</strong>
+                <input type="text" name="tel" id="tel1" minlength="2" maxlength="3"> -
+                <input type="text" name="tel" id="tel2" minlength="3" maxlength="4"> -
+                <input type="text" name="tel" id="tel3" minlength="4" maxlength="4">
+            </li>
+            <li>
+                <strong>핸드폰번호 :</strong>
+                <input type="text" name="phone" id="phone1" minlength="3" maxlength="3"> -
+                <input type="text" name="phone" id="phone2" minlength="4" maxlength="4"> -
+                <input type="text" name="phone" id="phone3" minlength="4" maxlength="4">
+            </li>
+            <li>
+                <strong>E-mail</strong>
+                <span id="email">{{email}}</span>
+            </li>
+            <li>
+                <strong>소개글</strong>
+                <input type="text" name="intro" id="intro" minlength="4" >
+            </li>
+        </ul>
+        <input type="submit" value="회원가입">
+    </form>
+</body>
+</html>

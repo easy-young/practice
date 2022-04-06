@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>오이마켓 - 환영페이지</title>
+    <link rel="shortcut icon" href="favicon.png">
+    <link type="text/css" rel="stylesheet" href="/css/user/welcome.css">
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script type="text/javascript">
+        document.addEventListener('DOMContentLoaded', async ()=>{
+            const welcome = document.querySelector('#welcome');
+            const welcome2 = document.querySelector('#welcome2').innerHTML;
+            const option = {
+                "Content-type":"application/json",
+                withCredentials:true,
+            };
+            const response = await axios.post('http://localhost:3000/user/welcome', null, option);
+            const { level, userid, userpw, userimage, name, nickname,
+                    birth, address, gender, tel, phone, email, intro,
+                    point, active, date } = response.data;
+
+            let template = '';
+            template = welcome2.replace('{userid}', userid)
+                               .replace('{userimage}', userimage)
+                               .replace('{name}', name)
+                               .replace('{nickname}', nickname)
+                               .replace('{birth}', birth)
+                               .replace('{address}', address)
+                               .replace('{gender}', gender)
+                               .replace('{tel}', tel.substring(0,3) + '-' + tel.substring(3,6) + '-' + tel.substring(6,10))
+                               .replace('{phone}', phone.substring(0,3) + '-' + phone.substring(3,7) + '-' + phone.substring(7,11))
+                               .replace('{email}', email)
+                               .replace('{intro}', intro)
+                               .replace('{point}', point)
+                               .replace('{active}', active)
+                               .replace('{date}', date);
+            welcome.innerHTML = template;
+        });
+    </script>
+</head>
+<body>
+    <header>
+        <h1>
+            오세요~ 이쪽이에요!
+        </h1>
+        <h2>오이마켓 환영페이지</h2>
+    </header>
+    <div id="welcome"></div>
+    <template id="welcome2">
+        <div id="content">
+            <div>
+                오이마켓의 회원이 되신 것을 환영합니다!
+            </div>
+            <table cellspacing="0" cellpadding="0" border="1">
+                <tr>
+                    <td>사진</td>
+                    <td><img src="{userimage}" id="welcome_img" width="80px" height="80px" style="border-radius: 40px;"></td>
+                </tr>
+                <tr>
+                    <td>아이디</td>
+                    <td>{userid}</td>
+                </tr>
+                <tr>
+                    <td>이름</td>
+                    <td>{name}</td>
+                </tr>
+                <tr>
+                    <td>닉네임</td>
+                    <td>{nickname}</td>
+                </tr>
+                <tr>
+                    <td>생년월일</td>
+                    <td>{birth}</td>
+                </tr>
+                <tr>
+                    <td>주소</td>
+                    <td>{address}</td>
+                </tr>
+                <tr>
+                    <td>성별</td>
+                    <td>{gender}</td>
+                </tr>
+                <tr>
+                    <td>집전화</td>
+                    <td>{tel}</td>
+                </tr>
+                <tr>
+                    <td>휴대폰번호</td>
+                    <td>{phone}</td>
+                </tr>
+                <tr>
+                    <td>E-mail</td>
+                    <td>{email}</td>
+                </tr>
+                <tr>
+                    <td>자기소개</td>
+                    <td>{intro}</td>
+                </tr>
+                <tr>
+                    <td>나의 포인트</td>
+                    <td>{point}</td>
+                </tr>
+                <tr>
+                    <td>나의 레벨</td>
+                    <td>{active}</td>
+                </tr>
+                <tr>
+                    <td>가입일</td>
+                    <td>{date}</td>
+                </tr>
+            </table>
+        </div>
+        <a href="/" id="home">홈으로</a>
+    </template>
+</body>
+</html>

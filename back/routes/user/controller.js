@@ -3,8 +3,7 @@ const {createToken} = require('../../utils/jwt.js')
 const axios = require('axios')
 
 exports.join = async (req,res)=>{
-
-    let userimage = req.file.filename
+    let userimage = req.file.filename;
     userimage = `http://localhost:3000/uploadsUser/${userimage}`
     const { userid, userpw, name, nickname, address, gender,
             intro, email, birth, phone,tel } = req.body
@@ -156,8 +155,8 @@ exports.profile = async (req,res) => {
 
         result.birth = real_birth
         result.date = real_date
-        
-        res.json(result)
+
+        res.json(result);
 
     } else if(cookie == 'kakaoToken'){
         const {email} = user
@@ -177,11 +176,9 @@ exports.profile = async (req,res) => {
 
         res.json(result)
     }
-    
 }
 
 exports.profileUpdate = async (req,res)=>{
-    
     const cookie = req.headers.cookie.split('=')[0]
     const cookie1 = req.headers.cookie.split('=')[1].split('.')[1]
     const user = JSON.parse(Buffer.from(cookie1,'base64').toString('utf-8'))

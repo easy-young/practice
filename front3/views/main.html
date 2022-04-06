@@ -7,8 +7,10 @@
     <title>오이마켓</title>
     <link rel="shortcut icon" href="favicon.png">
     <link type="text/css" rel="stylesheet" href="http://localhost:3001/css/main.css">
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script type="text/javascript">
-        document.addEventListener('DOMContentLoaded', ()=>{
+        document.addEventListener('DOMContentLoaded', async ()=>{
+            const option = {withCredentials:true};
             const ul = document.querySelector('header > ul');
             const beforeLogin = document.querySelector('#beforeLogin').innerHTML;
             const afterLogin = document.querySelector('#afterLogin').innerHTML;
@@ -18,8 +20,19 @@
             const scrap = document.querySelectorAll('#scrap');
             const befoerScrap = document.querySelectorAll('#beforeScrap');
             const afterScrap = document.querySelectorAll('#afterScrap');
-            // ul.innerHTML = beforeLogin;
-            ul.innerHTML = afterLogin;
+
+            const response = await axios.post('http://localhost:3000/loginCheck', null, option);
+            const {errno} = response.data;
+            if (errno === 1) ul.innerHTML = beforeLogin;
+            else {
+                ul.innerHTML = afterLogin;
+                const logout = document.querySelector('#logout');
+                logout.addEventListener('click', async (e)=>{
+                    e.preventDefault();
+                    const response2 = await axios.post('http://localhost:3000/user/logout', null, option);
+                    location.href = 'http://localhost:3001/';
+                });
+            }
             
             const cnt = [];
             const cnt2 = [];
@@ -31,7 +44,7 @@
             }
             for (let j = 0; j < like.length; j++) {
                 like[j].addEventListener('click', ()=>{
-                    if (cnt[j]%2 === 1) {
+                    if (cnt[j] % 2 === 1) {
                         beforeLike[j].style.display = 'none';
                         afterLike[j].style.display = 'block';
                     } else {
@@ -41,7 +54,7 @@
                     cnt[j]++;
                 });
                 scrap[j].addEventListener('click', ()=>{
-                    if (cnt2[j]%2 === 1) {
+                    if (cnt2[j] % 2 === 1) {
                         befoerScrap[j].style.display = 'none';
                         afterScrap[j].style.display = 'block';
                     } else {
@@ -60,12 +73,13 @@
     <header>
         <ul>
             <template id="beforeLogin">
-                <li><a href="#">회원가입</a></li>
-                <li><a href="#">로그인</a></li>
+                <li><a href="user/join">회원가입</a></li>
+                <li><a href="user/login">로그인</a></li>
             </template>
             <template id="afterLogin">
+                <li><a href="user/profile">프로필</a></li>
                 <li><a href="board/write">글쓰기</a></li>
-                <li><a href="#">로그아웃</a></li>
+                <li><button id="logout">로그아웃</button></li>
             </template>
         </ul>
         <div id="category">
