@@ -10,7 +10,7 @@
 
     <script type="text/javascript">
         document.addEventListener('DOMContentLoaded',async ()=>{
-            
+
         const profile = document.querySelector('#profile')
         const profileUpdate = document.querySelector('#profileUpdate').innerHTML
         
@@ -68,6 +68,8 @@
                                 .replace('{active}',active)
                                 .replace('{date}',date.substring(0,10))
 
+        
+
         profile.innerHTML = template
         
         const profilefrm = document.querySelector('#profilefrm')
@@ -79,7 +81,6 @@
         if(gender==="F") F.checked = true 
 
         const default_birth = birth.substring(0,10)
-        // document.getElementById("birth").defaultValue = default_birth;
 
         const emailSelect = document.querySelector('#email_select')
         emailSelect.addEventListener('click',(e)=>{
@@ -197,6 +198,7 @@
                 </li>
                 <li>
                     <strong>사진 :</strong>
+                    <img src="{userimage}">
                     <input type="file" value="{userimage}" name="userimage" id="userimage" minlength="3" maxlength="10">       
                 </li>
                 <li>
