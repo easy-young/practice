@@ -150,16 +150,12 @@ exports.profile = async (req,res) => {
         
         let birth = JSON.stringify(result.birth)
         let date = JSON.stringify(result.date)
-        
-        const sql1 = `SELECT DATE_ADD(${birth}, INTERVAL 9 HOUR)`
-        const sql2 = `SELECT DATE_ADD(${date}, INTERVAL 9 HOUR)`
-        let [[result1]] = await pool.execute(sql1)
-        let [[result2]] = await pool.execute(sql2)
-    
-        let a = JSON.stringify(result1).split(`"`)[5].split(' ')[0]
-        let b = JSON.stringify(result2).split('"')[5]
-        result.birth = a
-        result.date = b
+        let real_birth = birth.split('T')[0].substring(1,11)
+        const a = date.split('"')[1].split('T')
+        let real_date = a[0]+' '+a[1].substring(0,8)
+
+        result.birth = real_birth
+        result.date = real_date
         
         res.json(result)
 
@@ -172,16 +168,12 @@ exports.profile = async (req,res) => {
         
         let birth = JSON.stringify(result.birth)
         let date = JSON.stringify(result.date)
-        
-        const sql1 = `SELECT DATE_ADD(${birth}, INTERVAL 9 HOUR)`
-        const sql2 = `SELECT DATE_ADD(${date}, INTERVAL 9 HOUR)`
-        let [[result1]] = await pool.execute(sql1)
-        let [[result2]] = await pool.execute(sql2)
-    
-        let a = JSON.stringify(result1).split(`"`)[5].split(' ')[0]
-        let b = JSON.stringify(result2).split('"')[5]
-        result.birth = a
-        result.date = b
+        let real_birth = birth.split('T')[0].substring(1,11)
+        const a = date.split('"')[1].split('T')
+        let real_date = a[0]+' '+a[1].substring(0,8)
+
+        result.birth = real_birth
+        result.date = real_date
 
         res.json(result)
     }
@@ -193,58 +185,63 @@ exports.profileUpdate = async (req,res)=>{
     const cookie = req.headers.cookie.split('=')[0]
     const cookie1 = req.headers.cookie.split('=')[1].split('.')[1]
     const user = JSON.parse(Buffer.from(cookie1,'base64').toString('utf-8'))
-    if(cookie == 'token'){
-        let userimage = req.file.filename
-        userimage = `http://localhost:3000/uploadsUser/${userimage}`
-        
-        const {userid} = req.user
-        const {userpw,name,nickname,address,gender,intro} = req.body
-        let {phone, birth, tel, email} = req.body
-
-        try {
-            const sql = `UPDATE user SET userpw=?, userimage=?, name=?, nickname=?, birth=?,
-                         address=?, gender=?, tel=?, phone=?, email=?, intro=? WHERE userid=?`
-            const prepare = [ userpw, userimage, name, nickname, birth, address,
-                              gender, tel, phone, email, intro, userid ]
-            const [result] = await pool.execute(sql,prepare)
+    try {
+        if(cookie == 'token'){
+            let userimage = req.file.filename
+            userimage = `http://localhost:3000/uploadsUser/${userimage}`
             
-            res.json(result)
-        } catch(e){
-            console.log(e)
-            const err = 1062
-            res.json({err})
-            console.log('중복된 닉네임 임다')
-            res.redirect('http://localhost:3001/user/profileUpdate')
+            const {userid} = req.user
+            const {userpw,name,nickname,address,gender,intro} = req.body
+            let {phone, birth, tel, email} = req.body
+    
+            try {
+                const sql = `UPDATE user SET userpw=?, userimage=?, name=?, nickname=?, birth=?,
+                             address=?, gender=?, tel=?, phone=?, email=?, intro=? WHERE userid=?`
+                const prepare = [ userpw, userimage, name, nickname, birth, address,
+                                  gender, tel, phone, email, intro, userid ]
+                const [result] = await pool.execute(sql,prepare)
+                
+                res.json(result)
+            } catch(e){
+                console.log(e)
+                const err = 1062
+                res.json({err})
+                console.log('중복된 닉네임 임다')
+                res.redirect('http://localhost:3001/user/profileUpdate')
+            }
+        } else if (cookie == 'kakaoToken'){
+            let {email} = req.body
+            email = email[0]+'@'+email[1]
+    
+            const sql = `SELECT userid FROM user WHERE email=?`
+            const prepare = [email]
+            let [[result]] = await pool.execute(sql,prepare)
+    
+            let {userid} = result
+    
+            let {userpw,userimage,name,nickname,birth,address,gender,tel,phone,intro} = req.body
+            birth = birth[0]+birth[1]+birth[2]
+            tel = tel[0]+tel[1]+tel[2]
+            phone = phone[0]+phone[1]+phone[2]
+            
+            const sql1 = `UPDATE user SET userpw=?, userimage=?, name=?,
+                                          nickname=?, birth=?, address=?,
+                                          gender=?, tel=?, phone=?,
+                                          intro=? WHERE userid=?`
+    
+            const prepare1 = [ userpw, userimage, name,
+                               nickname, birth,address,
+                               gender, tel, phone,
+                               intro, userid ]
+    
+            const [result1] = await pool.execute(sql1,prepare1)
+            
+            res.json(result1)
         }
-    } else if (cookie == 'kakaoToken'){
-        let {email} = req.body
-        email = email[0]+'@'+email[1]
-
-        const sql = `SELECT userid FROM user WHERE email=?`
-        const prepare = [email]
-        let [[result]] = await pool.execute(sql,prepare)
-
-        let {userid} = result
-
-        let {userpw,userimage,name,nickname,birth,address,gender,tel,phone,intro} = req.body
-        birth = birth[0]+birth[1]+birth[2]
-        tel = tel[0]+tel[1]+tel[2]
-        phone = phone[0]+phone[1]+phone[2]
-        
-        const sql1 = `UPDATE user SET userpw=?, userimage=?, name=?,
-                                      nickname=?, birth=?, address=?,
-                                      gender=?, tel=?, phone=?,
-                                      intro=? WHERE userid=?`
-
-        const prepare1 = [ userpw, userimage, name,
-                           nickname, birth,address,
-                           gender, tel, phone,
-                           intro, userid ]
-
-        const [result1] = await pool.execute(sql1,prepare1)
-        
-        res.json(result1)
+    } catch(e){
+        console.log(e.message)
     }
+    
 }
 
 exports.logout = (req,res) => {
@@ -309,20 +306,15 @@ exports.welcome = async (req,res) => {
         const prepare = [userid]
         
         let [[result]] = await pool.execute(sql,prepare)
-        
+
         let birth = JSON.stringify(result.birth)
         let date = JSON.stringify(result.date)
-        
-        const sql1 = `SELECT DATE_ADD(${birth}, INTERVAL 9 HOUR)`
-        const sql2 = `SELECT DATE_ADD(${date}, INTERVAL 9 HOUR)`
-        let [[result1]] = await pool.execute(sql1)
-        let [[result2]] = await pool.execute(sql2)
-    
-        let a = JSON.stringify(result1).split(`"`)[5].split(' ')[0]
-        let b = JSON.stringify(result2).split('"')[5]
-        result.birth = a
-        result.date = b
-        
+        let real_birth = birth.split('T')[0].substring(1,11)
+        const a = date.split('"')[1].split('T')
+        let real_date = a[0]+' '+a[1].substring(0,8)
+
+        result.birth = real_birth
+        result.date = real_date
         res.json(result)
     } else if(cookieAuth == 'kakaoToken'){
         const cookie = req.headers.cookie.split('=')[1].split('.')[1]
@@ -335,77 +327,39 @@ exports.welcome = async (req,res) => {
     
         let birth = JSON.stringify(result.birth)
         let date = JSON.stringify(result.date)
-        
-        const sql1 = `SELECT DATE_ADD(${birth}, INTERVAL 9 HOUR)`
-        const sql2 = `SELECT DATE_ADD(${date}, INTERVAL 9 HOUR)`
-        let [[result1]] = await pool.execute(sql1)
-        let [[result2]] = await pool.execute(sql2)
-    
-        let a = JSON.stringify(result1).split(`"`)[5].split(' ')[0]
-        let b = JSON.stringify(result2).split('"')[5]
-        result.birth = a
-        result.date = b
+        let real_birth = birth.split('T')[0].substring(1,11)
+        const a = date.split('"')[1].split('T')
+        let real_date = a[0]+' '+a[1].substring(0,8)
+
+        result.birth = real_birth
+        result.date = real_date
     
         res.json(result)
     }
 }
 
-// exports.kakaoWelcome = async (req,res)=>{
-    
-// }
-
 exports.Auth = async (req,res)=>{
     try{
-        if(req.body.cookie.split('=')[0]==='token'){
-            try{
-                const cookie = req.body.cookie.split('=')[1].split('.')[1]
-                const user = JSON.parse(Buffer.from(cookie,'base64').toString('utf-8'))
-            
-                const sql = `SELECT * FROM user WHERE userid=? and nickname=?`
-                const prepare = [user.userid, user.nickname]
-        
-                const [[result]] = await pool.execute(sql,prepare)
-                
-                const response  = {
-                    errno:0,
-                }
-                res.json(response)
-        
-            } catch (e){
-                console.log(e.message)
-                const response = {
-                    errno:1,
-                }
-                res.json(response)
-            }
-        } else if (req.body.cookie.split('=')[0]==='kakaoToken'){
-            try{
-                const cookie = req.body.cookie.split('=')[1].split('.')[1]
-                const user = JSON.parse(Buffer.from(cookie,'base64').toString('utf-8'))
-                
-                const response = {
-                    errno:0,
-                }
-                res.json(response)
-            } catch(e){
-                console.log(e.message)
-                const response = {
-                    errno:1,
-                }
-                res.json(response)
-            }
-        } else {
-            const response = {
-                errno:1,
-            }
-            res.json(response)
+        const cookieName = req.headers.cookie.split('=')
+        const cookie = cookieName[1].split('.')[1]
+        const user = JSON.parse(Buffer.from(cookie,'base64').toString('utf-8'))
+
+        if(cookieName[0] =='token'){
+            const sql = `SELECT * FROM user WHERE userid=? and nickname=?`
+            const prepare = [user.userid, user.nickname]
+            const [result] = await pool.execute(sql,prepare)
+            if(result.length != 0) res.json({errno:1})
+            if(result.length == 0) res.json({errno:0})
+        } else if(cookieName[0] == 'kakaoToken'){
+            const sql = `SELECT * FROM user WHERE nickname=? and email=?`
+            const prepare = [user.nickname, user.email]
+            const [result] = await pool.execute(sql,prepare)
+            if(result.length != 0) res.json({errno:1})
+            if(result.length == 0) res.json({errno:0})
         }
     } catch(e){
         console.log(e.message)
-        const response = {
-            errno:1,
-        }
-        res.json(response)
+        res.json({errno:0})
     }
 }
 
