@@ -97,8 +97,8 @@
     </form>
 
     <script type="text/javascript">
-        const frm = document.querySelector('#join_frm')
 
+        // 로그인상태에서 /user/join 못들어감
         async function asdf(){
             const option = {
                 'Content-type':'application/json',
@@ -107,20 +107,20 @@
 
             const response = await axios.post('http://localhost:3000/user/auth',null,option)
             const {errno} = response.data
-            if(errno == 1) location.href = 'http://localhost:3001/'
+            if(errno == 1) {
+                alert('로그아웃 먼저 하고오세요')
+                location.href = 'http://localhost:3001/'
+            }
         }
         asdf()
         
-
-
-
-
         const emailSelect = document.querySelector('#email_select')
         emailSelect.addEventListener('click',(e)=>{
             let email2Value = document.querySelector('#email2')
             email2Value.value = e.target.value
         })
 
+        const frm = document.querySelector('#join_frm')
 
         frm.addEventListener('submit',async (e)=>{
             e.preventDefault()

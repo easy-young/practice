@@ -6,9 +6,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link href="/user/kakaoAgree.css" type="text/css" rel="stylesheet">
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
     <script type="text/javascript">
-        document.addEventListener('DOMContentLoaded',()=>{
+        document.addEventListener('DOMContentLoaded',async ()=>{
+
+            const option = {
+                'Content-type':'application/json',
+                withCredentials:true,
+            }
+            // 로그인상태에서 /user/kakaoAgree 못들어감
+            const responseAuth = await axios.post('http://localhost:3000/user/auth',null,option)
+            const {errno} = responseAuth.data
+            if(errno == 1) {
+                alert('동의는 한번만하셔도 돼요;;')
+                location.href = 'http://localhost:3001'
+            }
+
             const check1 = document.querySelector('#check1')
             const check2 = document.querySelector('#check2')
             const check3 = document.querySelector('#check3')

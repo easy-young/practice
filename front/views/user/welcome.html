@@ -12,15 +12,28 @@
 
     <script type="text/javascript">
         document.addEventListener('DOMContentLoaded', async ()=>{
+
+            const option = {
+                'Content-type':'application/json',
+                withCredentials:true,
+            }
+            // 로그인상태에서 /user/welcome 못들어감
+            const responseAuth = await axios.post('http://localhost:3000/user/auth',null,option)
+            const {errno} = responseAuth.data
+            console.log(errno)
+            if(errno == 2) {
+                alert('니가 누군데 환영을 해')
+                location.href = 'http://localhost:3001/user/login'
+            }
             
 
             const welcome = document.querySelector('#welcome')
             const welcome2 = document.querySelector('#welcome2').innerHTML
             
-            const option = {
-                "Content-type":"application/json",
-                withCredentials:true,
-            }
+            // const option = {
+            //     "Content-type":"application/json",
+            //     withCredentials:true,
+            // }
 
             const response = await axios.post('http://localhost:3000/user/welcome',null,option);
             const { level, userid, userpw, userimage, name, nickname,

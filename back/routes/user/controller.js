@@ -96,86 +96,78 @@ exports.kakaoJoin = async (req,res)=>{
 exports.login = async (req,res)=>{
     const {userid, userpw} = req.body
     const sql = `
-                SELECT userid, name, level, point, nickname 
+                SELECT userid, name, level, point, nickname, active
                 FROM user 
                 WHERE userid=? and userpw=?
                 `
     const prepare = [userid, userpw]
-
-    try {
-        const [result] = await pool.execute(sql,prepare)
-        const {userid, nickname} = result[0]
-       
-        const tokenResult = {userid, nickname}
-
-        if(result.length == 0) throw Error('등록된회원이 아닙니다.')
-     
-        const jwt = createToken({...tokenResult})
-          res.cookie('token',jwt,{
-            path:'/',
-            httpOnly:true,
-            secure:true,
-            domain:'localhost'
-        })
-       
-        const response = {
-            result,
-            errno:0
+    const [[result]] = await pool.execute(sql,prepare)
+    
+    if(result == undefined) {
+        res.json({errno:1})
+    } else {
+        if(result.active == 0) res.json({errno:2})
+        if(result.active != 0) {
+            const {nickname} = result
+            const tokenResult = {userid, nickname}
+            const jwt = createToken({...tokenResult})
+            res.cookie('token',jwt,{
+                path:'/',
+                httpOnly:true,
+                secure:true,
+                domain:'localhost'
+            })
+            res.json({result,errno:0})
         }
-        
-        res.json(response)
-        // res.send(JSON.stringify(response))
-    } catch (e) {
-        console.log(e.message)
-        const response = {
-            result:[],
-            errno:1,
-        }
-        res.json(response)
     }
 }
 
 exports.profile = async (req,res) => {
-    const cookie = req.headers.cookie.split('=')[0]
-    const cookie1 = req.headers.cookie.split('=')[1].split('.')[1]
-    const user = JSON.parse(Buffer.from(cookie1,'base64').toString('utf-8'))
+    try {
+        const cookie = req.headers.cookie.split('=')[0]
+        const cookie1 = req.headers.cookie.split('=')[1].split('.')[1]
+        const user = JSON.parse(Buffer.from(cookie1,'base64').toString('utf-8'))
 
-    if(cookie == 'token'){
-        const {userid} = req.user
-        const sql = `SELECT * FROM user WHERE userid=?`
-        const prepare = [userid]
-        
-        let [[result]] = await pool.execute(sql,prepare)
-        
-        let birth = JSON.stringify(result.birth)
-        let date = JSON.stringify(result.date)
-        let real_birth = birth.split('T')[0].substring(1,11)
-        const a = date.split('"')[1].split('T')
-        let real_date = a[0]+' '+a[1].substring(0,8)
+        if(cookie == 'token'){
+            const {userid} = req.user
+            const sql = `SELECT * FROM user WHERE userid=?`
+            const prepare = [userid]
+            
+            let [[result]] = await pool.execute(sql,prepare)
+            
+            let birth = JSON.stringify(result.birth)
+            let date = JSON.stringify(result.date)
+            let real_birth = birth.split('T')[0].substring(1,11)
+            const a = date.split('"')[1].split('T')
+            let real_date = a[0]+' '+a[1].substring(0,8)
 
-        result.birth = real_birth
-        result.date = real_date
+            result.birth = real_birth
+            result.date = real_date
 
-        res.json(result);
+            res.json(result);
 
-    } else if(cookie == 'kakaoToken'){
-        const {email} = user
-        const sql = `SELECT * FROM user WHERE email=?`
-        const prepare = [email]
-        
-        let [[result]] = await pool.execute(sql,prepare)
-        
-        let birth = JSON.stringify(result.birth)
-        let date = JSON.stringify(result.date)
-        let real_birth = birth.split('T')[0].substring(1,11)
-        const a = date.split('"')[1].split('T')
-        let real_date = a[0]+' '+a[1].substring(0,8)
+        } else if(cookie == 'kakaoToken'){
+            const {email} = user
+            const sql = `SELECT * FROM user WHERE email=?`
+            const prepare = [email]
+            
+            let [[result]] = await pool.execute(sql,prepare)
+            
+            let birth = JSON.stringify(result.birth)
+            let date = JSON.stringify(result.date)
+            let real_birth = birth.split('T')[0].substring(1,11)
+            const a = date.split('"')[1].split('T')
+            let real_date = a[0]+' '+a[1].substring(0,8)
 
-        result.birth = real_birth
-        result.date = real_date
+            result.birth = real_birth
+            result.date = real_date
 
-        res.json(result)
+            res.json(result)
+        }
+    } catch(e){
+        console.log(e.message)
     }
+    
 }
 
 exports.profileUpdate = async (req,res)=>{
@@ -296,43 +288,48 @@ exports.resign = async (req,res) => {
 }
 
 exports.welcome = async (req,res) => {
-    const cookieAuth = req.headers.cookie.split('=')[0]
-    if(cookieAuth == 'token'){
-        const {userid} = req.user
-        const sql = `SELECT * FROM user WHERE userid=?`
-        const prepare = [userid]
+    try{
+        const cookieAuth = req.headers.cookie.split('=')[0]
+        if(cookieAuth == 'token'){
+            const {userid} = req.user
+            const sql = `SELECT * FROM user WHERE userid=?`
+            const prepare = [userid]
+            
+            let [[result]] = await pool.execute(sql,prepare)
+
+            let birth = JSON.stringify(result.birth)
+            let date = JSON.stringify(result.date)
+            let real_birth = birth.split('T')[0].substring(1,11)
+            const a = date.split('"')[1].split('T')
+            let real_date = a[0]+' '+a[1].substring(0,8)
+
+            result.birth = real_birth
+            result.date = real_date
+            res.json(result)
+        } else if(cookieAuth == 'kakaoToken'){
+            const cookie = req.headers.cookie.split('=')[1].split('.')[1]
+            const user = JSON.parse(Buffer.from(cookie,'base64').toString('utf-8'))
+            const {nickname, email} = user
         
-        let [[result]] = await pool.execute(sql,prepare)
+            const sql = `SELECT * FROM user WHERE nickname=? and email=?`
+            const prepare = [nickname, email]
+            let [[result]] = await pool.execute(sql, prepare)
+        
+            let birth = JSON.stringify(result.birth)
+            let date = JSON.stringify(result.date)
+            let real_birth = birth.split('T')[0].substring(1,11)
+            const a = date.split('"')[1].split('T')
+            let real_date = a[0]+' '+a[1].substring(0,8)
 
-        let birth = JSON.stringify(result.birth)
-        let date = JSON.stringify(result.date)
-        let real_birth = birth.split('T')[0].substring(1,11)
-        const a = date.split('"')[1].split('T')
-        let real_date = a[0]+' '+a[1].substring(0,8)
-
-        result.birth = real_birth
-        result.date = real_date
-        res.json(result)
-    } else if(cookieAuth == 'kakaoToken'){
-        const cookie = req.headers.cookie.split('=')[1].split('.')[1]
-        const user = JSON.parse(Buffer.from(cookie,'base64').toString('utf-8'))
-        const {nickname, email} = user
-    
-        const sql = `SELECT * FROM user WHERE nickname=? and email=?`
-        const prepare = [nickname, email]
-        let [[result]] = await pool.execute(sql, prepare)
-    
-        let birth = JSON.stringify(result.birth)
-        let date = JSON.stringify(result.date)
-        let real_birth = birth.split('T')[0].substring(1,11)
-        const a = date.split('"')[1].split('T')
-        let real_date = a[0]+' '+a[1].substring(0,8)
-
-        result.birth = real_birth
-        result.date = real_date
-    
-        res.json(result)
+            result.birth = real_birth
+            result.date = real_date
+        
+            res.json(result)
+        }
+    } catch(e){
+        console.log(e.message)
     }
+    
 }
 
 exports.Auth = async (req,res)=>{
@@ -356,7 +353,7 @@ exports.Auth = async (req,res)=>{
         }
     } catch(e){
         console.log(e.message)
-        res.json({errno:0})
+        res.json({errno:2})
     }
 }
 
@@ -377,4 +374,10 @@ exports.kakaoJoinAuth = async (req,res)=>{
         }
     }
     res.json(response)
+}
+
+exports.tokenName = (req,res) => {
+    const cookie = req.headers.cookie.split('=')[0]
+    if(cookie == 'token') res.json({token:'token'})
+    if(cookie == 'kakaoToken') res.json({token:'kakaoToken'})
 }
