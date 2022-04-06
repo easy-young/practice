@@ -12,7 +12,6 @@
         document.addEventListener('DOMContentLoaded', async ()=>{
             const profiles = document.querySelector('#profiles');
             const profile = document.querySelector('#profile').innerHTML;
-
             const option = {
                 "Content-type":"application/json",
                 withCredentials:true,
@@ -33,124 +32,113 @@
 
             phone = phone.substring(0,3) + '-' + phone.substring(3,7) + '-' + phone.substring(7,11);
             
-            if (gender === "F") gender = "여자 여성 F 등등 수정가능";
-            if (gender === "M") gender = "남자 남성 M 등등 수정가능";
+            if (gender === "F") gender = "여성";
+            if (gender === "M") gender = "남성";
 
             try {
                 let template = '';
-                template = profile.replace('{userid}',userid)
-                                .replace('{userimage}',userimage)
-                                .replace('{name}',name)
-                                .replace('{nickname}',nickname)
-                                .replace('{birth}',birth)
-                                .replace('{address}',address)
-                                .replace('{gender}',gender)
-                                .replace('{tel}',tel)
-                                .replace('{phone}',phone)
-                                .replace('{email}',email)
-                                .replace('{intro}',intro)
-                                .replace('{point}',point)
-                                .replace('{active}',active)
-                                .replace('{date}',date)
-                                    
-                profiles.innerHTML = template
-            } catch (e){
-                alert('로그인부터하시죠?')
-                location.href = 'localhost:3000/user/login'
-                console.log(e)
+                template = profile.replace('{userid}', userid)
+                                .replace('{userimage}', userimage)
+                                .replace('{name}', name)
+                                .replace('{nickname}', nickname)
+                                .replace('{birth}', birth)
+                                .replace('{address}', address)
+                                .replace('{gender}', gender)
+                                .replace('{tel}', tel)
+                                .replace('{phone}', phone)
+                                .replace('{email}', email)
+                                .replace('{intro}', intro)
+                                .replace('{point}', point)
+                                .replace('{active}', active)
+                                .replace('{date}', date);
+                profiles.innerHTML = template;
+            } catch (e) {
+                console.log(e.message);
+                location.href = 'localhost:3000/user/login';
             }
         });
     </script>
 </head>
 <body>
-    <div id="wrap">
-        <div id="header">
-            <div id="logo">
-                <h1>
-                    <a href="/">Logo</a>
-                </h1>
+    <header>
+        <h1>
+            오세요~ 이쪽이에요!
+        </h1>
+        <h2>오이마켓 프로필</h2>
+    </header>
+    <div id="profiles"></div>
+    <template id="profile">
+        <div id="content">
+            <div id="content_top">
+                회원님의 소중한 개인정보는 52마켓 개인정보처리방침에 따라 안전하게 관리되고 있습니다.
             </div>
-            <div id="category">
-                <h2>
-                    나의 오이 페이지
-                </h2>
+            <table cellspacing="0" cellpadding="0" border="1" id="info">
+                <tr>
+                    <td><strong>사진</strong></td>
+                    <!-- <td><img src="{userimage}" width="80px" height="80px" style="border-radius: 40px;"></td> -->
+                    <td><img src="/검정색.jpg" width="80px" height="80px" style="border-radius: 40px;"></td>
+                </tr>
+                <tr>
+                    <td><strong>ID</strong></td>
+                    <td>{userid}</td>
+                </tr>
+                <tr>
+                    <td><strong>이름</strong></td>
+                    <td>{name}</td>
+                </tr>
+                <tr>
+                    <td><strong>닉네임</strong></td>
+                    <td>{nickname}</td>
+                </tr>
+                <tr>
+                    <td><strong>생년월일</strong></td>
+                    <td>{birth}</td>
+                </tr>
+                <tr>
+                    <td><strong>주소</strong></td>
+                    <td>{address}</td>
+                </tr>
+                <tr>
+                    <td><strong>성별</strong></td>
+                    <td>{gender}</td>
+                </tr>
+                <tr>
+                    <td><strong>집전화</strong></td>
+                    <td>{tel}</td>
+                </tr>
+                <tr>
+                    <td><strong>휴대폰번호</strong></td>
+                    <td>{phone}</td>
+                </tr>
+                <tr>
+                    <td><strong>E-mail</strong></td>
+                    <td>{email}</td>
+                </tr>
+                <tr>
+                    <td><strong>자기소개</strong></td>
+                    <td>{intro}</td>
+                </tr>
+                <tr>
+                    <td><strong>포인트</strong></td>
+                    <td>{point}</td>
+                </tr>
+                <tr>
+                    <td><strong>레벨</strong></td>
+                    <td>{active}</td>
+                </tr>
+                <tr>
+                    <td><strong>가입일</strong></td>
+                    <td>{date}</td>
+                </tr>         
+            </table>
+            <div id="else">
+                <a href="/">뒤로 가기</a>
+                <a href="/user/profileUpdate">프로필 수정</a>
             </div>
         </div>
-        <div id="profiles"></div>
-        <template id="profile">
-            <div id="content">
-                <div id="content_top">
-                    <h3>
-                        기본정보
-                    </h3>
-                    <span>
-                        회원님의 소중한 개인정보는 52마켓 개인정보처리방침에 따라 안전하게 관리되고 있습니다.
-                    </span>
-                </div>
-                <table id="info">
-                    <tr>
-                        <td>ID</td>
-                        <td>{userid}</td>
-                    </tr>
-                    <tr>
-                        <td><strong>이름</strong></td>
-                        <td>{name}</td>
-                    </tr>
-                    <tr>
-                        <td><strong>사진</strong></td>
-                        <td><img src="{userimage}"></td>
-                    </tr>
-                    <tr>
-                        <td><strong>닉네임</strong></td>
-                        <td>{nickname}</td>
-                    </tr>
-                    <tr>
-                        <td><strong>생년월일</strong></td>
-                        <td>{birth}</td>
-                    </tr>
-                    <tr>
-                        <td><strong>주소</strong></td>
-                        <td>{address}</td>
-                    </tr>
-                    <tr>
-                        <td><strong>성별</strong></td>
-                        <td>{gender}</td>
-                    </tr>
-                    <tr>
-                        <td><strong>집전화</strong></td>
-                        <td>{tel}</td>
-                    </tr>
-                    <tr>
-                        <td><strong>핸드폰번호</strong></td>
-                        <td>{phone}</td>
-                    </tr>
-                    <tr>
-                        <td><strong>E-mail</strong></td>
-                        <td>{email}</td>
-                    </tr>
-                    <tr>
-                        <td><strong>자기소개</strong></td>
-                        <td>{intro}</td>
-                    </tr>
-                    <tr>
-                        <td><strong>나의 포인트</strong></td>
-                        <td>{point}</td>
-                    </tr>
-                    <tr>
-                        <td><strong>나의 레벨</strong></td>
-                        <td>{active}</td>
-                    </tr>
-                    <tr>
-                        <td><strong>가입일</strong></td>
-                        <td>{date}</td>
-                    </tr>         
-                </table>
-            </div>
-        </template>
-        <a href="/user/profileUpdate">프로필 수정하기</a>
-        <div id="footer">
-            <h2></h2>
-        </div>
+    </template>
+    <div id="footer">
+        <h2></h2>
     </div>
 </body>
 </html>

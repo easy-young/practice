@@ -3,8 +3,7 @@ const {createToken} = require('../../utils/jwt.js')
 const axios = require('axios')
 
 exports.join = async (req,res)=>{
-
-    let userimage = req.file.filename
+    let userimage = req.file.filename;
     userimage = `http://localhost:3000/uploadsUser/${userimage}`
     const { userid, userpw, name, nickname, address, gender,
             intro, email, birth, phone,tel } = req.body
@@ -137,59 +136,58 @@ exports.login = async (req,res)=>{
 }
 
 exports.profile = async (req,res) => {
-    const cookie = req.headers.cookie.split('=')[0]
-    const cookie1 = req.headers.cookie.split('=')[1].split('.')[1]
-    const user = JSON.parse(Buffer.from(cookie1,'base64').toString('utf-8'))
+    if (req.headers.cookie !== undefined) {
+        const cookie = req.headers.cookie.split('=')[0];
+        const cookie1 = req.headers.cookie.split('=')[1].split('.')[1];
+        const user = JSON.parse(Buffer.from(cookie1,'base64').toString('utf-8'));
 
-    if(cookie == 'token'){
-        const {userid} = req.user
-        const sql = `SELECT * FROM user WHERE userid=?`
-        const prepare = [userid]
+        if (cookie === 'token') {
+            const {userid} = req.user;
+            const sql = `SELECT * FROM user WHERE userid=?`;
+            const prepare = [userid];
+            
+            let [[result]] = await pool.execute(sql, prepare);
+            
+            let birth = JSON.stringify(result.birth);
+            let date = JSON.stringify(result.date);
+            
+            const sql1 = `SELECT DATE_ADD(${birth}, INTERVAL 9 HOUR)`;
+            const sql2 = `SELECT DATE_ADD(${date}, INTERVAL 9 HOUR)`;
+            let [[result1]] = await pool.execute(sql1);
+            let [[result2]] = await pool.execute(sql2);
         
-        let [[result]] = await pool.execute(sql,prepare)
-        
-        let birth = JSON.stringify(result.birth)
-        let date = JSON.stringify(result.date)
-        
-        const sql1 = `SELECT DATE_ADD(${birth}, INTERVAL 9 HOUR)`
-        const sql2 = `SELECT DATE_ADD(${date}, INTERVAL 9 HOUR)`
-        let [[result1]] = await pool.execute(sql1)
-        let [[result2]] = await pool.execute(sql2)
-    
-        let a = JSON.stringify(result1).split(`"`)[5].split(' ')[0]
-        let b = JSON.stringify(result2).split('"')[5]
-        result.birth = a
-        result.date = b
-        
-        res.json(result)
+            let a = JSON.stringify(result1).split(`"`)[5].split(' ')[0];
+            let b = JSON.stringify(result2).split('"')[5];
+            result.birth = a;
+            result.date = b;
+            
+            res.json(result);
 
-    } else if(cookie == 'kakaoToken'){
-        const {email} = user
-        const sql = `SELECT * FROM user WHERE email=?`
-        const prepare = [email]
+        } else if (cookie === 'kakaoToken') {
+            const {email} = user;
+            const sql = `SELECT * FROM user WHERE email=?`;
+            const prepare = [email];
+            
+            let [[result]] = await pool.execute(sql, prepare);
+            
+            let birth = JSON.stringify(result.birth);
+            let date = JSON.stringify(result.date);
+            
+            const sql1 = `SELECT DATE_ADD(${birth}, INTERVAL 9 HOUR)`;
+            const sql2 = `SELECT DATE_ADD(${date}, INTERVAL 9 HOUR)`;
+            let [[result1]] = await pool.execute(sql1);
+            let [[result2]] = await pool.execute(sql2);
         
-        let [[result]] = await pool.execute(sql,prepare)
-        
-        let birth = JSON.stringify(result.birth)
-        let date = JSON.stringify(result.date)
-        
-        const sql1 = `SELECT DATE_ADD(${birth}, INTERVAL 9 HOUR)`
-        const sql2 = `SELECT DATE_ADD(${date}, INTERVAL 9 HOUR)`
-        let [[result1]] = await pool.execute(sql1)
-        let [[result2]] = await pool.execute(sql2)
-    
-        let a = JSON.stringify(result1).split(`"`)[5].split(' ')[0]
-        let b = JSON.stringify(result2).split('"')[5]
-        result.birth = a
-        result.date = b
-
-        res.json(result)
+            let a = JSON.stringify(result1).split(`"`)[5].split(' ')[0];
+            let b = JSON.stringify(result2).split('"')[5];
+            result.birth = a;
+            result.date = b;
+            res.json(result);
+        }
     }
-    
 }
 
 exports.profileUpdate = async (req,res)=>{
-    
     const cookie = req.headers.cookie.split('=')[0]
     const cookie1 = req.headers.cookie.split('=')[1].split('.')[1]
     const user = JSON.parse(Buffer.from(cookie1,'base64').toString('utf-8'))

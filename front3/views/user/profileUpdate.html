@@ -20,6 +20,7 @@
             const { level, userid, userimage, name, nickname, userpw,
                     birth, address, gender, tel, phone, email, intro,
                     point, active, date } = response.data;
+            console.log(userimage);
             let tel11, tel22, tel33;
             if (tel.substring(0,2) === '02') {
                 tel11 = tel.substring(0,2);
@@ -155,27 +156,27 @@
         <form method="post" action="http://localhost:3000/user/profileUpdate" id="profilefrm" enctype="multipart/form-data">
             <ul>
                 <li>
-                    <strong>ID :</strong>
-                    <span id=userid>{userid}</span>
+                    <strong>아이디 :</strong>
+                    <span id="userid">{userid}</span>
                 </li>
                 <li>
-                    <strong>비밀번호 :</strong>
+                    <div><strong>비밀번호</strong></div>
                     <input type="password" value="{userpw}" name="userpw" id="userpw" minlength="1" maxlength="10">    
                 </li>
                 <li>
-                    <strong>사진 :</strong>
+                    <div><strong>사진</strong></div>
                     <input type="file" value="{userimage}" name="userimage" id="userimage" minlength="3" maxlength="10">       
                 </li>
                 <li>
-                    <strong>이름 :</strong>
+                    <div><strong>이름</strong></div>
                     <input type="text" value="{name}" name="name" id="name" minlength="1" maxlength="10">
                 </li>
                 <li>
-                    <strong>닉네임 :</strong>
+                    <div><strong>닉네임</strong></div>
                     <input type="text" value="{nickname}" name="nickname" id="nickname" maxlength="10">
                 </li>
                 <li>
-                    <strong>생년월일 :</strong>
+                    <div><strong>생년월일</strong></div>
                     <select id="year">
                         <option value="1999">1999년</option>
                         <option value="2000">2000년</option>
@@ -193,43 +194,43 @@
                     </select>
                 </li>
                 <li>
-                    <strong>주소 :</strong>
+                    <div><strong>주소</strong></div>
                     <input type="text" value="{address}" name="address" id="address">
                 </li>
-                <li>
-                    <strong>성별 :</strong>
+                <li id="gender">
+                    <div><strong>성별</strong></div>
                     <input type="radio" name="gender" value="M" id="genderM">
                     <label for="genderM">남자</label>
                     <input type="radio" name="gender" value="F" id="genderF">
                     <label for="genderM">여자</label>
                 </li>
-                <li>
-                    <strong>집전화 :</strong>
+                <li id="tel">
+                    <div><strong>집전화</strong></div>
                     <input type="text" value="{tel1}" name="tel" id="tel1" minlength="2" maxlength="3"> -
                     <input type="text" value="{tel2}" name="tel" id="tel2" minlength="3" maxlength="4"> -
                     <input type="text" value="{tel3}" name="tel" id="tel3" minlength="4" maxlength="4">
                 </li>
-                <li>
-                    <strong>핸드폰번호 :</strong>
+                <li id="phone">
+                    <div><strong>휴대폰번호</strong></div>
                     <input type="text" value="{phone1}" name="phone" id="phone1" minlength="3" maxlength="3"> -
                     <input type="text" value="{phone2}" name="phone" id="phone2" minlength="4" maxlength="4"> -
                     <input type="text" value="{phone3}" name="phone" id="phone3" minlength="4" maxlength="4">
 
                 </li>
-                <li>
-                    <strong>E-mail :</strong>
+                <li id="email">
+                    <div><strong>E-mail</strong></div>
                     <input type="text" value="{email1}" name="email1" id="email"> @
                     <input type="text" value="{email2}" name="email2" id="email2">
                     <select id="email_select">
                         <option id="hanmail.net">hanmail.net</option>
                         <option id="gmail.com">gmail.com</option>
                         <option id="naver.com">naver.com</option>
-                        <option id="또뭐있냐?.com">또뭐있냐?.com</option>
+                        <option id="또뭐있냐?.com">직접 입력</option>
                     </select>
                 </li>
                 <li>
-                    <strong>자기소개 :</strong>
-                    <input type="text" value="{intro}" name="intro" id="intro">
+                    <div><strong>자기소개</strong></div>
+                    <textarea name="intro" value="{intro}" id="intro" cols="30" rows="10"></textarea>
                 </li>
                 <li>
                     <strong>나의 포인트 :</strong>
@@ -247,10 +248,13 @@
                     <strong>가입일 :</strong>
                     {date}
                 </li>
-                <input type="submit" value="프로필 수정하기">
+                <div>
+                    <a href="/user/profile">뒤로 가기</a>
+                    <input type="submit" id="submit" value="수정 완료">
+                    <a href="" id="resign">회원 탈퇴</a>
+                </div>
             </ul>
         </form>
-        <a href="" id="resign">회원 탈퇴하기</a>
     </template>
 </body>
 </html>

@@ -70,7 +70,7 @@
                         };
                         const response = await axios.post('http://localhost:3000/user/join', body, option);
                         if (response.data.errno !== 0) throw new Error('Error');
-                        location.href='http://localhost:3001/user/welcome';
+                        location.href = 'http://localhost:3001/user/welcome';
                     } catch (e) {
                         console.log(e.message);
                         alert('ID 나 닉네임이 중복입니다.');
@@ -168,7 +168,7 @@
             </li>
         </ul>
         <div id="submitBox">
-            <a href="main">뒤로 가기</a>
+            <a href="/">뒤로 가기</a>
             <input type="submit" id="submit" value="회원가입">
         </div>
     </form>

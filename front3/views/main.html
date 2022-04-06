@@ -27,6 +27,11 @@
             else {
                 ul.innerHTML = afterLogin;
                 const logout = document.querySelector('#logout');
+                logout.addEventListener('click', async (e)=>{
+                    e.preventDefault();
+                    const response2 = await axios.post('http://localhost:3000/user/logout', null, option);
+                    location.href = 'http://localhost:3001/';
+                });
             }
             
             const cnt = [];
@@ -59,11 +64,6 @@
                     cnt2[j]++;
                 });
             }
-            logout.addEventListener('click', async (e)=>{
-                e.preventDefault();
-                const response2 = await axios.post('http://localhost:3000/user/logout', null, option);
-                location.href = 'http://localhost:3001/';
-            });
         });
     </script>
 </head>
