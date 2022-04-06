@@ -4,104 +4,45 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>오이마켓</title>
-    <link rel="shortcut icon" href="favicon.png">
-    <link type="text/css" rel="stylesheet" href="http://localhost:3001/css/main.css">
+    <title>52market</title>
+
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+    <link type="text/css" rel="stylesheet" href="http://localhost:3001/css/main.css">
+  
+ 
+
+
+   
+
+<!-- 게시판 리스트 불러오기 -->
     <script type="text/javascript">
+        const moveHandler = (idx, hit) => {
+            location.href = "/board/view/"+idx;
+        };
         document.addEventListener('DOMContentLoaded', async ()=>{
-            const option = {withCredentials:true};
-            const ul = document.querySelector('header > ul');
-            const beforeLogin = document.querySelector('#beforeLogin').innerHTML;
-            const afterLogin = document.querySelector('#afterLogin').innerHTML;
-            const like = document.querySelectorAll('#like');
-            const beforeLike = document.querySelectorAll('#beforeLike');
-            const afterLike = document.querySelectorAll('#afterLike');
-            const scrap = document.querySelectorAll('#scrap');
-            const befoerScrap = document.querySelectorAll('#beforeScrap');
-            const afterScrap = document.querySelectorAll('#afterScrap');
-
-            const response = await axios.post('http://localhost:3000/loginCheck', null, option);
-            const {errno} = response.data;
-            if (errno === 1) ul.innerHTML = beforeLogin;
-            else {
-                ul.innerHTML = afterLogin;
-                const logout = document.querySelector('#logout');
-                logout.addEventListener('click', async (e)=>{
-                    e.preventDefault();
-                    const response2 = await axios.post('http://localhost:3000/user/logout', null, option);
-                    location.href = 'http://localhost:3001/';
-                });
-            }
-            
-            const cnt = [];
-            const cnt2 = [];
-            for (let i = 0; i < like.length; i++) {
-                afterLike[i].style.display = 'none';
-                afterScrap[i].style.display = 'none';
-                cnt.push(1);
-                cnt2.push(1);
-            }
-            for (let j = 0; j < like.length; j++) {
-                like[j].addEventListener('click', ()=>{
-                    if (cnt[j] % 2 === 1) {
-                        beforeLike[j].style.display = 'none';
-                        afterLike[j].style.display = 'block';
-                    } else {
-                        beforeLike[j].style.display = 'block';
-                        afterLike[j].style.display = 'none';
-                    }
-                    cnt[j]++;
-                });
-                scrap[j].addEventListener('click', ()=>{
-                    if (cnt2[j] % 2 === 1) {
-                        befoerScrap[j].style.display = 'none';
-                        afterScrap[j].style.display = 'block';
-                    } else {
-                        befoerScrap[j].style.display = 'block';
-                        afterScrap[j].style.display = 'none';
-                    }
-                    cnt2[j]++;
-                });
-            }
-        });
-    </script>
-</head>
-<body>
-    <h2>오세요~ 이쪽이에요!</h2>
-    <h1><a href="/">오이마켓</a></h1>
-    <header>
-        <ul>
-            <template id="beforeLogin">
-                <li><a href="user/join">회원가입</a></li>
-                <li><a href="user/login">로그인</a></li>
-            </template>
-            <template id="afterLogin">
-                <li><a href="user/profile">프로필</a></li>
-                <li><a href="board/write">글쓰기</a></li>
-                <li><button id="logout">로그아웃</button></li>
-            </template>
-        </ul>
-        <div id="category">
-            <span><a href="#">중고거래</a></span>
-            <span><a href="#">동네친구찾기</a></span>
-            <span><a href="#">Q&A</a></span>
-            <span><a href="#">신고</a></span>
-        </div>
-    </header>
-
-    <div id="container">
-        <!-- <template> -->
-            <div id="contentBox">
-                <img src="#" width="280px" height="200px">
-                <strong><a href="#">맥북 프로 팝니다.</a></strong>
-                <div>작성일 : 2022-04-04</div>
-                <div>조회수 : 7</div>
-                <div>좋아요 : 10</div>
+            try {
+                  // 요청에대한 코드를 작성해서 결과물을 받아와야합니다.
+            const response = await axios.post('http://localhost:3000/board/list',{
+                withCredentials:true,
+            });
+    
+            const container = document.getElementById('container')
+            let innerData =''
+            if(response.data.status){
+                let list= response.data.data
+                list.map((item)=>{
+                    const url=item.imageName!==''?`<img src="http://localhost:3000/${JSON.parse(item.imageName).upload[0].path.replace('public/','')}" width="280px" height="200px">`:'' 
+                    innerData+=` <div class="contentBox">
+                        ${url}
+                <strong><a href="/board/view/${item.idx}">${item.subject.substr(0,20)}</a></strong>
+                <div>작성일 : ${item.date}</div>
+                <div>조회수 : ${item.hit}</div>
+                <div>좋아요 : ${item.good}</div>
                 <div id="author">
                     <img src="/검정색.jpg" width="25px" height="25px">
                     <span>
-                        by <strong><a href="#">leejy230698</a></strong>
+                        by <strong><a href="#">${item.nickname}</a></strong>
                     </span>
                     <button id="scrap">
                         <img id="beforeScrap" src="/star.png" width="20px" height="20px">
@@ -113,91 +54,105 @@
                     </button>
                 </div>
             </div>
-            <span id="contentBox">
-                <img src="#" width="280px" height="200px">
-                <strong><a href="#">맥북 프로 팝니다.</a></strong>
-                <div>작성일 : 2022-04-04</div>
-                <div>조회수 : 7</div>
-                <div>좋아요 : 10</div>
-                <div id="author">
-                    <img src="/검정색.jpg" width="25px" height="25px">
-                    <span>
-                        by <strong><a href="#">leejy230698</a></strong>
-                    </span>
-                    <button id="scrap">
-                        <img id="beforeScrap" src="/star.png" width="20px" height="20px">
-                        <img id="afterScrap" src="/star2.png" width="20px" height="20px">
-                    </button>
-                    <button id="like">
-                        <img id="beforeLike" src="/heart.png" width="20px" height="20px">
-                        <img id="afterLike" src="/heart2.png" width="20px" height="20px">
-                    </button>
-                </div>
-            </span>
-            <span id="contentBox">
-                <img src="#" width="280px" height="200px">
-                <strong><a href="#">맥북 프로 팝니다.</a></strong>
-                <div>작성일 : 2022-04-04</div>
-                <div>조회수 : 7</div>
-                <div>좋아요 : 10</div>
-                <div id="author">
-                    <img src="/검정색.jpg" width="25px" height="25px">
-                    <span>
-                        by <strong><a href="#">leejy230698</a></strong>
-                    </span>
-                    <button id="scrap">
-                        <img id="beforeScrap" src="/star.png" width="20px" height="20px">
-                        <img id="afterScrap" src="/star2.png" width="20px" height="20px">
-                    </button>
-                    <button id="like">
-                        <img id="beforeLike" src="/heart.png" width="20px" height="20px">
-                        <img id="afterLike" src="/heart2.png" width="20px" height="20px">
-                    </button>
-                </div>
-            </span>
-            <span id="contentBox">
-                <img src="#" width="280px" height="200px">
-                <strong><a href="#">맥북 프로 팝니다.</a></strong>
-                <div>작성일 : 2022-04-04</div>
-                <div>조회수 : 7</div>
-                <div>좋아요 : 10</div>
-                <div id="author">
-                    <img src="/검정색.jpg" width="25px" height="25px">
-                    <span>
-                        by <strong><a href="#">leejy230698</a></strong>
-                    </span>
-                    <button id="scrap">
-                        <img id="beforeScrap" src="/star.png" width="20px" height="20px">
-                        <img id="afterScrap" src="/star2.png" width="20px" height="20px">
-                    </button>
-                    <button id="like">
-                        <img id="beforeLike" src="/heart.png" width="20px" height="20px">
-                        <img id="afterLike" src="/heart2.png" width="20px" height="20px">
-                    </button>
-                </div>
-            </span>
-            <span id="contentBox">
-                <img src="#" width="280px" height="200px">
-                <strong><a href="#">맥북 프로 팝니다.</a></strong>
-                <div>작성일 : 2022-04-04</div>
-                <div>조회수 : 7</div>
-                <div>좋아요 : 10</div>
-                <div id="author">
-                    <img src="/검정색.jpg" width="25px" height="25px">
-                    <span>
-                        by <strong><a href="#">leejy230698</a></strong>
-                    </span>
-                    <button id="scrap">
-                        <img id="beforeScrap" src="/star.png" width="20px" height="20px">
-                        <img id="afterScrap" src="/star2.png" width="20px" height="20px">
-                    </button>
-                    <button id="like">
-                        <img id="beforeLike" src="/heart.png" width="20px" height="20px">
-                        <img id="afterLike" src="/heart2.png" width="20px" height="20px">
-                    </button>
-                </div>
-            </span>
-        <!-- </template> -->
+                        `
+                })
+             
+            }else{
+                innerData+=`<div class="post-wrapper">데이터가 없습니다. 첫번째 글을 작성해주세요</div>`
+            }
+            container.innerHTML=innerData
+
+            } catch (error) {
+                console.log('error :' ,error)
+            }
+        })
+
+    </script>
+    <i class="fs fs-icon"></i>
+
+
+ 
+</head>
+<body>
+
+
+    
+    <header>
+        <div class="logo" style="width: 100%; text-align: center;">
+            <a href="/"  ><img src="/ㄹㅇ52마켓.png" width="300"/></a>
+        </div>
+
+
+
+    <div class="navigation">
+        <div class="category">
+            <span><a href="#">중고거래</a></span>
+            <span><a href="#">동네친구찾기</a></span>
+            <span><a href="#">Q&A</a></span>
+            <span><a href="#">신고</a></span>
+        </div>
+     
+      
+        {% if userData.isLogin %}
+        <div class="auth-profile" id="auth-profile-btn">
+            <span><a href="/board/write">글쓰기</a></span>
+            <span><a href="/user/profile">프로필</a></span>
+            <button id="logout-btn">로그아웃</button>
+         
+        </div>
+     
+        
+        {% else %}
+           
+        <div class="auth-profile" id="auth-profile-btn">
+
+            <span><a href="/user/login">로그인</a></span>
+            <span><a href="/user/agress">회원가입</a></span>
+            
+        </div>
+     
+        {% endif %}
+       
     </div>
+       
+    </header>
+
+  
+    
+    
+
+
+
+
+
+    <div id="container">
+    </div>
+
+
+    <script>
+     
+       const deleteButton= document.getElementById('logout-btn')
+      
+            async function logoutHandler (e) { 
+                const option = {
+                "Content-type":"application/json",
+                withCredentials:true,
+            };
+            await deleteButton.addEventListener('click',async()=>{
+             
+                     const response = await axios.post(`http://localhost:3000/user/logout`,null, option)
+                     location.href='/'
+               
+                 })
+ 
+             }
+             logoutHandler()
+ </script>
+
+
+
+
 </body>
+
+
 </html>
