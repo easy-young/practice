@@ -7,15 +7,48 @@
     <title>오이마켓</title>
     <link rel="shortcut icon" href="/favicon.png">
     <link rel="stylesheet" href="http://localhost:3001/css/board/write.css">
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script type="text/javascript">
         document.addEventListener('DOMContentLoaded', ()=>{
-            //
+            const frm = document.querySelector('#frm_write');
+            const main = document.querySelector('#main').value;
+            const sub = document.querySelector('#sub').value;
+            frm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const subject = document.querySelector('#subject').value;
+                const content = document.querySelector('#content').value;
+                const files = document.querySelector('#upload').files;
+                const formData = new FormData();
+
+                for (let i = 0; i < files.length; i++) {
+                    const file = files[i];
+                    formData.append('upload', file);
+                }
+
+                formData.append('subject', subject);
+                formData.append('content', content);
+                formData.append('main', main);
+                formData.append('sub', sub);
+
+                const option = {
+                    "Content-type": "application/json",
+                    withCredentials: true,
+                    Authorization: '',
+                };
+
+                if (files.length < 6) {
+                    const response = await axios.post('http://localhost:3000/board/write', formData, option);
+                    location.href = ('/');
+                } else {
+                    alert("이미지의 최대 갯수는 5장입니다.");
+                }
+            });
         });
     </script>
 </head>
 <body>
     <h1>글쓰기</h1>
-    <form method="post" action="">
+    <form method="post" action="/board/write" id="frm_write" enctype="multipart/form-data">
         <div>
             <span>메인 카테고리 : 
                 <select name="main" id="main">
@@ -38,10 +71,10 @@
             <input type="text" name="subject" id="subject">
         </div>
         <div>사진 :
-            <input type="file" name="image" id="image">
+            <input type="file" name="upload" id="upload" multiple accept="image/*">
         </div>
         <div>내용 :
-            <input type="textarea" name="content" id="content">
+            <textarea name="content" id="content" cols="30" rows="10"></textarea>
         </div>
         <input type="submit" value="글쓰기">
     </form>

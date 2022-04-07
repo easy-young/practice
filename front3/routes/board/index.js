@@ -13,7 +13,7 @@ router.get('/write', (req, res) => {
     res.render('board/write.html');
 });
 
-router.get('/modify', (req, res) => {
+router.get('/modify/:idx', (req, res) => {
     res.render('board/modify.html');
 });
 

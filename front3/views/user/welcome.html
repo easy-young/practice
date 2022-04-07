@@ -19,7 +19,7 @@
             const response = await axios.post('http://localhost:3000/user/welcome', null, option);
             const { level, userid, userpw, userimage, name, nickname,
                     birth, address, gender, tel, phone, email, intro,
-                    point, active, date } = response.data;
+                    point, date } = response.data;
 
             let template = '';
             template = welcome2.replace('{userid}', userid)
@@ -34,7 +34,7 @@
                                .replace('{email}', email)
                                .replace('{intro}', intro)
                                .replace('{point}', point)
-                               .replace('{active}', active)
+                               .replace('{level}', level)
                                .replace('{date}', date);
             welcome.innerHTML = template;
         });
@@ -104,7 +104,7 @@
                 </tr>
                 <tr>
                     <td>나의 레벨</td>
-                    <td>{active}</td>
+                    <td>{level}</td>
                 </tr>
                 <tr>
                     <td>가입일</td>

@@ -20,7 +20,6 @@
             const { level, userid, userimage, name, nickname, userpw,
                     birth, address, gender, tel, phone, email, intro,
                     point, active, date } = response.data;
-            console.log(userimage);
             let tel11, tel22, tel33;
             if (tel.substring(0,2) === '02') {
                 tel11 = tel.substring(0,2);
@@ -42,7 +41,7 @@
             template = profileUpdate.replace('{level}', level)
                                     .replace('{userpw}', userpw)
                                     .replace('{userid}', userid)
-                                    .replace('{userimage}', userimage)
+                                    .replaceAll('{userimage}', userimage)
                                     .replace('{name}', name)
                                     .replace('{nickname}', nickname)
                                     .replace('{birth}', birth)
@@ -165,6 +164,7 @@
                 </li>
                 <li>
                     <div><strong>사진</strong></div>
+                    <img src="{userimage}" width="80px" height="80px" style="border-radius: 40px;">
                     <input type="file" value="{userimage}" name="userimage" id="userimage" minlength="3" maxlength="10">       
                 </li>
                 <li>
@@ -239,10 +239,6 @@
                 <li>
                     <strong>나의 레벨 :</strong>
                     {level}
-                </li>
-                <li>
-                    <strong>계정 활성화 여부 :</strong>
-                    {active}
                 </li>
                 <li>
                     <strong>가입일 :</strong>
