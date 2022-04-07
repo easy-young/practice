@@ -9,138 +9,211 @@
     <link type="text/css" rel="stylesheet" href="http://localhost:3001/css/user/profileUpdate.css">
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script type="text/javascript">
-        document.addEventListener('DOMContentLoaded', async ()=>{
-            const profile = document.querySelector('#profile');
-            const profileUpdate = document.querySelector('#profileUpdate').innerHTML;
+        document.addEventListener('DOMContentLoaded',async ()=>{
+            
             const option = {
-                "Content-type":"application/json",
+                'Content-type':'application/json',
                 withCredentials:true,
-            };
-            const response = await axios.post('http://localhost:3000/user/profile', null, option);
+            }
+            // 로그인상태에서 /user/profileUpdate 못들어감
+            const responseAuth = await axios.post('http://localhost:3000/user/auth',null,option)
+            const {errno} = responseAuth.data
+            if(errno == 2) {
+                alert('로그인부터 하세요')
+                location.href = 'http://localhost:3001/user/login'
+            }
+
+
+            const profile = document.querySelector('#profile')
+            const profileUpdate = document.querySelector('#profileUpdate').innerHTML
+
+            const response = await axios.post('http://localhost:3000/user/profile',null,option)
             const { level, userid, userimage, name, nickname, userpw,
                     birth, address, gender, tel, phone, email, intro,
-                    point, active, date } = response.data;
-            let tel11, tel22, tel33;
-            if (tel.substring(0,2) === '02') {
+                    point, active, date } = response.data
+                    
+
+            let tel11
+            let tel22
+            let tel33
+
+            if(tel.substring(0,2)==='02'){
                 tel11 = tel.substring(0,2);
                 tel22 = tel.substring(2,6);
                 tel33 = tel.substring(6,10);
             } else {
                 tel11 = tel.substring(0,3);
                 tel22 = tel.substring(3,6);
-                tel33 = tel.substring(6,10);
+                tel33 = tel.substring(6,10)
             }
-            const phone11 = phone.substring(0,3);
-            const phone22 = phone.substring(3,7);
-            const phone33 = phone.substring(7,11);
+            
+            const phone11 = phone.substring(0,3)
+            const phone22 = phone.substring(3,7)
+            const phone33 = phone.substring(7,11)
 
-            let email11 = email.split('@')[0];
-            let email22 = email.split('@')[1];
+            let email11 = email.split('@')[0]
+            let email22 = email.split('@')[1]
+
+            
 
             let template = '';
-            template = profileUpdate.replace('{level}', level)
-                                    .replace('{userpw}', userpw)
-                                    .replace('{userid}', userid)
-                                    .replaceAll('{userimage}', userimage)
-                                    .replace('{name}', name)
-                                    .replace('{nickname}', nickname)
-                                    .replace('{birth}', birth)
-                                    .replace('{address}', address)
-                                    .replace('{gender}', gender)
-                                    .replace('{tel1}', tel11)
-                                    .replace('{tel2}', tel22)
-                                    .replace('{tel3}', tel33)
-                                    .replace('{phone1}', phone11)
-                                    .replace('{phone2}', phone22)
-                                    .replace('{phone3}', phone33)
-                                    .replace('{email1}', email11)
-                                    .replace('{email2}', email22)
-                                    .replace('{intro}', intro)
-                                    .replace('{point}', point)
-                                    .replace('{active}', active)
-                                    .replace('{date}', date.substring(0,10));
-            profile.innerHTML = template;
+            template = profileUpdate.replace('{level}',level)
+                                    .replace('{userpw}',userpw)
+                                    .replace('{userid}',userid)
+                                    .replaceAll('{userimage}',userimage)
+                                    .replace('{name}',name)
+                                    .replace('{nickname}',nickname)
+                                    .replace('{birth}',birth)
+                                    .replace('{address}',address)
+                                    .replace('{gender}',gender)
+                                    .replace('{tel1}',tel11)
+                                    .replace('{tel2}',tel22)
+                                    .replace('{tel3}',tel33)
+                                    .replace('{phone1}',phone11)
+                                    .replace('{phone2}',phone22)
+                                    .replace('{phone3}',phone33)
+                                    .replace('{email1}',email11)
+                                    .replace('{email2}',email22)
+                                    .replace('{intro}',intro)
+                                    .replace('{point}',point)
+                                    .replace('{active}',active)
+                                    .replace('{date}',date.substring(0,10))
 
-            const profilefrm = document.querySelector('#profilefrm');
-            const M = document.querySelector('#genderM');
-            const F = document.querySelector('#genderF');
+            profile.innerHTML = template
+            
+            const profilefrm = document.querySelector('#profilefrm')
 
-            if (gender === "M") M.checked = true;
-            if (gender === "F") F.checked = true;
+            const M = document.querySelector('#genderM')
+            const F = document.querySelector('#genderF')
 
-            const default_birth = birth.substring(0,10);
-            const emailSelect = document.querySelector('#email_select');
-            emailSelect.addEventListener('click', (e) => {
-                const email2Value = document.querySelector('#email2');
-                email2Value.value = e.target.value;
-            });
+            if(gender==="M") M.checked = true 
+            if(gender==="F") F.checked = true 
+
+            const default_birth = birth.substring(0,10)
+
+            const emailSelect = document.querySelector('#email_select')
+            emailSelect.addEventListener('click',(e)=>{
+                let email2Value = document.querySelector('#email2')
+                email2Value.value = e.target.value
+            })
 
             profilefrm.addEventListener('submit', async (e)=>{
                 e.preventDefault();
-                const userpw1 = e.target.userpw.value;
-                const userimage1 = e.target.userimage.files[0];
-                const name1 = e.target.name.value;
-                const nickname1 = e.target.nickname.value;
 
-                const year = e.target.year.value;
-                const month = e.target.month.value;
-                const day = e.target.day.value;
-                const birth = year + month + day;
+                const responseTokenName = await axios.post('http://localhost:3000/user/tokenName',null,option)
+                const {token} = responseTokenName.data
 
-                const address1 = e.target.address.value;
-                const gender1 = e.target.gender.value;
-
-                const tel1 = e.target.tel1.value;
-                const tel2 = e.target.tel2.value;
-                const tel3 = e.target.tel3.value;
-                const tel11 = tel1 + tel2 + tel3;
-
-                const phone1 = e.target.phone1.value;
-                const phone2 = e.target.phone2.value;
-                const phone3 = e.target.phone3.value;
-                const phone11 = phone1 + phone2 + phone3;
-
-                const email1 = e.target.email1.value;
-                const email2 = e.target.email2.value;
-                const email11 = email1 + '@' + email2;
-
-                const intro1 = e.target.intro.value;
-                
-                const formData = new FormData();
-                formData.append('userimage', userimage1);
-                formData.append('userpw', userpw1);
-                formData.append('name', name1);
-                formData.append('nickname', nickname);
-                formData.append('birth', birth);
-                formData.append('address', address1);
-                formData.append('gender', gender1);
-                formData.append('tel', tel11);
-                formData.append('phone', phone11);
-                formData.append('email', email11);
-                formData.append('intro', intro1);
-
-                const body = formData;
-                const response2 = await axios.post('http://localhost:3000/user/profileUpdate', body, option);
-
-                if (response2.data.err === 1062) {
-                    alert('닉네임이 중복됩니다.');
-                } else {
-                    alert(`회원정보가 수정되었습니다.`);
-                    location.href = 'http://localhost:3001/user/profile';
+                // fs로 이전사진 지우기
+                if(token == 'token'){
+                    let responseFS
+                    if(e.target.userimage.files[0] != undefined){
+                        const bodyFS = {userimage}
+                        responseFS = await axios.post('http://localhost:3000/user/FS',bodyFS,option)
+                    }
                 }
-            });
-            const resign = document.querySelector('#resign');
-            resign.addEventListener('click', async (e) => {
-                e.preventDefault();
-                const option = {
-                    "Content-type":"application/json",
-                    withCredentials:true,
-                };
-                const resignResponse = await axios.post('http://localhost:3000/user/resign', null, option);
-                alert('회원 탈퇴가 완료되었습니다.');
-                location.href = 'http://localhost:3001';
-            });
-        });
+                
+                const userpw1 = e.target.userpw.value
+
+                let userimage1
+                if(token == 'token') userimage1 = e.target.userimage.files[0]
+                
+                const name1 = e.target.name.value
+                const nickname1 = e.target.nickname.value
+
+                const year = e.target.year.value
+                const month = e.target.month.value
+                const day = e.target.day.value
+                const birth = year+month+day
+
+                const address1 = e.target.address.value
+                const gender1 = e.target.gender.value
+
+                const tel1 = e.target.tel1.value
+                const tel2 = e.target.tel2.value
+                const tel3 = e.target.tel3.value
+                const tel11 = tel1+tel2+tel3
+
+                const phone1 = e.target.phone1.value
+                const phone2 = e.target.phone2.value
+                const phone3 = e.target.phone3.value
+                const phone11 = phone1+phone2+phone3
+
+                const email1 = e.target.email1.value
+                const email2 = e.target.email2.value
+                const email11 = email1+'@'+email2
+
+                const intro1 = e.target.intro.value
+                console.log(intro1)
+
+                
+                
+                const formData = new FormData()
+                formData.append('userpw',userpw1)
+                if(token == 'token') formData.append('userimage',userimage1)
+                formData.append('name',name1)
+                formData.append('nickname',nickname1)
+                formData.append('birth',birth)
+                formData.append('address',address1)
+                formData.append('gender',gender1)
+                formData.append('tel',tel11)
+                formData.append('phone',phone11)
+                formData.append('email',email11)
+                formData.append('intro',intro1)
+
+                try{
+                    if( userpw1=='' || name1=='' || nickname1=='' || address1=='' ||
+                        gender1=='' || tel1=='' || tel2=='' || tel3=='' || phone1=='' || phone2=='' || phone3=='' ||
+                        email1=='' || email2=='' || intro1 =='') throw new Error
+
+                    const body = formData
+
+                    const response2 = await axios.post('http://localhost:3000/user/profileUpdate', body, option)
+
+
+                    if(response2.data.errno == 1) alert('닉네임이 중복됩니다.')
+                    if(response2.data.errno == 2) alert('생년월일을 다시 확인하세요.')
+                    if(response2.data.errno == 0) {
+                        alert(`회원정보가 수정되었습니다!`)
+                        location.href = 'http://localhost:3001/user/profile'
+                    }
+                }catch(e){
+                    console.log(e)
+                    alert('빈값 다 채우세요')
+                }
+            })
+
+        const option3 = {
+            'Content-type':'application/json',
+            withCredentials:true,
+        }
+
+        // 토큰이름 가져오기
+        const responseTokenName = await axios.post('http://localhost:3000/user/tokenName',null,option3)
+        const {token} = responseTokenName.data
+        
+        const li = document.querySelector('#li')
+        const liTem = document.querySelector('#li_tem').innerHTML
+
+        if(token == 'token') li.innerHTML = liTem
+
+
+        
+        const resign = document.querySelector('#resign')
+        resign.addEventListener('click',async(e)=>{
+            e.preventDefault()
+
+            const option = {
+                "Content-type":"application/json",
+                withCredentials:true,
+            }
+
+            const resignResponse = await axios.post('http://localhost:3000/user/resign',null,option)
+            
+            alert('회원 탈퇴가 완료되었습니다...ㅠ')
+            location.href = 'http://localhost:3001'
+        })
+    })
+        
     </script>
 </head>
 <body>
@@ -230,7 +303,7 @@
                 </li>
                 <li>
                     <div><strong>자기소개</strong></div>
-                    <textarea name="intro" value="{intro}" id="intro" cols="30" rows="10"></textarea>
+                    <textarea name="intro" id="intro" cols="30" rows="10">{intro}</textarea>
                 </li>
                 <li>
                     <strong>나의 포인트 :</strong>
