@@ -12,13 +12,22 @@
 
     <script type="text/javascript">
         document.addEventListener('DOMContentLoaded', async ()=>{
-            const profiles = document.querySelector('#profiles');
-            const profile = document.querySelector('#profile').innerHTML;
 
             const option = {
-                "Content-type":"application/json",
+                'Content-type':'application/json',
                 withCredentials:true,
             }
+            // 로그인상태에서 /user/profile 못들어감
+            const responseAuth = await axios.post('http://localhost:3000/user/auth',null,option)
+            const {errno} = responseAuth.data
+
+            if(errno == 2) {
+                alert('로그인을 해야 프로필을 볼거 아니냐...')
+                location.href = 'http://localhost:3001/user/login'
+            }
+
+            const profiles = document.querySelector('#profiles');
+            const profile = document.querySelector('#profile').innerHTML;
 
             const response = await axios.post('http://localhost:3000/user/profile',null,option);
             const { level, userid, userpw, userimage, name, nickname,
@@ -35,8 +44,8 @@
 
             phone = phone.substring(0,3)+'-'+phone.substring(3,7)+'-'+phone.substring(7,11)
             
-            if(gender==="F") gender = "여자 여성 F 등등 수정가능"
-            if(gender==="M") gender = "남자 남성 M 등등 수정가능"
+            if(gender==="F") gender = "여성"
+            if(gender==="M") gender = "남성"
 
             try {
                 let template = '';
@@ -52,7 +61,7 @@
                                 .replace('{email}',email)
                                 .replace('{intro}',intro)
                                 .replace('{point}',point)
-                                .replace('{active}',active)
+                                .replace('{level}',level)
                                 .replace('{date}',date)
                                     
                 profiles.innerHTML = template
@@ -145,7 +154,7 @@
                         </tr>
                         <tr>
                             <td><strong>나의 레벨</strong></td>
-                            <td>{active}</td>
+                            <td>{level}</td>
                         </tr>
                         <tr>
                             <td><strong>가입일</strong></td>

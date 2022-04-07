@@ -12,22 +12,37 @@
 
     <script type="text/javascript">
         document.addEventListener('DOMContentLoaded', async ()=>{
+
+            const option = {
+                'Content-type':'application/json',
+                withCredentials:true,
+            }
+            // 로그인상태에서 /user/welcome 못들어감
+            const responseAuth = await axios.post('http://localhost:3000/user/auth',null,option)
+            const {errno} = responseAuth.data
+            
+            if(errno == 2) {
+                alert('니가 누군데 환영을 해')
+                location.href = 'http://localhost:3001/user/login'
+            }
             
 
             const welcome = document.querySelector('#welcome')
             const welcome2 = document.querySelector('#welcome2').innerHTML
             
-            const option = {
-                "Content-type":"application/json",
-                withCredentials:true,
-            }
+            // const option = {
+            //     "Content-type":"application/json",
+            //     withCredentials:true,
+            // }
 
             const response = await axios.post('http://localhost:3000/user/welcome',null,option);
             const { level, userid, userpw, userimage, name, nickname,
-                    address, gender, tel, phone, email, intro,
+                    address, tel, phone, email, intro,
                     point, active, date } = response.data;
 
-            let {birth}=response.data 
+            let {birth, gender}=response.data 
+            if(gender == 'F') gender = '여성'
+            if(gender == 'M') gender = '남성'
 
             let template = ''
             template = welcome2.replace('{userid}',userid)
@@ -42,7 +57,7 @@
                                .replace('{email}',email)
                                .replace('{intro}',intro)
                                .replace('{point}',point)
-                               .replace('{active}',active)
+                               .replace('{level}',level)
                                .replace('{date}',date)
             welcome.innerHTML = template
         })
@@ -126,7 +141,7 @@
                         </tr>
                         <tr>
                             <td>나의 레벨</td>
-                            <td>{active}</td>
+                            <td>{level}</td>
                         </tr>
                         <tr>
                             <td>가입일</td>

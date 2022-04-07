@@ -13,5 +13,7 @@ router.post('/resign',controller.resign);
 router.post('/welcome',controller.welcome);
 router.post('/auth',controller.Auth);
 router.post('/kakaoJoinAuth',controller.kakaoJoinAuth);
+router.post('/tokenName',controller.tokenName);
+router.post('/FS',controller.FS);
 
 module.exports = router

@@ -6,6 +6,53 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+    <script type="text/javascript">
+        document.addEventListener('DOMContentLoaded', async ()=>{
+
+            const option = {
+                'Content-type':'application/json',
+                withCredentials:true,
+            }
+            // 로그인상태에서 /user/login 못들어감
+            const responseAuth = await axios.post('http://localhost:3000/user/auth',null,option)
+            const {errno} = responseAuth.data
+            if(errno == 1) {
+                alert('로그인을 또 하게?')
+                location.href = 'http://localhost:3001'
+            }
+
+
+
+            const frm = document.querySelector('#login_frm')
+            frm.addEventListener('submit',async (e)=>{
+            e.preventDefault()
+            const userid = document.querySelector('#userid').value
+            const userpw = document.querySelector('#userpw').value
+
+            const body = {userid, userpw}
+
+            const response = await axios.post('http://localhost:3000/user/login',body,option)
+            const {errno} = response.data
+            if(errno == 1) alert('아이디 비번 틀립니다.')
+            if(errno == 2) alert('관리자가 당신의 로그인을 차단했습니다.')
+            if(errno == 0) {
+                alert(`
+                     아이디는 ${response.data.result.userid}
+                     닉네임은 ${response.data.result.nickname}
+                     이름은 ${response.data.result.name}
+                     레벨은 ${response.data.result.level}
+                     현재 포인트는 ${response.data.result.point} 점 입니다.
+                     `)
+                location.href = 'http://localhost:3001'
+                }
+            })
+
+            
+        })
+    </script>
+
+
 </head>
 <body>
     <h1>
@@ -31,47 +78,7 @@
     <a href="/user/agree">회원가입하기</a>
 
     <script type="text/javascript">
-        const frm = document.querySelector('#login_frm')
-        frm.addEventListener('submit',async (e)=>{
-            e.preventDefault()
-            const userid = document.querySelector('#userid').value
-            const userpw = document.querySelector('#userpw').value
-
-            const body = {
-                userid,
-                userpw
-            }
-
-            const option = {
-                'Content-type':'application/json',
-                withCredentials:true,
-            }
-
-            try {
-                const response = await axios.post('http://localhost:3000/user/login',body,option)
-                if(response.data.errno !==0) throw new Error('로그인 에러!')
-           
-                alert(`
-                    아이디는 ${response.data.result[0].userid}
-                    닉네임은 ${response.data.result[0].nickname}
-                    이름은 ${response.data.result[0].name}
-                    레벨은 ${response.data.result[0].level}
-                    현재 포인트는 ${response.data.result[0].point} 점 입니다.
-                `)
-
-                //  get render값에 두번째 인자로 마지막 url 넘겨받는곳
-                const lastPage = '{{pageName}}'
-                if(lastPage){
-                    location.href = lastPage
-                }else{
-                    location.href = 'http://localhost:3001'
-                }
-               
-                // location.href = 'http://localhost:3001'
-            } catch (e) {
-                alert('아이디나 비밀번호를 다시 확인해보세욜')
-            }
-        })
+        
     </script>
 </body>
 </html>
