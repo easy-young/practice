@@ -343,14 +343,9 @@ exports.kakaoJoinAuth = async (req,res)=>{
     const [[result]] = await pool.execute(sql,prepare)
     let response
     if(result == undefined){
-        response = {
-            errno:0
-        }
+        response = {errno:0}
     } else {
-        
-        response = {
-            errno:1
-        }
+        response = {errno:1}
     }
     res.json(response)
 }
