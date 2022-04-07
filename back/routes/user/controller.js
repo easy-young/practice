@@ -336,6 +336,25 @@ exports.Auth = async (req,res)=>{
     }
 }
 
+exports.kakaoJoinAuth = async (req,res)=>{
+    const {nickname,email,userimage} = req.body
+    const sql = `SELECT * FROM user WHERE nickname=? and email=?`
+    const prepare = [nickname, email]
+    const [[result]] = await pool.execute(sql,prepare)
+    let response
+    if(result == undefined){
+        response = {
+            errno:0
+        }
+    } else {
+        
+        response = {
+            errno:1
+        }
+    }
+    res.json(response)
+}
+
 exports.tokenName = (req,res) => {
     const cookie = req.headers.cookie.split('=')[0]
     if(cookie == 'token') res.json({token:'token'})
