@@ -97,17 +97,18 @@
             profilefrm.addEventListener('submit', async (e)=>{
                 e.preventDefault();
 
-                // fs로 이전사진 지우기
-                let responseFS
-                if(e.target.userimage.files[0] != undefined){
-                    console.log(userimage)
-                    const bodyFS = {userimage}
-                    responseFS = await axios.post('http://localhost:3000/user/FS',bodyFS,option)
-                }
-
                 const responseTokenName = await axios.post('http://localhost:3000/user/tokenName',null,option)
                 const {token} = responseTokenName.data
-            
+
+                // fs로 이전사진 지우기
+                if(token == 'token'){
+                    let responseFS
+                    if(e.target.userimage.files[0] != undefined){
+                        const bodyFS = {userimage}
+                        responseFS = await axios.post('http://localhost:3000/user/FS',bodyFS,option)
+                    }
+                }
+                
                 const userpw1 = e.target.userpw.value
 
                 let userimage1
