@@ -1,4 +1,3 @@
-
 CREATE TABLE user(
     level INT DEFAULT 3 NOT NULL,
     userid VARCHAR(10) NOT NULL,
@@ -14,7 +13,7 @@ CREATE TABLE user(
     email TEXT NOT NULL,
     intro TEXT NOT NULL,
     point INT DEFAULT 0 NOT NULL,
-    active INT NOT NULL DEfAULT 1,
+    active INT NOT NULL DEFAULT 1,
     date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY(userid),
     UNIQUE KEY(nickname)
@@ -26,10 +25,12 @@ CREATE TABLE board(
     sub VARCHAR(10) NOT NULL,
     subject VARCHAR(40) NOT NULL,
     nickname VARCHAR(10) NOT NULL,
+    userid VARCHAR(10) NOT NULL,
     date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     content TEXT NOT NULL,
     hit INT DEFAULT 0 NOT NULL,
     good INT DEFAULT 0 NOT NULL,
+    goodUsers TEXT NOT NULL,
     imageName TEXT NOT NULL,
     active INT NOT NULL DEFAULT 1,
     PRIMARY KEY(idx)
@@ -56,10 +57,6 @@ CREATE TABLE category(
 
 CREATE TABLE tag(
     idx INT NOT NULL AUTO_INCREMENT,
-    tag1 VARCHAR(10) NOT NULL,
-    tag2 VARCHAR(10) NOT NULL,
-    tag3 VARCHAR(10) NOT NULL,
-    tag4 VARCHAR(10) NOT NULL,
-    tag5 VARCHAR(10) NOT NULL,
+    tag VARCHAR(10) NOT NULL,
     FOREIGN KEY (idx) REFERENCES board (idx)
 );

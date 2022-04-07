@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>오이마켓</title>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script type="text/javascript">
+        const idx = location.pathname.split('/')[3];
+        document.addEventListener('DOMContentLoaded', async ()=>{
+            const option = {withCredentials:true};
+            const subjectBox = document.querySelector('#subject');
+            const nicknameBox = document.querySelector('#nickname');
+            const contentBox = document.querySelector('#content');
+            const imageBox = document.querySelector('#image');
+            const hitBox = document.querySelector('#hit');
+            const private_chat = document.querySelector('#private_chat');
+            const deleteTem = document.querySelector('#deleteTem').innerHTML;
+
+            let whoami = '';
+            let nickname_now = '';
+
+            async function view() {
+                const response = await axios.post(`http://localhost:3000/board/view/${idx}`, null, option);
+                console.log(response.data);
+                if (response.data.status) {
+                    const {subject, nickname, content, userid, imageName, hit} = response.data.data;
+                    for (let i = 0; i < imageName.match(/png/g).length; i++) {
+                        const url = `http://localhost:3000/uploades/${imageName.split(',')[i]}`;
+                        imageBox.innerHTML += `<span class="image-wrapper"><img src="${url}" width="300px" height="200px"></span>`;
+                    }
+                    subjectBox.innerHTML = subject;
+                    nicknameBox.innerHTML = nickname;
+                    contentBox.innerHTML = content;
+                    hitBox.innerHTML = `hit : ${hit}`;
+                    private_chat.innerHTML = `<a href="http://localhost:3001/board/private_chat/${nickname}">1:1채팅</a>`;
+
+                    whoami = response.data.user;
+                    nickname_now = response.data.nickname;
+                    if (whoami === userid) document.querySelector('#delete-btn').innerHTML = deleteTem.replace('{idx}', idx);
+                }
+            }
+            view();
+
+            let state = {
+                replay: [],
+                value: '',
+                length: ''
+            };
+
+            async function commentView() {
+                commentApp.innerHTML = '';
+                createForm();
+                const commentList = document.querySelector('#commentList');
+                const comments = document.querySelector('#comments');
+                const commentsInput = document.querySelector('#comments-input');
+                const commentModify = document.querySelector('#comment-modify');
+                const response = await axios.post(`http://localhost:3000/board/view/${idx}`, null, option);
+                nickname_now = response.data.nickname;
+
+                const response2 = await axios.post(`http://localhost:3000/board/comment/${idx}`, null, option);
+                
+                let inData = '';
+                let inComments = comments.innerHTML;
+                response2.data.data.forEach((v, i) => {
+                    if (v.nickname === nickname_now) {
+                        comments.innerHTML += commentModify.innerHTML;
+                    }
+                    inData += comments.innerHTML.replace('{nickname}', v.nickname)
+                                        .replace('{comment}', v.comment)
+                                        .replace('{uuid}', v.uuid)
+                                        .replace('{updatedAt}', v.updatedAt.split('T')[0]);
+                    comments.innerHTML = inComments;
+                });
+                commentList.innerHTML = inData;
+
+                const commentUpdateBtn = document.querySelectorAll('.comment-update-btn');
+                const commentDeleteBtn = document.querySelectorAll('.comment-delete-btn');
+                for (let i = 0; i < commentUpdateBtn.length; i++) {
+                    commentUpdateBtn[i].addEventListener('click', ()=>{
+                        const beforeContent = commentUpdateBtn[i].previousElementSibling.innerHTML.split('<li class="comment-content">')[1].split('<input')[0];
+                        const beforeUpdatedAt = commentUpdateBtn[i].previousElementSibling.innerHTML.split('<li class="comment-date">')[1].split('</li>')[0];
+                        const beforeUUID = commentUpdateBtn[i].previousElementSibling.innerHTML.split('value="')[1].split('">')[0];
+                        commentUpdateBtn[i].previousElementSibling.innerHTML = commentsInput.innerHTML.replace('{nickname}', nickname_now)
+                                                                                                        .replace('{updatedAt}', beforeUpdatedAt);
+                        const commentContentInput = document.querySelector('#comment-content-input');
+                        const commentUpdate = document.querySelector('.comment-update');
+                        commentContentInput.value = beforeContent;
+                        commentUpdateBtn[i].style.display = 'none';
+                        commentUpdateBtn[i].nextElementSibling.style.display ='none';
+
+                        commentUpdate.addEventListener('click', async ()=>{
+                            const body = {
+                                comment: commentContentInput.value,
+                                idx: idx,
+                                uuid: beforeUUID
+                            };
+                            const response = await axios.post('http://localhost:3000/board/comment-update/:uuid', body, option);
+                            commentView();
+                        });
+                    });
+
+                    commentDeleteBtn[i].addEventListener('click', async () => {
+                        const beforeUUID = commentUpdateBtn[i].previousElementSibling.innerHTML.split('value="')[1].split('">')[0];
+                        const body = {
+                            uuid:beforeUUID
+                        };
+                        const response = await axios.post(`http://localhost:3000/board/comment-delete/:uuid`, body, option);
+                        commentView();
+                    });
+                }
+            }
+
+            async function getComment() {
+                const [,,,idx] = location.pathname.split('/');
+                const response = await axios.post(`http://localhost:3000/board/comment/${idx}`, null, option);
+                if (response.data.status) {
+                    state = {
+                        ...state,
+                        replay: response.data.data,
+                        length: response.data.data.length
+                    };
+                }
+            }
+            getComment();
+
+            const commentApp = document.querySelector('#commentApp');
+            const commentForm = document.querySelector('#commentForm');
+            const commentList = document.querySelector('#commentList');
+            const commentInput = document.querySelector('#commentInput');
+
+            function createForm() {
+                const clone = document.importNode(commentForm.content, true);
+                const form = clone.querySelector('form');
+                const counting = form.querySelector('h4 > span');
+                counting.innerHTML = `(${state.length})`;
+
+                form.addEventListener('submit', submitHandler);
+                commentApp.append(clone);
+            }
+
+            async function submitHandler(e) {
+                e.preventDefault();
+                const {input} = e.target;
+                const counting = e.target.querySelector('h4 > span');
+                const [,,,idx] = location.pathname.split('/');
+                const result = {
+                    comment:input.value
+                };
+                const response = await axios.post(`http://localhost:3000/board/comment-write/${idx}`, result, option);
+
+                if (response.data.status) {
+                    state = {
+                        ...state,
+                        replay: response.data.commentList,
+                        length: response.data.commentList.length
+                    };
+                }
+                input.value = '';
+                counting.innerHTML = `(${state.length})`;
+                commentView();
+            }
+            commentView();
+        });
+
+        async function postDeleteHandler(e) {
+            const option = {
+                "Content-type":"application/json",
+                withCredentials:true,
+            };
+            const response = await axios.post(`http://localhost:3000/board/delete/${idx}`, null, option);
+            if (response.data.status) location.href = "/";
+        }
+    </script>
+</head>
+<body>
+    <div id="container">
+        <div class="card">
+            <div class="card-header">
+                제목 : <span id="subject"></span>
+            </div>
+            <div class="card-body">
+                닉네임 : <span id="nickname"></span>
+                <div id="hit"></div>
+            </div>
+            <div class="card-body">
+                <div id="image" class="card-image"></div>
+            </div>
+            <div class="card-body">
+                내용 : <span id="content"></span>
+            </div>
+        </div>
+        <div id="delete-btn"></div>
+
+        <template id="deleteTem">
+            <div>
+                <button onclick="postDeleteHandler(this)">삭제</button>
+                <a href="http://localhost:3001/board/modify/{idx}">수정</a>
+            </div>
+        </template>
+
+        <div>
+            <ul id="commentApp"></ul>
+        </div>
+
+        <template id="commentForm">
+            <li class="comment-form">
+                <form action="post" action="">
+                    <h4>댓글쓰기<span></span></h4>
+                    <span class="ps_box">
+                        <input type="text" placeholder="댓글 내용을 입력해주세요." class="int" value="" name="input">
+                    </span>
+                    <input type="submit" class="btn" value="등록" />
+                </form>
+            </li>
+        </template>
+
+        <div id="commentList"></div>
+
+        <template id="commentInput">
+            <span>
+                <input type="text" class="comment-update-input" value="">
+            </span>
+        </template>
+
+        <template id="comments">
+            <ul class="comment-row">
+                <li class="comment-id">{nickname}</li>
+                <li class="comment-content">{comment}<input type="hidden" name="uuid" value="{uuid}">
+                </li>
+                <li class="comment-date">{updatedAt}</li>
+            </ul>
+        </template>
+
+        <template id="comments-input">
+            <li class="comment-id">{nickname}</li>
+            <li class="comment-content">
+                <input type="hidden" name="uuid" value="{uuid}">
+                <input type="text" name="comment-content-input" id="comment-content-input">
+            </li>
+            <li class="comment-date">{updatedAt}</li>
+            <button class="comment-update">수정하기</button>
+        </template>
+
+        <template id="comment-modify">
+            <button class="comment-update-btn">수정</button>
+            <button class="comment-delete-btn">X</button>
+        </template>
+        
+        <div id="private_chat"></div>
+    </div>
+</body>
+</html>
