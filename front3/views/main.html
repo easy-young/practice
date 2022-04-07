@@ -14,12 +14,8 @@
             const ul = document.querySelector('header > ul');
             const beforeLogin = document.querySelector('#beforeLogin').innerHTML;
             const afterLogin = document.querySelector('#afterLogin').innerHTML;
-            const like = document.querySelectorAll('#like');
-            const beforeLike = document.querySelectorAll('#beforeLike');
-            const afterLike = document.querySelectorAll('#afterLike');
-            const scrap = document.querySelectorAll('#scrap');
-            const befoerScrap = document.querySelectorAll('#beforeScrap');
-            const afterScrap = document.querySelectorAll('#afterScrap');
+            const container = document.querySelector('#container');
+            const contentBoxes = document.querySelector('#contentBoxes').innerHTML;
 
             const response = await axios.post('http://localhost:3000/loginCheck', null, option);
             const {errno} = response.data;
@@ -33,6 +29,26 @@
                     location.href = 'http://localhost:3001/';
                 });
             }
+
+            let template = '';
+            const response2 = await axios.post('http://localhost:3000/board/list', null, option);
+            response2.data.data.forEach(v=>{
+                template += contentBoxes.replace('{userid}', v.userid)
+                                        .replace('{subject}', v.subject)
+                                        .replace('{imageName}', v.imageName.split(',')[0])
+                                        .replace('{date}', v.date.split('T')[0])
+                                        .replace('{hit}', v.hit)
+                                        .replace('{good}', v.good)
+                                        .replace('{idx}', v.idx);
+            });
+            container.innerHTML = template;
+
+            const like = document.querySelectorAll('#like');
+            const beforeLike = document.querySelectorAll('#beforeLike');
+            const afterLike = document.querySelectorAll('#afterLike');
+            const scrap = document.querySelectorAll('#scrap');
+            const befoerScrap = document.querySelectorAll('#beforeScrap');
+            const afterScrap = document.querySelectorAll('#afterScrap');
             
             const cnt = [];
             const cnt2 = [];
@@ -91,17 +107,17 @@
     </header>
 
     <div id="container">
-        <!-- <template> -->
+        <template id="contentBoxes">
             <div id="contentBox">
-                <img src="#" width="280px" height="200px">
-                <strong><a href="#">맥북 프로 팝니다.</a></strong>
-                <div>작성일 : 2022-04-04</div>
-                <div>조회수 : 7</div>
-                <div>좋아요 : 10</div>
+                <img src="http://localhost:3000/uploades/{imageName}" width="280px" height="200px">
+                <strong><a href="board/view/{idx}">{subject}</a></strong>
+                <div>작성일 : {date}</div>
+                <div>조회수 : {hit}</div>
+                <div>좋아요 : {good}</div>
                 <div id="author">
-                    <img src="/검정색.jpg" width="25px" height="25px">
+                    <img src="http://localhost:3000/uploadsUser/" width="25px" height="25px">
                     <span>
-                        by <strong><a href="#">leejy230698</a></strong>
+                        by <strong><a href="#">{userid}</a></strong>
                     </span>
                     <button id="scrap">
                         <img id="beforeScrap" src="/star.png" width="20px" height="20px">
@@ -113,91 +129,7 @@
                     </button>
                 </div>
             </div>
-            <span id="contentBox">
-                <img src="#" width="280px" height="200px">
-                <strong><a href="#">맥북 프로 팝니다.</a></strong>
-                <div>작성일 : 2022-04-04</div>
-                <div>조회수 : 7</div>
-                <div>좋아요 : 10</div>
-                <div id="author">
-                    <img src="/검정색.jpg" width="25px" height="25px">
-                    <span>
-                        by <strong><a href="#">leejy230698</a></strong>
-                    </span>
-                    <button id="scrap">
-                        <img id="beforeScrap" src="/star.png" width="20px" height="20px">
-                        <img id="afterScrap" src="/star2.png" width="20px" height="20px">
-                    </button>
-                    <button id="like">
-                        <img id="beforeLike" src="/heart.png" width="20px" height="20px">
-                        <img id="afterLike" src="/heart2.png" width="20px" height="20px">
-                    </button>
-                </div>
-            </span>
-            <span id="contentBox">
-                <img src="#" width="280px" height="200px">
-                <strong><a href="#">맥북 프로 팝니다.</a></strong>
-                <div>작성일 : 2022-04-04</div>
-                <div>조회수 : 7</div>
-                <div>좋아요 : 10</div>
-                <div id="author">
-                    <img src="/검정색.jpg" width="25px" height="25px">
-                    <span>
-                        by <strong><a href="#">leejy230698</a></strong>
-                    </span>
-                    <button id="scrap">
-                        <img id="beforeScrap" src="/star.png" width="20px" height="20px">
-                        <img id="afterScrap" src="/star2.png" width="20px" height="20px">
-                    </button>
-                    <button id="like">
-                        <img id="beforeLike" src="/heart.png" width="20px" height="20px">
-                        <img id="afterLike" src="/heart2.png" width="20px" height="20px">
-                    </button>
-                </div>
-            </span>
-            <span id="contentBox">
-                <img src="#" width="280px" height="200px">
-                <strong><a href="#">맥북 프로 팝니다.</a></strong>
-                <div>작성일 : 2022-04-04</div>
-                <div>조회수 : 7</div>
-                <div>좋아요 : 10</div>
-                <div id="author">
-                    <img src="/검정색.jpg" width="25px" height="25px">
-                    <span>
-                        by <strong><a href="#">leejy230698</a></strong>
-                    </span>
-                    <button id="scrap">
-                        <img id="beforeScrap" src="/star.png" width="20px" height="20px">
-                        <img id="afterScrap" src="/star2.png" width="20px" height="20px">
-                    </button>
-                    <button id="like">
-                        <img id="beforeLike" src="/heart.png" width="20px" height="20px">
-                        <img id="afterLike" src="/heart2.png" width="20px" height="20px">
-                    </button>
-                </div>
-            </span>
-            <span id="contentBox">
-                <img src="#" width="280px" height="200px">
-                <strong><a href="#">맥북 프로 팝니다.</a></strong>
-                <div>작성일 : 2022-04-04</div>
-                <div>조회수 : 7</div>
-                <div>좋아요 : 10</div>
-                <div id="author">
-                    <img src="/검정색.jpg" width="25px" height="25px">
-                    <span>
-                        by <strong><a href="#">leejy230698</a></strong>
-                    </span>
-                    <button id="scrap">
-                        <img id="beforeScrap" src="/star.png" width="20px" height="20px">
-                        <img id="afterScrap" src="/star2.png" width="20px" height="20px">
-                    </button>
-                    <button id="like">
-                        <img id="beforeLike" src="/heart.png" width="20px" height="20px">
-                        <img id="afterLike" src="/heart2.png" width="20px" height="20px">
-                    </button>
-                </div>
-            </span>
-        <!-- </template> -->
+        </template>
     </div>
 </body>
 </html>

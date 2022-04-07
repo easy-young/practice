@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>오이마켓</title>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script type="text/javascript">
+        document.addEventListener('DOMContentLoaded', ()=>{
+            const idx = location.pathname.split('/')[3];
+            const frm = document.querySelector('#frm_write');
+            const subjectInput = document.querySelector('#subject');
+            const contentInput = document.querySelector('#content');
+            const filesInput = document.querySelector('#upload');
+            const imageLi = document.querySelector('#imageLi');
+            const imageBox = document.querySelector('#imageBox');
+            const option = {
+                "Content-type":"application/json",
+                withCredentials: true,
+            };
+            async function getData() {
+                const response = await axios.post(`http://localhost:3000/board/get-post/${idx}`, null, option);
+                const {subject, nickname, content, userid, imageName, main, sub} = response.data.data;
+                const imageLength = imageName.match(/png/g).length;
+                subjectInput.value = subject;
+                contentInput.value = content;
+
+                let template = '';
+                for (let i = 0; i < imageLength; i++) template += imageBox.innerHTML.replace('{imageName}', 'http://localhost:3000/uploades/' + imageName.split(',')[i]);
+                imageLi.innerHTML += template;
+            }
+            getData();
+
+            frm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const subject = document.querySelector('#subject').value;
+                const content = document.querySelector('#content').value;
+                const {files} = document.querySelector('#upload');
+                const formData = new FormData();
+
+                for (let i = 0; i < files.length; i++) {
+                    const file = files[i];
+                    formData.append('upload', file);
+                }
+
+                formData.append('subject', subject);
+                formData.append('content', content);
+                formData.append('main', main);
+                formData.append('sub', sub);
+                formData.append('idx', idx);
+
+                if (files.length < 6) {
+                    const response = await axios.post('http://localhost:3000/board/modify', formData, option);
+                    location.href = ('/');
+                } else {
+                    alert('이미지의 최대 갯수는 5장입니다.');
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+    <h1>
+        글 수정
+    </h1>
+    <form method="post" action="/board/write" id="frm_write" enctype="multipart/form-data">
+        <div id="category">
+            <span>메인 카테고리 :
+                <select name="main" id="main" onchange="mainChangeHandler(this)">
+                    <option value="buy">중고거래</option>
+                    <option value="friends">동네친구찾기</option>
+                    <option value="question">Q&A</option>
+                    <option value="ban">신고</option>
+                </select>
+            </span>
+            <span>서브 카테고리 :
+                <select name="sub" id="sub">
+                    <!--  -->
+                </select>
+            </span>
+        </div>
+        <ul>
+            <li>
+                <strong>제목 : </strong>
+                <input class="form-control" type="text" name="subject" id="subject">
+            </li>
+            <li id="imageLi">
+                <div>
+                    <strong>사진 : </strong>
+                    <input type="file" name="upload" id="upload" multiple accept="image/*">
+                </div>
+                <template id="imageBox">
+                    <img src="{imageName}" id="imageName" width="280px" height="200px">
+                </template>
+            </li>
+            <li>
+                <strong>내용 : </strong>
+                <textarea name="content" id="content" rows="20"></textarea>
+            </li>
+        </ul>
+        <input type="submit" value="수정 완료">
+    </form>
+    <a href="/">홈으로</a>
+</body>
+</html>

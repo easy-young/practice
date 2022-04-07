@@ -4,49 +4,35 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link href="/user/kakaoAgree.css" type="text/css" rel="stylesheet">
+    <title>오이마켓 - 약관 동의</title>
+    <link rel="shortcut icon" href="../favicon.png">
+    <link type="text/css" rel="stylesheet" href="http://localhost:3001/css/user/kakao_agree.css">
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-
     <script type="text/javascript">
-        document.addEventListener('DOMContentLoaded',async ()=>{
+        document.addEventListener('DOMContentLoaded', () => {
+            const check1 = document.querySelector('#check1');
+            const check2 = document.querySelector('#check2');
+            const check3 = document.querySelector('#check3');
+            const agree = document.querySelector('#agree');
+            const agreeAll = document.querySelector('#agree_all');
 
-            const option = {
-                'Content-type':'application/json',
-                withCredentials:true,
-            }
-            // 로그인상태에서 /user/kakaoAgree 못들어감
-            const responseAuth = await axios.post('http://localhost:3000/user/auth',null,option)
-            const {errno} = responseAuth.data
-            if(errno == 1) {
-                alert('동의는 한번만하셔도 돼요;;')
-                location.href = 'http://localhost:3001'
-            }
+            agreeAll.addEventListener('click', (e) => {
+                e.preventDefault();
+                check1.checked = true;
+                check2.checked = true;
+                check3.checked = true;
+            });
 
-            const check1 = document.querySelector('#check1')
-            const check2 = document.querySelector('#check2')
-            const check3 = document.querySelector('#check3')
-            const agree = document.querySelector('#agree')
-            const agreeAll = document.querySelector('#agree_all')
-
-            agreeAll.addEventListener('click',(e)=>{
-                e.preventDefault()
-                check1.checked = true
-                check2.checked = true
-                check3.checked = true
-            })
-
-            agree.addEventListener('click',(e)=>{
-                e.preventDefault()
-                if(check1.checked == true && check2.checked == true && check3.checked == true){
-                    location.href = agree.href
+            agree.addEventListener('click', (e) => {
+                e.preventDefault();
+                if(check1.checked === true && check2.checked === true && check3.checked === true) {
+                    location.href = agree.href;
                 } else {
-                    alert('다 체크 하세요')
+                    alert('모두 동의해주세요.');
                 }
-            })
-        })
+            });
+        });
     </script>
-
 </head>
 <body>
     <div id="all">
@@ -70,12 +56,12 @@
             </div>
             <div id="content">
                 <ul>
-                    <div id="agree_div">
+                    <div class="agree_div">
                         <h2>
                             제1조 목적
                         </h2>
                         <br>
-                        본 약관은 주식회사 네오위즈가 운영하는 게임 포털 피망 (www.pmang.com)과 피망에서 제공하는 게임 및 관련 서비스의 이용에 관하여 회사와 회원의 권리, 의무 및 기타 필요한 사항을 규정함을 목적으로 합니다.
+                        본 약관은 주식회사 jenny_slaves가 운영하는 중고거래 사이트 52마켓 (www.52market.com)과 52마켓에서 제공하는 관련 서비스의 이용에 관하여 회사와 회원의 권리, 의무 및 기타 필요한 사항을 규정함을 목적으로 합니다.
                         <br>
                         <br>
                         <h2>
@@ -102,7 +88,7 @@
                     </div>
                     <br>
                     <br>
-                    <div id="agree_div">
+                    <div class="agree_div">
                         <h2>
                             개인정보의 수집 및 이용목적
                         </h2>
@@ -130,7 +116,7 @@
                     </div>
                     <br>
                     <br>
-                    <div id="agree_div">
+                    <div class="agree_div" id="third_agree">
                         <h2>
                             수집한 개인정보의 보유 및 이용기간
                         </h2>
@@ -170,10 +156,8 @@
                 </ul>
             </div>
             <div id="back">
-                <a href="/">뒤로가기</a>
-                <a href="/user/kakaoJoin?code={{code}}" id="agree">회원가입 하기</a>
-                <!-- <br>
-                <a href="/user/kakaoJoin?code={{code}}" id="agree">이미 옛날에 동의했는데요? 회원가입 옛날에했는데?</a> -->
+                <a href="/">뒤로 가기</a>
+                <a href="/user/kakaoJoin?code={{code}}" id="agree">회원가입</a>
             </div>
             <div id="footer">
                 <div id="logo">
@@ -190,10 +174,10 @@
                     </div>
                     <ul id="intro2">
                         <li>
-                            (주)오이마켓 대표이사 이지영 강원도 강릉시 어쩌구 바람드리 5길 6 오이마켓 천호타워
+                            (주)오이마켓 대표이사 이지영 강원도 강릉시 바람드리 5길 6 오이마켓 천호타워
                         </li>
                         <li>
-                            Tel : 1600-8870  Fax : (031)8039-1692  E-mail : help@help.pmang.com  호스팅서비스 사업자 : (주)오이마켓
+                            Tel : 1600-8870  Fax : (031)8039-1692  E-mail : help@help.52market.com  호스팅서비스 사업자 : (주)오이마켓
                         </li>
                         <li>
                             사업자등록번호 121-97-18249 중고거래업 신고번호 제 2010-서울강남-0528호 사업자정보확인
@@ -203,10 +187,7 @@
                         </li>
                     </ul>
                 </div>
-                
             </div>
-
-
         </div>
     </div>
 </body>
