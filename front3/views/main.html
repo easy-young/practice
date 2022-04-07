@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -7,35 +8,41 @@
     <title>52market</title>
 
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-
+    <link type="text/css" rel="stylesheet" href="http://localhost:3001/css/common.css">
     <link type="text/css" rel="stylesheet" href="http://localhost:3001/css/main.css">
-  
+
+
+
+
+
+
+
+    <!-- 게시판 리스트 불러오기 -->
+    <script type="text/javascript">
+
+
+        const moveHandler = (idx, hit) => {
+            location.href = "/board/view/" + idx;
+        };
  
 
-
-   
-
-<!-- 게시판 리스트 불러오기 -->
-    <script type="text/javascript">
-        const moveHandler = (idx, hit) => {
-            location.href = "/board/view/"+idx;
-        };
-        document.addEventListener('DOMContentLoaded', async ()=>{
-            try {
-                  // 요청에대한 코드를 작성해서 결과물을 받아와야합니다.
-            const response = await axios.post('http://localhost:3000/board/list',{
-                withCredentials:true,
-            });
-    
+        const setPostList = (response) => {
             const container = document.getElementById('container')
-            let innerData =''
-            if(response.data.status){
-                let list= response.data.data
-                list.map((item)=>{
-                    const url=item.imageName!==''?`<img src="http://localhost:3000/${JSON.parse(item.imageName).upload[0].path.replace('public/','')}" width="280px" height="200px">`:'' 
-                    innerData+=` <div class="contentBox">
+            let innerData = ''
+            if (response.data.status) {
+                let list = response.data.data
+                list.map((item) => {
+
+                    let tagbox = ''
+                    item.tag.forEach(tag => {
+                        tagbox += `<span class="tag-item"> # ${tag.tag}</span>`
+                    });
+                    console.log(tagbox)
+                    const url = item.imageName !== '' ? `<img src="http://localhost:3000/${JSON.parse(item.imageName).upload[0].path.replace('public/', '')}" width="280px" height="200px">` : ''
+                    innerData += ` <div class="contentBox">
                         ${url}
-                <strong><a href="/board/view/${item.idx}">${item.subject.substr(0,20)}</a></strong>
+                <strong><a href="/board/view/${item.idx}">${item.subject.substr(0, 20)}</a></strong>
+                        <div>${tagbox}</div>
                 <div>작성일 : ${item.date}</div>
                 <div>조회수 : ${item.hit}</div>
                 <div>좋아요 : ${item.good}</div>
@@ -56,70 +63,100 @@
             </div>
                         `
                 })
-             
-            }else{
-                innerData+=`<div class="post-wrapper">데이터가 없습니다. 첫번째 글을 작성해주세요</div>`
-            }
-            container.innerHTML=innerData
 
+            } else {
+                innerData += `<div class="post-wrapper">데이터가 없습니다. 첫번째 글을 작성해주세요</div>`
+            }
+            container.innerHTML = innerData
+        }
+
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                const response = await axios.post('http://localhost:3000/board/list', {
+                    withCredentials: true,
+                });
+                setPostList(response)
             } catch (error) {
-                console.log('error :' ,error)
+                console.log('error :', error)
             }
         })
 
+      
+
+
+
+
+
+
     </script>
-    <i class="fs fs-icon"></i>
 
 
- 
+
+
 </head>
+
 <body>
 
 
-    
+
     <header>
         <div class="logo" style="width: 100%; text-align: center;">
-            <a href="/"  ><img src="/ㄹㅇ52마켓.png" width="300"/></a>
+            <a href="/"><img src="/ㄹㅇ52마켓.png" width="300" /></a>
         </div>
 
 
 
-    <div class="navigation">
-        <div class="category">
-            <span><a href="#">중고거래</a></span>
-            <span><a href="#">동네친구찾기</a></span>
-            <span><a href="#">Q&A</a></span>
-            <span><a href="#">신고</a></span>
-        </div>
-     
-      
-        {% if userData.isLogin %}
-        <div class="auth-profile" id="auth-profile-btn">
-            <span><a href="/board/write">글쓰기</a></span>
-            <span><a href="/user/profile">프로필</a></span>
-            <button id="logout-btn">로그아웃</button>
-         
-        </div>
-     
-        
-        {% else %}
-           
-        <div class="auth-profile" id="auth-profile-btn">
+        <div class="navigation">
+            <div class="category">
+                <span><a href="#">중고거래</a></span>
+                <span><a href="#">동네친구찾기</a></span>
+                <span><a href="#">Q&A</a></span>
+                <span><a href="#">신고</a></span>
+            </div>
 
-            <span><a href="/user/login">로그인</a></span>
-            <span><a href="/user/agress">회원가입</a></span>
-            
+
+            <div class="auth-profile" id="auth-profile-btn">
+
+                <from id="search-form" class="search-wrapper">
+                    <select id="search-type" >
+                        <option value="nickname">글쓴이</option>
+                        <option value="content">내용</option>
+                        <option value="subject">제목</option>
+                        <option value="tag">헤쉬테그</option>
+                        <option value="userid">아이디</option>
+                        
+                    </select>
+                    <input name="search" id="search-input" type="text" />
+                    <button type="submit" id="search-button">Search</button>
+                </from>
+
+                {% if userData.isLogin %}
+                <span><a href="/board/write">글쓰기</a></span>
+                <span><a href="/user/profile">프로필</a></span>
+                <button id="logout-btn">로그아웃</button>
+
+
+                {% else %}
+                <span><a href="/user/login">로그인</a></span>
+                <span><a href="/user/agress">회원가입</a></span>
+
+
+                {% endif %}
+
+            </div>
+
+
+
+
+
         </div>
-     
-        {% endif %}
-       
-    </div>
-       
+
     </header>
 
-  
-    
-    
+
+
+
 
 
 
@@ -129,27 +166,125 @@
     </div>
 
 
-    <script>
-     
-       const deleteButton= document.getElementById('logout-btn')
-      
-            async function logoutHandler (e) { 
-                const option = {
-                "Content-type":"application/json",
-                withCredentials:true,
-            };
-            await deleteButton.addEventListener('click',async()=>{
-             
-                     const response = await axios.post(`http://localhost:3000/user/logout`,null, option)
-                     location.href='/'
-               
-                 })
- 
-             }
-             logoutHandler()
- </script>
+<script>
+      const searchinput = document.getElementById('search-input')
+        const searchbutton = document.getElementById('search-button')
+        const searchType = document.getElementById('search-type')
+        const searchHandler = async()=>{
+            try {
+
+if (searchinput.value.length === 0) {
+    const response = await axios.post('http://localhost:3000/board/list', {
+    withCredentials: true,
+});
+setPostList(response)
 
 
+
+} else {
+    
+        const setPostList = (response) => {
+            try {
+                const container = document.getElementById('container')
+            let innerData = ''
+          
+            if (response.data.status) {
+                let list = response.data.data
+                list.map((item) => {
+                  
+                    let tagbox = ''
+                    console.log(item)
+                    item.tag.forEach(tag => {
+                        tagbox += `<span class="tag-item"> # ${tag.tag}</span>`
+                    });
+                
+                    const url = item.imageName !== '' ? `<img src="http://localhost:3000/${JSON.parse(item.imageName).upload[0].path.replace('public/', '')}" width="280px" height="200px">` : ''
+                    innerData += ` <div class="contentBox">
+                        ${url}
+                <strong><a href="/board/view/${item.idx}">${item.subject.substr(0, 20)}</a></strong>
+                        <div>${tagbox}</div>
+                <div>작성일 : ${item.date}</div>
+                <div>조회수 : ${item.hit}</div>
+                <div>좋아요 : ${item.good}</div>
+                <div id="author">
+                    <img src="/검정색.jpg" width="25px" height="25px">
+                    <span>
+                        by <strong><a href="#">${item.nickname}</a></strong>
+                    </span>
+                    <button id="scrap">
+                        <img id="beforeScrap" src="/star.png" width="20px" height="20px">
+                        <img id="afterScrap" src="/star2.png" width="20px" height="20px">
+                    </button>
+                    <button id="like">
+                        <img id="beforeLike" src="/heart.png" width="20px" height="20px">
+                        <img id="afterLike" src="/heart2.png" width="20px" height="20px">
+                    </button>
+                </div>
+            </div>
+                        `
+                })
+
+            } else {
+                innerData += `<div class="post-wrapper">검색한 데이터가 없습니다. 다른 검색어를 입력하세요.</div>`
+            }
+            container.innerHTML = innerData
+            searchinput.value=''
+            } catch (error) {
+                console.log(error)
+            }
+          
+        }
+
+
+    const response = await axios.post('http://localhost:3000/board/search',
+        {
+            type: searchType.value,
+            searchText: searchinput.value
+        },
+        {
+            withCredentials: true,
+        })
+       
+        setPostList(response)                
+}
+} catch (error) {
+
+}
+        }
+        
+        
+        searchbutton.addEventListener('click', async () => {
+            searchHandler()
+        })
+          
+        searchinput.addEventListener('keypress', async (e) => {
+            if(e.key==='Enter'){
+                searchHandler()
+            }
+            
+        })
+
+
+        
+        const deleteButton = document.getElementById('logout-btn')
+
+async function logoutHandler(e) {
+    const option = {
+        "Content-type": "application/json",
+        withCredentials: true,
+    };
+    await deleteButton.addEventListener('click', async () => {
+
+        const response = await axios.post(`http://localhost:3000/user/logout`, null, option)
+        location.href = '/'
+
+    })
+
+}
+logoutHandler()
+
+
+</script>
 
 
 </body>

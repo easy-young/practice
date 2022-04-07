@@ -5,6 +5,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link type="text/css" rel="stylesheet" href="http://localhost:3001/css/common.css">
+    <link type="text/css" rel="stylesheet" href="http://localhost:3001/css/board/comment.css">
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script type="text/javascript"></script>
 </head>
@@ -19,147 +21,22 @@
                 닉네임 : <span id="nickname"></span>
                 <div id="hit"></div>
             </div>
+
             <div class="card-body">
                 <div id="image" class="card-image"></div>
             </div>
             <div class="card-body">
                 <div id="content"></div>
             </div>
+            <div id="tag">
+
+            </div>
         </div>
         <div id="delete-btn"></div>
-        <!-- <button onclick="postDeleteHandler(this)">삭제</button> -->
+     
       
       
         <!-- 여기서부터 댓글시작 -->
-        <style>
-            * {
-                margin: 0;
-                padding: 10px;
-            }
-
-            ul,
-            li {
-                list-style: none;
-            }
-
-            .comment {
-                display: flex;
-                flex-direction: column;
-                flex-wrap: nowrap;
-                padding: 30px;
-                width: 600px;
-                margin: 0 auto;
-
-            }
-
-            .comment>li {
-                margin-top: 20px;
-            }
-
-            .comment>li:nth-child(1) {
-                margin: 0px;
-            }
-
-            .comment-row {
-                display: flex;
-                justify-content: space-between;
-                flex-direction: row;
-            }
-
-            .comment-row {
-                margin-top: 20px;
-                width: 100%;
-            }
-
-            .comment-row>li:nth-child(1) {
-                display: flex;
-                align-items: center;
-            }
-
-            .comment-row>li:nth-child(2) {
-                flex-shrink: 0;
-                flex-grow: 1;
-                padding-left: 25px;
-                z-index: 1;
-                width: 100%;
-            }
-
-            .comment-row>li:nth-child(2) {
-                width: 85px;
-            }
-
-            .comment-form>form {
-                display: flex;
-                flex-direction: row;
-                flex-wrap: wrap;
-                justify-content: space-between;
-            }
-
-            .comment-form>form>h4 {
-                width: 100%;
-                margin: 14px 0 14px 0;
-            }
-
-            .comment-content {
-                word-break: break-all;
-                padding-right: 25px;
-            }
-
-            .ps_box {
-                display: block;
-                position: relative;
-                width: 80%;
-                height: 51px;
-                border: solid 1px #dadada;
-                padding: 10px 14px 10px 14px;
-                background: #fff;
-                box-sizing: border-box;
-            }
-
-            .ps_box>input {
-                outline: none;
-            }
-
-            .int {
-                display: block;
-                position: relative;
-                width: 100%;
-                height: 29px;
-                padding-right: 25px;
-                line-height: 29px;
-                border: none;
-                background: #fff;
-                font-size: 15px;
-                box-sizing: border-box;
-                z-index: 10;
-            }
-
-            .btn {
-                width: 18%;
-                padding: 18px 0 16px;
-                text-align: center;
-                box-sizing: border-box;
-                text-decoration: none;
-                border: none;
-                background: #333;
-                color: #fff;
-                font-size: 14px;
-            }
-
-            .comment-delete-btn {
-                display: inline-block;
-                margin-left: 7px;
-                cursor: pointer;
-            }
-
-            .comment-update-input {
-                border: none;
-                border-bottom: 1px solid #333;
-                font-size: 16px;
-                color: #666;
-                outline: none;
-            }
-        </style>
 
         <!-- 여기서부터 댓글-->
         <div>
@@ -195,13 +72,19 @@
                 const subjectBox = document.querySelector('#subject')
                 const nicknameBox = document.querySelector('#nickname')
                 const contentBox = document.querySelector('#content')
+                const tagBox = document.querySelector('#tag')
 
                 const response = await axios.post(`http://localhost:3000/board/view/${idx}`, {
                     withCredentials: true,
                 })
            
-                const { subject, nickname, content,userid } = response.data.data
-           
+                const { subject, nickname, content,userid ,tag} = response.data.data
+                let innerTag=''
+                tag.forEach(t => {
+                    innerTag+=`<span class="tag-item"># ${t.tag}</span>`
+                });
+              
+                tagBox.innerHTML = innerTag
                     subjectBox.innerHTML = subject
                     nicknameBox.innerHTML = nickname
                     contentBox.innerHTML = content
@@ -253,18 +136,6 @@
                
                 const commentList = document.getElementById('commentList')
                 let inData=''
-                /*
-                comment: "aaaaaaa"
-createdAt: "2022-04-05T15:00:00.000Z"
-idx: 25
-nickname: "reqwrqwr"
-updatedAt: "2022-04-05T15:00:00.000Z"
-userid: "asdf"
-uuid: "e05acc13-a42f-47f2-b7b3-4f5acc1eec8b"
-
-
-            
-*/
                 state.replay.forEach((v, i) => {
                    
                    
@@ -273,9 +144,13 @@ uuid: "e05acc13-a42f-47f2-b7b3-4f5acc1eec8b"
                 <ul class="comment-row">
                     <li class="comment-id">${v.nickname}</li>
                     <li class="comment-content">
-                        ${v.comment}                
-                        <input type="hidden" name="uuid" value="${v.uuid}" />
-                        <span class="comment-delete-btn">X</span>
+                        <p id="comment-text-${i}" onclick="commentClick(${i} , '${v.userid}')">${v.comment} </p>   
+                            <input id="comment-input-${i}" type="hidden" value="${v.comment}"/>   
+                            <button  id="comment-button-${i}" style="display:none" onclick="onsubmitHandler(${i},'${v.uuid}')">Send</button>
+                            <input id="comment-uuid-${i}" type="hidden" name="uuid" value="${v.uuid}"  />
+                            <input id="comment-userid-${i}" type="hidden" name="uuid" value="${v.userid}"  />
+                            <input id="comment-nickname-${i}" type="hidden" name="uuid" value="${v.nickname}"  />
+                            <button type="button" id="comment-delete-${i}" onclick="ondeleteHandler('${v.uuid}')" class="comment-delete-btn">X</span>
                     </li>
                     <li class="comment-date">${v.updatedAt}</li>
                 </ul>
@@ -286,6 +161,59 @@ uuid: "e05acc13-a42f-47f2-b7b3-4f5acc1eec8b"
                 })
               
                 commentList.innerHTML=inData
+            }
+
+            async function ondeleteHandler(uuid) {
+                const response = await axios.post(`http://localhost:3000/board/comment-delete/${uuid}`, {
+                                withCredentials: true,
+                            })
+                          
+                            if (response.data.status) {
+                                const newReply = state.replay.filter(v => v.uuid !== uuid)
+                                state = {
+                                    ...state,
+                                    replay: newReply,
+                                    length: newReply.length
+                                }
+                            }commentView()
+                        }
+                        
+                async function onsubmitHandler( i,v) {
+                    const _value=document.getElementById(`comment-input-${i}`)
+                    const userid=document.getElementById(`comment-userid-${i}`).value
+                    const nickname=document.getElementById(`comment-nickname-${i}`).value
+                    const uuid=document.getElementById(`comment-uuid-${i}`).value
+             
+        
+                const response = await axios.post(`http://localhost:3000/board/comment-update/${uuid}`, { comment: _value.value}, {
+                            withCredentials: true,
+                        })
+                 
+                    document.getElementById(`comment-text-${i}`).style.display="block"
+                        _value.type="hidden"
+                        document.getElementById(`comment-button-${i}`).style.display="none"
+                    if(response.data.status){
+                        console.log('response')
+                        state = {
+                        ...state,
+                        replay: response.data.commentList,
+                        length: response.data.commentList.length
+                        }
+                        counting.innerHTML = `(${state.length})`
+                        commentView()
+                       
+                    }
+            }
+
+
+            async function commentClick(i,_userid) {
+               
+                if(_userid==='{{  userData.userid  }}'){
+                    document.getElementById(`comment-text-${i}`).style.display="none"
+                    document.getElementById(`comment-input-${i}`).type="text"
+                    document.getElementById(`comment-button-${i}`).style.display="block"
+
+                }
             }
  
 
@@ -333,40 +261,25 @@ uuid: "e05acc13-a42f-47f2-b7b3-4f5acc1eec8b"
                 const counting = e.target.querySelector('h4 > span')
 
                 const [, , , idx] = location.pathname.split('/')
-                const result = {  userid: '{{  userData.userid  }}',nickname: '{{  userData.nickname  }}', comment: input.value }
-            
-
-               
-          
+                const result = {  userid: '{{  userData.userid  }}',nickname: '{{  userData.nickname  }}', comment: input.value }   
                 const response = await axios.post(`http://localhost:3000/board/comment-write/${idx}`,result, {
-                    withCredentials: true,
-                })
-      
-                if(response.data.status){
+                        withCredentials: true,
+                    })
+                        if (response.data.status) {
 
-                    state = {
-                    ...state,
-                    replay: response.data.commentList,
-                    length: response.data.commentList.length
+                            state = {
+                                ...state,
+                                replay:response.data.commentList
+                            }
+                        }
+                    commentView()
                 }
 
-                input.value = ''
-                counting.innerHTML = `(${state.length})`
-               
-                commentView()
-                }
-
-            }
-        
 
          
 
 
             function updateHandler(e) {
-
-               
-
-
                 const idx = parseInt(e.target.parentNode.querySelector('input').value)
             
                 const newReply = [...state.replay]
@@ -412,32 +325,10 @@ uuid: "e05acc13-a42f-47f2-b7b3-4f5acc1eec8b"
                     }
                 }
  
-                    async function deleteHandler(e) {
-                           
-                            const uuid = e.target.parentNode.parentNode.querySelector('.comment-delete-btn').value
-                            const response = await axios.post(`http://localhost:3000/board/comment-delete/${uuid}`, {
-                                withCredentials: true,
-                            })
-                          
-                            if (response.data.status) {
-                                const newReply = state.replay.filter(v => v.uuid !== uuid)
-                                state = {
-                                    ...state,
-                                    replay: newReply,
-                                    length: newReply.length
-                                }
-                            }
-
-
-
-                            commentView()
-                        }
-
-            commentView()
+                  
         </script>
-        <div id="private_chat"> </div>
     </div>
-    
+<!-- 뷰부분 스크립트  -->
     <script>
         async function view() {
             const [, , , idx] = location.pathname.split('/')
@@ -476,13 +367,7 @@ uuid: "e05acc13-a42f-47f2-b7b3-4f5acc1eec8b"
         view()
     </script>
 
-    
-    <script>
-        const deleteHandler = async (idx) => {
-            await axios.post(`http://localhost:3000/board/delete/${idx}`)
-        }
 
-    </script>
 
 
 

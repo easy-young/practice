@@ -5,6 +5,7 @@ const controller = require('./controller.js')
 
 
 router.post('/list',controller.list)
+router.post('/search',controller.search)
 router.post('/view/:idx',controller.view)
 router.post('/write',upload.fields([{name:'upload'}]),controller.write)
 router.post('/modify',upload.fields([{name:'upload'}]),controller.modify)

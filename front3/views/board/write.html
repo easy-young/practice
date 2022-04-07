@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="http://localhost:3001/css/board/write.css">
 </head>
 
 <body>
@@ -18,8 +19,9 @@
         <div class="">
 
             <div>
-                <span>메인 카테고리 : 
+                <span>메인 카테고리 :    
                     <select name="main" id="main" onchange="mainChangeHandler(this)" >
+                        <option>게시판을 선택해주세요</option>
                         <option value="buy">중고거래</option>
                         <option value="friends">동네친구찾기</option>
                         <option value="question">Q&A</option>
@@ -32,7 +34,7 @@
                 </span>
             </div>
 
-
+<div id="AreaContorl">
             <div class="">
                 <label class="" for="subject" class="">제목 :</label>
                 <div class="">
@@ -53,6 +55,7 @@
             <input class="" type="submit" value="글 게시하기">
         </div>
     </form>
+</div>
 
     
 
@@ -60,7 +63,7 @@
     let main=''
     let sub=''
     
-    const buy = [
+    const buy = [{ label: '분류' },
                 { label: '디지털기기', value: '디지털기기' },
                 { label: '생활가전', value: '생활가전' },
                 { label: '가구/인테리어', value: '가구/인테리어' },

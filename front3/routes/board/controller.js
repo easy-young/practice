@@ -15,3 +15,7 @@ exports.modify = (req, res) => {
     console.log('modify')
     res.render('./board/modify.html',{userData:req.cookies.userData})
 }
+
+exports.chat = (req,res) =>{
+    res.render('./board/chat.html',)
+}
