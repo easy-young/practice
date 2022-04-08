@@ -38,13 +38,38 @@ ul,li {
 }
 
 #title{
-    padding : 20px 0 ;
+    height: 300px;
+    padding : 40px 0 ;
     margin : 0 auto;
     text-align: center;
     background-color: white;
     border: 3px solid black;
     border-radius: 20px;
-    
+    box-sizing: border-box;
+}
+
+#agree_ment {
+    color: red;
+    font-weight: bold;
+    margin: 0 auto;
+    padding-top: 8px;
+    padding-bottom: 20px;
+    box-sizing: border-box;
+}
+
+#pass {
+    display: block;
+    width : 170px;
+    height: 40px;
+    line-height: 30px;
+    background-color: rgb(244 242 247);
+    border-radius: 10px;
+    border: 3px solid rgb(208 202 219);
+    text-align: center;
+    margin: 0 auto;
+    margin-bottom: 10px;
+    padding-top: 3px;
+    box-sizing: border-box;
 }
 
 #content {
