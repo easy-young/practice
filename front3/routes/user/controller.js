@@ -7,11 +7,7 @@ const client_secret = 'tmv3oBdGla9uOAwSSlJKQraK4Ukq0L1P';
 const {createToken} = require('../../../back/utils/jwt.js');
 
 exports.login = (req, res) => {
-    if (req.headers.cookie != undefined) {
-        res.redirect('/');
-    } else {
-        res.render('./user/login.html');
-    }
+    res.render('./user/login.html');
 };
 
 exports.kakaoLogin = (req, res) => {

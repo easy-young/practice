@@ -161,8 +161,6 @@ exports.profile = async (req,res) => {
 
 exports.profileUpdate = async (req,res)=>{
     const cookie = req.headers.cookie.split('=')[0]
-    const cookie1 = req.headers.cookie.split('=')[1].split('.')[1]
-    const user = JSON.parse(Buffer.from(cookie1,'base64').toString('utf-8'))
     try {
         if(cookie == 'token'){
             const {userid} = req.user
@@ -345,14 +343,9 @@ exports.kakaoJoinAuth = async (req,res)=>{
     const [[result]] = await pool.execute(sql,prepare)
     let response
     if(result == undefined){
-        response = {
-            errno:0
-        }
+        response = {errno:0}
     } else {
-        
-        response = {
-            errno:1
-        }
+        response = {errno:1}
     }
     res.json(response)
 }
