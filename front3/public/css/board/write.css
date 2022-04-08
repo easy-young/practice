@@ -15,6 +15,8 @@
     font-size: 20px;
 }
 
+a { text-decoration: none;}
+
 body {
     background-color: rgba(221, 221, 221, 0.933);
     /* cursor: url('../5252.png'), auto; */
@@ -114,6 +116,7 @@ body {
     font-size: 40px;
     box-sizing: border-box;
     margin-left: 20px;
+    resize: none;
 }
 
 #story > textarea:focus {
@@ -131,3 +134,17 @@ body {
     box-shadow: 0px 1px 8px rgb(0 0 0 / 20%);
     background-color: #ded4d4;
 }
+
+#home {
+    display: block;
+    width : 100px;
+    height: 40px;
+    border : 3px solid #8e8b8b;
+    border-radius: 20px;
+    padding-top: 10px;
+    text-align: center;
+    box-sizing: border-box;
+    box-shadow: 0px 1px 8px rgb(0 0 0 / 20%);
+    background-color: #ded4d4;
+    float: right;
+} 
