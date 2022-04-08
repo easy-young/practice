@@ -10,12 +10,24 @@
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script type="text/javascript">
         document.addEventListener('DOMContentLoaded', async ()=>{
+
+
+            const option = {
+                'Content-type':'application/json',
+                withCredentials:true,
+            }
+            // 로그인상태에서 /user/profile 못들어감
+            const responseAuth = await axios.post('http://localhost:3000/user/auth',null,option)
+            const {errno} = responseAuth.data
+            if(errno == 2) {
+                alert('로그인부터 하세요')
+                location.href = 'http://localhost:3001/user/login'
+            }
+
+
             const welcome = document.querySelector('#welcome');
             const welcome2 = document.querySelector('#welcome2').innerHTML;
-            const option = {
-                "Content-type":"application/json",
-                withCredentials:true,
-            };
+            
             const response = await axios.post('http://localhost:3000/user/welcome', null, option);
             const { level, userid, userpw, userimage, name, nickname,
                     birth, address, gender, tel, phone, email, intro,
@@ -43,7 +55,7 @@
 <body>
     <header>
         <h1>
-            오세요~ 이쪽이에요!
+            <a href="/">오세요~ 이쪽이에요!</a>
         </h1>
         <h2>오이마켓 환영페이지</h2>
     </header>

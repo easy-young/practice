@@ -362,7 +362,7 @@ exports.FS = (req,res)=>{
     fs.unlink(`./public/uploadsUser/${a}`,(err)=>{
         try{
             if(err) throw new Error;
-            console.log('파일삭제')
+            console.log('사진업데이트 성공!')
         }catch(e){
             console.log(e.messege)
         }

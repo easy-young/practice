@@ -10,12 +10,24 @@
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script type="text/javascript">
         document.addEventListener('DOMContentLoaded', async ()=>{
+
+
+            const option = {
+                'Content-type':'application/json',
+                withCredentials:true,
+            }
+            // 로그인상태에서 /user/profile 못들어감
+            const responseAuth = await axios.post('http://localhost:3000/user/auth',null,option)
+            const {errno} = responseAuth.data
+            if(errno == 2) {
+                alert('로그인부터 하세요')
+                location.href = 'http://localhost:3001/user/login'
+            }
+
+
+
             const profiles = document.querySelector('#profiles');
             const profile = document.querySelector('#profile').innerHTML;
-            const option = {
-                "Content-type":"application/json",
-                withCredentials:true,
-            };
 
             const response = await axios.post('http://localhost:3000/user/profile', null, option);
             const { level, userid, userpw, userimage, name, nickname,
@@ -62,7 +74,7 @@
 <body>
     <header>
         <h1>
-            오세요~ 이쪽이에요!
+            <a href="/">오세요~ 이쪽이에요!</a>
         </h1>
         <h2>오이마켓 프로필</h2>
     </header>
@@ -75,8 +87,7 @@
             <table cellspacing="0" cellpadding="0" border="1" id="info">
                 <tr>
                     <td><strong>사진</strong></td>
-                    <!-- <td><img src="{userimage}" width="80px" height="80px" style="border-radius: 40px;"></td> -->
-                    <td><img src="/검정색.jpg" width="80px" height="80px" style="border-radius: 40px;"></td>
+                    <td><img src="{userimage}" width="80px" height="80px" style="border-radius: 40px;"></td>
                 </tr>
                 <tr>
                     <td><strong>ID</strong></td>

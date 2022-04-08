@@ -97,12 +97,29 @@ input:focus {
     box-shadow: inset 1px 2px 4px rgba(0, 0, 0, 0.2), 0px 0px 8px rgba(0, 0, 0, 0.2);;
 }
 
+#kakao_img, #local_img {
+    width : 250px;
+    height: 250px;
+    margin-left: 220px;
+}
+
 #userimage {
     width: 300px;
     height: 35px;
     border: none;
     border-radius: 0px;
     box-shadow: none;
+}
+
+
+
+#li_userid {
+    width : 200px;
+    margin: 0 auto;
+}
+
+#li_userid > strong {
+    margin-left: 20px;
 }
 
 select {

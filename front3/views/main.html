@@ -26,6 +26,7 @@
                 logout.addEventListener('click', async (e)=>{
                     e.preventDefault();
                     const response2 = await axios.post('http://localhost:3000/user/logout', null, option);
+                    alert('로그아웃 되었습니다.')
                     location.href = 'http://localhost:3001/';
                 });
             }
@@ -84,7 +85,7 @@
     </script>
 </head>
 <body>
-    <h2>오세요~ 이쪽이에요!</h2>
+    <h2><a href="/">오세요~ 이쪽이에요!</a></h2>
     <h1><a href="/">오이마켓</a></h1>
     <header>
         <ul>
