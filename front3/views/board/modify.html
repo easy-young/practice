@@ -15,22 +15,24 @@
             const subjectInput = document.querySelector('#subject');
             const contentInput = document.querySelector('#content');
             const filesInput = document.querySelector('#upload');
-            const imageLi = document.querySelector('#imageLi');
+            const imageDiv = document.querySelector('#imageDiv');
             const imageBox = document.querySelector('#imageBox');
             const option = {
                 "Content-type":"application/json",
                 withCredentials: true,
             };
+
             async function getData() {
                 const response = await axios.post(`http://localhost:3000/board/get-post/${idx}`, null, option);
                 const {subject, nickname, content, userid, imageName, main, sub} = response.data.data;
-                const imageLength = imageName.match(/png/g).length;
+                const imageLength = imageName.split(',').length;
+
                 subjectInput.value = subject;
                 contentInput.value = content;
 
                 let template = '';
                 for (let i = 0; i < imageLength; i++) template += imageBox.innerHTML.replace('{imageName}', 'http://localhost:3000/uploades/' + imageName.split(',')[i]);
-                imageLi.innerHTML += template;
+                imageDiv.innerHTML += template;
             }
             getData();
 
@@ -88,9 +90,12 @@
                 </div>
                 <ul id="category_mid">
                     <li id="imageLi">
-                        <div>
+                        <div id="add_pic">
                             <strong>사진 첨부 ➤</strong>
                             <input type="file" name="upload" id="upload" multiple accept="image/*">
+                        </div>
+                        <div id="imageDiv">
+
                         </div>
                         <template id="imageBox">
                             <img src="{imageName}" id="imageName" width="280px" height="200px">

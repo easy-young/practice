@@ -80,10 +80,18 @@ body {
 }
 
 #category_mid > #imageLi {
-    display: flex;
-    justify-content: space-between;
-    width : 500px;
+    width : 100%;
     height: 100%;
+}
+
+#imageLi > #add_pic {
+    width : 100%;
+    height : 70px;
+}
+
+#imageDiv {
+    display: flex;
+    justify-content: space-evenly;
 }
 
 #category_mid > #title {
@@ -93,6 +101,11 @@ body {
     border-bottom: 3px solid rgb(193, 190, 190);
     margin-top: 40px;
     box-sizing: border-box;
+}
+
+#imageName {
+    width : 150px;
+    height: 150px;
 }
 
 #title > input {
