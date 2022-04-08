@@ -21,12 +21,14 @@
 
             let whoami = '';
             let nickname_now = '';
+            let imageLength;
 
             async function view() {
                 const response = await axios.post(`http://localhost:3000/board/view/${idx}`, null, option);
                 if (response.data.status) {
                     const {subject, nickname, content, userid, imageName, hit, tag} = response.data.data;
-                    for (let i = 0; i < imageName.match(/png/g).length; i++) {
+                    const imageLength = imageName.split(',').length;
+                    for (let i = 0; i < imageLength; i++) {
                         const url = `http://localhost:3000/uploades/${imageName.split(',')[i]}`;
                         imageBox.innerHTML += `<span class="image-wrapper"><img src="${url}" width="300px" height="200px"></span>`;
                     }
