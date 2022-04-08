@@ -150,10 +150,14 @@ exports.commentWrite = async (req, res) => {
     try {
         if (req.user.isLogin) {
             const {idx} = req.params;
-            const { userid, nickname } = req.user;
+            const { nickname } = req.user;
+            const queryStr = `SELECT userid FROM user WHERE nickname=?`;
+            const [[result]] = await pool.query(queryStr, nickname);
+
+            const {userid} = result;
             const arr = [idx, req.body.comment, v4(), nickname, userid];
-            const queryStr = `INSERT INTO reply(idx,comment,uuid,nickname,userid,createdAt,updatedAt) VALUES(?,?,?,?,?,NOW(),NOW() );`;
-            await pool.query(queryStr, arr);
+            const queryStr2 = `INSERT INTO reply(idx,comment,uuid,nickname,userid,createdAt,updatedAt) VALUES(?,?,?,?,?,NOW(),NOW() );`;
+            await pool.query(queryStr2, arr);
             const [data] = await pool.query("SELECT * FROM reply WHERE idx=?", idx);
             await res.status(200).json({
                 reqName: "board_comment_write",

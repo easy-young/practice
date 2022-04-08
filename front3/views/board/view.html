@@ -45,7 +45,7 @@
 
                     whoami = response.data.user;
                     nickname_now = response.data.nickname;
-                    if (whoami === userid) document.querySelector('#delete-btn').innerHTML = deleteTem.replace('{idx}', idx);
+                    if (whoami === userid || nickname_now === nickname) document.querySelector('#delete-btn').innerHTML = deleteTem.replace('{idx}', idx);
                 }
             }
             view();

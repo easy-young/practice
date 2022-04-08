@@ -2,8 +2,20 @@ const {createSignature} = require('../utils/jwt.js');
 
 exports.Auth = (req, res, next) => {
     const {token} = req.cookies;
+    const {kakaoToken} = req.cookies;
+
     if (token !== undefined) {
         const [header,payload,sign] = token.split('.')
+        const signature = createSignature(header,payload)
+
+        if (sign !== signature) throw new Error('토큰 변조함 NaGa')
+        const user = JSON.parse(Buffer.from(payload,'base64').toString('utf-8'))
+        req.user = {
+            ...user,
+            isLogin:true
+        }
+    } else if(kakaoToken !== undefined) {
+        const [header,payload,sign] = kakaoToken.split('.')
         const signature = createSignature(header,payload)
 
         if (sign !== signature) throw new Error('토큰 변조함 NaGa')
