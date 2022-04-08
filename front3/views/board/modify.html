@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>오이마켓</title>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <link rel="shortcut icon" href="../favicon.png">
+    <link type="text/css" rel="stylesheet" href="http://localhost:3001/css/board/modify.css">
     <script type="text/javascript">
         document.addEventListener('DOMContentLoaded', ()=>{
             const idx = location.pathname.split('/')[3];
@@ -61,46 +63,52 @@
     </script>
 </head>
 <body>
-    <h1>
-        글 수정
-    </h1>
-    <form method="post" action="/board/write" id="frm_write" enctype="multipart/form-data">
-        <div id="category">
-            <span>메인 카테고리 :
-                <select name="main" id="main" onchange="mainChangeHandler(this)">
-                    <option value="buy">중고거래</option>
-                    <option value="friends">동네친구찾기</option>
-                    <option value="question">Q&A</option>
-                    <option value="ban">신고</option>
-                </select>
-            </span>
-            <span>서브 카테고리 :
-                <select name="sub" id="sub">
-                    <!--  -->
-                </select>
-            </span>
+    <div id="wrap">
+        <div id="header">
+            <h1>
+                글 수정
+            </h1>
         </div>
-        <ul>
-            <li>
-                <strong>제목 : </strong>
-                <input class="form-control" type="text" name="subject" id="subject">
-            </li>
-            <li id="imageLi">
-                <div>
-                    <strong>사진 : </strong>
-                    <input type="file" name="upload" id="upload" multiple accept="image/*">
+        <div id="cont">
+            <form method="post" action="/board/write" id="frm_write" enctype="multipart/form-data">
+                <div id="category">
+                    <span>메인 카테고리 :
+                        <select name="main" id="main" onchange="mainChangeHandler(this)">
+                            <option value="buy">중고거래</option>
+                            <option value="friends">동네친구찾기</option>
+                            <option value="question">Q&A</option>
+                            <option value="ban">신고</option>
+                        </select>
+                    </span>
+                    <span>서브 카테고리 :
+                        <select name="sub" id="sub">
+                            <!--  -->
+                        </select>
+                    </span>
                 </div>
-                <template id="imageBox">
-                    <img src="{imageName}" id="imageName" width="280px" height="200px">
-                </template>
-            </li>
-            <li>
-                <strong>내용 : </strong>
-                <textarea name="content" id="content" rows="20"></textarea>
-            </li>
-        </ul>
-        <input type="submit" value="수정 완료">
-    </form>
-    <a href="/">홈으로</a>
+                <ul id="category_mid">
+                    <li id="imageLi">
+                        <div>
+                            <strong>사진 첨부 ➤</strong>
+                            <input type="file" name="upload" id="upload" multiple accept="image/*">
+                        </div>
+                        <template id="imageBox">
+                            <img src="{imageName}" id="imageName" width="280px" height="200px">
+                        </template>
+                    </li>
+                    
+                    <li id="title">
+                        <input class="form-control" type="text" name="subject" id="subject" placeholder="제목을 입력하세요!">
+                    </li>
+                    
+                    <li id="story">
+                        <textarea name="content" id="content" rows="20" placeholder="내용을 입력하세요! #HashTag"></textarea>
+                    </li>
+                </ul>
+                <input type="submit" id="submit" value="수정 완료">
+                <a href="/" id="home">홈으로</a>
+            </form>
+        </div>
+    </div>
 </body>
 </html>
