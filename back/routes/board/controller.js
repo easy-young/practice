@@ -217,7 +217,7 @@ exports.good = async (req, res) => {
 
 exports.search = async (req, res) => {
     try {
-        const { searchText ,type } = req.body;
+        const { type, searchText } = req.body;
         const dataFormat = async (array) => {
             const posts = [];
             for (let i = 0; i < array.length; i++) {
@@ -234,10 +234,10 @@ exports.search = async (req, res) => {
 
         if (searchText.length > 1) {
             if (type !== 'tag'){
-                const [response] = await pool.query(`SELECT * FROM board WHERE ${type} LIKE "%${searchText}%"`, [searchText,]);
+                const [response] = await pool.query(`SELECT * FROM board WHERE ${type} LIKE "%${searchText}%" ORDER BY date DESC`, [searchText,]);
                 res.status(200).json({ reqName: "search", status: true, data:await dataFormat(response) });
             } else {
-                const [tags] = await pool.query(`SELECT * FROM tag WHERE ${type} LIKE "%${searchText}%"`, [searchText,]);
+                const [tags] = await pool.query(`SELECT * FROM tag WHERE ${type} LIKE "%${searchText}%" ORDER BY idx DESC`, [searchText,]);
                 const setPost = async (tagData) => {
                     const posts = [];
                     for (let i = 0; i < tagData.length; i++) {
@@ -274,7 +274,7 @@ const setDateChanger = async (time) => {
     const asMinutes = base.asMinutes();
     const asHours = base.asHours();
     const asDays = base.asDays();
-    if (asSeconds < 60) return "방금전";
+    if (asSeconds < 60) return "방금 전";
     else if (asMinutes < 60) return Math.floor(asMinutes) + "분전";
     else if (asHours < 24) return Math.floor(asHours) + "시간전";
     else if (asDays < 7) return Math.floor(asDays) + "일전";

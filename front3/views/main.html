@@ -16,6 +16,10 @@
             const afterLogin = document.querySelector('#afterLogin').innerHTML;
             const container = document.querySelector('#container');
             const contentBoxes = document.querySelector('#contentBoxes').innerHTML;
+            const searchForm = document.querySelector('#search-form');
+            const searchType = document.querySelector('#search-type');
+            const searchInput = document.querySelector('#search-input');
+            const searchBtn = document.querySelector('#search-button');
 
             const response = await axios.post('http://localhost:3000/loginCheck', null, option);
             const {errno} = response.data;
@@ -43,44 +47,99 @@
                                         .replace('{idx}', v.idx);
             });
             container.innerHTML = template;
+            template = '';
 
-            const like = document.querySelectorAll('#like');
-            const beforeLike = document.querySelectorAll('#beforeLike');
-            const afterLike = document.querySelectorAll('#afterLike');
-            const scrap = document.querySelectorAll('#scrap');
-            const befoerScrap = document.querySelectorAll('#beforeScrap');
-            const afterScrap = document.querySelectorAll('#afterScrap');
+            const tagBox = document.querySelectorAll('#tagBox');
+            const tag = document.querySelector('#tag').innerHTML;
             
-            const cnt = [];
-            const cnt2 = [];
-            for (let i = 0; i < like.length; i++) {
-                afterLike[i].style.display = 'none';
-                afterScrap[i].style.display = 'none';
-                cnt.push(1);
-                cnt2.push(1);
+            let tagTemplate = '';
+            response2.data.data.forEach((v, i)=>{
+                for (let i = 0; i < v.tag.length; i++) {
+                    tagTemplate += tag.replace('{tag}', v.tag[i].tag);
+                }
+                tagBox[i].innerHTML = tagTemplate;
+                tagTemplate = '';
+            });
+
+            searchForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const body3 = {
+                    type: searchType.value,
+                    searchText: searchInput.value
+                };
+                const response3 = await axios.post('http://localhost:3000/board/search', body3, option);
+                if (!response3.data.status) {
+                    alert('최소 두 글자 이상 입력해주세요.');
+                } else if (response3.data.data.length === 0) {
+                    alert('검색 결과가 없습니다.');
+                } else {
+                    response3.data.data.forEach(v=>{
+                        template += contentBoxes.replace('{userid}', v.userid)
+                                                .replace('{subject}', v.subject)
+                                                .replace('{imageName}', v.imageName.split(',')[0])
+                                                .replace('{date}', v.date.split('T')[0])
+                                                .replace('{hit}', v.hit)
+                                                .replace('{good}', v.good)
+                                                .replace('{idx}', v.idx);
+                    });
+                    container.innerHTML = template;
+                    template = '';
+
+                    const tagBox2 = document.querySelectorAll('#tagBox');
+                    const tag2 = document.querySelector('#tag').innerHTML;
+                    
+                    let tagTemplate = '';
+                    response3.data.data.forEach((v, i)=>{
+                        for (let i = 0; i < v.tag.length; i++) {
+                            tagTemplate += tag2.replace('{tag}', v.tag[i].tag);
+                        }
+                        tagBox2[i].innerHTML = tagTemplate;
+                        tagTemplate = '';
+                    });
+                    LikeScrap();
+                }
+            });
+
+            function LikeScrap() {
+                const like = document.querySelectorAll('#like');
+                const beforeLike = document.querySelectorAll('#beforeLike');
+                const afterLike = document.querySelectorAll('#afterLike');
+                const scrap = document.querySelectorAll('#scrap');
+                const befoerScrap = document.querySelectorAll('#beforeScrap');
+                const afterScrap = document.querySelectorAll('#afterScrap');
+                
+                const cnt = [];
+                const cnt2 = [];
+                for (let i = 0; i < like.length; i++) {
+                    afterLike[i].style.display = 'none';
+                    afterScrap[i].style.display = 'none';
+                    cnt.push(1);
+                    cnt2.push(1);
+                }
+                for (let j = 0; j < like.length; j++) {
+                    like[j].addEventListener('click', ()=>{
+                        if (cnt[j] % 2 === 1) {
+                            beforeLike[j].style.display = 'none';
+                            afterLike[j].style.display = 'block';
+                        } else {
+                            beforeLike[j].style.display = 'block';
+                            afterLike[j].style.display = 'none';
+                        }
+                        cnt[j]++;
+                    });
+                    scrap[j].addEventListener('click', ()=>{
+                        if (cnt2[j] % 2 === 1) {
+                            befoerScrap[j].style.display = 'none';
+                            afterScrap[j].style.display = 'block';
+                        } else {
+                            befoerScrap[j].style.display = 'block';
+                            afterScrap[j].style.display = 'none';
+                        }
+                        cnt2[j]++;
+                    });
+                }
             }
-            for (let j = 0; j < like.length; j++) {
-                like[j].addEventListener('click', ()=>{
-                    if (cnt[j] % 2 === 1) {
-                        beforeLike[j].style.display = 'none';
-                        afterLike[j].style.display = 'block';
-                    } else {
-                        beforeLike[j].style.display = 'block';
-                        afterLike[j].style.display = 'none';
-                    }
-                    cnt[j]++;
-                });
-                scrap[j].addEventListener('click', ()=>{
-                    if (cnt2[j] % 2 === 1) {
-                        befoerScrap[j].style.display = 'none';
-                        afterScrap[j].style.display = 'block';
-                    } else {
-                        befoerScrap[j].style.display = 'block';
-                        afterScrap[j].style.display = 'none';
-                    }
-                    cnt2[j]++;
-                });
-            }
+            LikeScrap();
         });
     </script>
 </head>
@@ -88,6 +147,17 @@
     <h2><a href="/">오세요~ 이쪽이에요!</a></h2>
     <h1><a href="/">오이마켓</a></h1>
     <header>
+        <form class="search-wrapper" id="search-form" action="/">
+            <select id="search-type">
+                <option value="subject">제목</option>
+                <option value="nickname">글쓴이</option>
+                <option value="content">내용</option>
+                <option value="userid">아이디</option>
+                <option value="tag">해시태그</option>
+            </select>
+            <input type="text" name="search" id="search-input">
+            <button type="submit" id="search-button">Search</button>
+        </form>
         <ul>
             <template id="beforeLogin">
                 <li><a href="user/join">회원가입</a></li>
@@ -99,19 +169,20 @@
                 <li><button id="logout">로그아웃</button></li>
             </template>
         </ul>
-        <div id="category">
-            <span><a href="#">중고거래</a></span>
-            <span><a href="#">동네친구찾기</a></span>
-            <span><a href="#">Q&A</a></span>
-            <span><a href="#">신고</a></span>
-        </div>
     </header>
+    <div id="category">
+        <span><a href="#">중고거래</a></span>
+        <span><a href="#">동네친구찾기</a></span>
+        <span><a href="#">Q&A</a></span>
+        <span><a href="#">신고</a></span>
+    </div>
 
     <div id="container">
         <template id="contentBoxes">
             <div id="contentBox">
                 <img src="http://localhost:3000/uploades/{imageName}" width="280px" height="200px">
                 <strong><a href="board/view/{idx}">{subject}</a></strong>
+                <div id="tagBox"></div>
                 <div>작성일 : {date}</div>
                 <div>조회수 : {hit}</div>
                 <div>좋아요 : {good}</div>
@@ -132,5 +203,9 @@
             </div>
         </template>
     </div>
+
+    <template id="tag">
+        <span class="tag-item"># {tag}</span>
+    </template>
 </body>
 </html>
