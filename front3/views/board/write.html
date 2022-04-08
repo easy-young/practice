@@ -47,36 +47,49 @@
     </script>
 </head>
 <body>
-    <h1>글쓰기</h1>
-    <form method="post" action="/board/write" id="frm_write" enctype="multipart/form-data">
-        <div>
-            <span>메인 카테고리 : 
-                <select name="main" id="main">
-                    <option value="buy">중고거래</option>
-                    <option value="friends">동네친구찾기</option>
-                    <option value="question">Q&A</option>
-                    <option value="ban">신고</option>
-                </select>
-            </span>
-            <span>서브 카테고리 : 
-                <select name="sub" id="sub">
-                    <option value="a">a</option>
-                    <option value="a">a</option>
-                    <option value="a">a</option>
-                    <option value="a">a</option>
-                </select>
-            </span>
+    <div id="wrap">
+        <div id="header">
+            <h1>
+                글쓰기
+            </h1>
         </div>
-        <div>제목 :
-            <input type="text" name="subject" id="subject">
+
+        <div id="cont">
+            <form method="post" action="/board/write" id="frm_write" enctype="multipart/form-data">
+                <div id="category">
+                    <span>메인 카테고리 : 
+                        <select name="main" id="main">
+                            <option value="buy">중고거래</option>
+                            <option value="friends">동네친구찾기</option>
+                            <option value="question">Q&A</option>
+                            <option value="ban">신고</option>
+                        </select>
+                    </span>
+                    <span>서브 카테고리 : 
+                        <select name="sub" id="sub">
+                            <option value="a">a</option>
+                            <option value="a">a</option>
+                            <option value="a">a</option>
+                            <option value="a">a</option>
+                        </select>
+                    </span>
+                </div>
+                <div id="category_mid">
+                    <div id="picture">
+                        <strong>사진 첨부 ➤ </strong>
+                        <input type="file" name="upload" id="upload" multiple accept="image/*">
+                    </div>
+                    <div id="title">
+                        <input type="text" name="subject" id="subject" placeholder="제목을 입력하세요!">
+                    </div>
+                    <div id="story">
+                        <textarea name="content" id="content" cols="30" rows="10" placeholder="내용을 입력하세요! #HashTag"></textarea>
+                    </div>
+                    <input type="submit" id="submit" value="글쓰기">
+                    <a href='/' id="home">홈으로</a>
+                </div>
+            </form>
         </div>
-        <div>사진 :
-            <input type="file" name="upload" id="upload" multiple accept="image/*">
-        </div>
-        <div>내용 :
-            <textarea name="content" id="content" cols="30" rows="10"></textarea>
-        </div>
-        <input type="submit" value="글쓰기">
-    </form>
+    </div>
 </body>
 </html>

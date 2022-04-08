@@ -28,7 +28,6 @@ exports.join = (req, res) => {
 
 exports.kakaoJoin = async (req, res) => {
     const {code} = req.query;
-    console.log(code);
     const token_url = host+'/oauth/token';
     const body = qs.stringify({    
         grant_type:'authorization_code',

@@ -143,7 +143,6 @@
                 const email11 = email1+'@'+email2
 
                 const intro1 = e.target.intro.value
-                console.log(intro1)
 
                 
                 
@@ -201,7 +200,6 @@
         const resign = document.querySelector('#resign')
         resign.addEventListener('click',async(e)=>{
             e.preventDefault()
-
             const option = {
                 "Content-type":"application/json",
                 withCredentials:true,
@@ -209,7 +207,8 @@
 
             const resignResponse = await axios.post('http://localhost:3000/user/resign',null,option)
             
-            alert('회원 탈퇴가 완료되었습니다...ㅠ')
+            alert(confirm('탈퇴하실거예요?'))
+            // alert('회원 탈퇴가 완료되었습니다...ㅠ')
             location.href = 'http://localhost:3001'
         })
     })
@@ -219,7 +218,7 @@
 <body>
     <header>
         <h1>
-            오세요~ 이쪽이에요!
+            <a href="/">오세요~ 이쪽이에요!</a>
         </h1>
         <h2>오이마켓 프로필 수정</h2>
     </header>
@@ -227,19 +226,26 @@
     <template id="profileUpdate">
         <form method="post" action="http://localhost:3000/user/profileUpdate" id="profilefrm" enctype="multipart/form-data">
             <ul>
-                <li>
-                    <strong>아이디 :</strong>
-                    <span id="userid">{userid}</span>
+                <li id="li">
+                    <img src="{userimage}" id="kakao_img">
+                </li>
+                <template id="li_tem">
+                    <li>
+                        <input type="file" value="{userimage}" name="userimage" id="userimage" minlength="3" maxlength="10">
+                        <img src="{userimage}" id="local_img" width="80px" height="80px" style="border-radius: 40px;">
+                               
+                    </li>
+                </template>
+                <li id="li_userid">
+                    <strong>아이디 : <span id="userid">{userid}</span></strong>
+                    
                 </li>
                 <li>
                     <div><strong>비밀번호</strong></div>
                     <input type="password" value="{userpw}" name="userpw" id="userpw" minlength="1" maxlength="10">    
                 </li>
-                <li>
-                    <div><strong>사진</strong></div>
-                    <img src="{userimage}" width="80px" height="80px" style="border-radius: 40px;">
-                    <input type="file" value="{userimage}" name="userimage" id="userimage" minlength="3" maxlength="10">       
-                </li>
+
+                
                 <li>
                     <div><strong>이름</strong></div>
                     <input type="text" value="{name}" name="name" id="name" minlength="1" maxlength="10">
@@ -251,19 +257,84 @@
                 <li>
                     <div><strong>생년월일</strong></div>
                     <select id="year">
+                        <option value="1985">1985년</option>
+                        <option value="1986">1986년</option>
+                        <option value="1987">1987년</option>
+                        <option value="1988">1988년</option>
+                        <option value="1989">1989년</option>
+                        <option value="1990">1990년</option>
+                        <option value="1991">1991년</option>
+                        <option value="1992">1992년</option>
+                        <option value="1993">1993년</option>
+                        <option value="1994">1994년</option>
+                        <option value="1995">1995년</option>
+                        <option value="1996">1996년</option>
+                        <option value="1997">1997년</option>
+                        <option value="1998">1998년</option>
                         <option value="1999">1999년</option>
                         <option value="2000">2000년</option>
                         <option value="2001">2001년</option>
                         <option value="2002">2002년</option>
+                        <option value="2003">2003년</option>
+                        <option value="2004">2004년</option>
+                        <option value="2005">2005년</option>
+                        <option value="2006">2006년</option>
+                        <option value="2007">2007년</option>
+                        <option value="2008">2008년</option>
+                        <option value="2009">2009년</option>
+                        <option value="2010">2000년</option>
+                        <option value="2011">2011년</option>
+                        <option value="2012">2012년</option>
+                        <option value="2013">2013년</option>
+                        <option value="2014">2014년</option>
+                        <option value="2015">2015년</option>
                     </select>
                     <select id="month">
                         <option value="01">1월</option>
                         <option value="02">2월</option>
+                        <option value="03">3월</option>
+                        <option value="04">4월</option>
+                        <option value="05">5월</option>
+                        <option value="06">6월</option>
+                        <option value="07">7월</option>
+                        <option value="08">8월</option>
+                        <option value="09">9월</option>
+                        <option value="10">10월</option>
+                        <option value="11">11월</option>
+                        <option value="12">12월</option>
                     </select>
                     <select id="day">
                         <option value="01">1일</option>
                         <option value="02">2일</option>
                         <option value="03">3일</option>
+                        <option value="04">4일</option>
+                        <option value="05">5일</option>
+                        <option value="06">6일</option>
+                        <option value="07">7일</option>
+                        <option value="08">8일</option>
+                        <option value="09">9일</option>
+                        <option value="10">10일</option>
+                        <option value="11">11일</option>
+                        <option value="12">12일</option>
+                        <option value="13">13일</option>
+                        <option value="14">14일</option>
+                        <option value="15">15일</option>
+                        <option value="16">16일</option>
+                        <option value="17">17일</option>
+                        <option value="18">18일</option>
+                        <option value="19">19일</option>
+                        <option value="20">20일</option>
+                        <option value="21">21일</option>
+                        <option value="22">22일</option>
+                        <option value="23">23일</option>
+                        <option value="24">24일</option>
+                        <option value="25">25일</option>
+                        <option value="26">26일</option>
+                        <option value="27">27일</option>
+                        <option value="28">28일</option>
+                        <option value="29">29일</option>
+                        <option value="30">30일</option>
+                        <option value="31">31일</option>
                     </select>
                 </li>
                 <li>
