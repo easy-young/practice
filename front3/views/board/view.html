@@ -17,23 +17,28 @@
             const hitBox = document.querySelector('#hit');
             const private_chat = document.querySelector('#private_chat');
             const deleteTem = document.querySelector('#deleteTem').innerHTML;
+            const tagBox = document.querySelector('#tag');
 
             let whoami = '';
             let nickname_now = '';
 
             async function view() {
                 const response = await axios.post(`http://localhost:3000/board/view/${idx}`, null, option);
-                console.log(response.data);
                 if (response.data.status) {
-                    const {subject, nickname, content, userid, imageName, hit} = response.data.data;
+                    const {subject, nickname, content, userid, imageName, hit, tag} = response.data.data;
                     for (let i = 0; i < imageName.match(/png/g).length; i++) {
                         const url = `http://localhost:3000/uploades/${imageName.split(',')[i]}`;
                         imageBox.innerHTML += `<span class="image-wrapper"><img src="${url}" width="300px" height="200px"></span>`;
                     }
                     subjectBox.innerHTML = subject;
                     nicknameBox.innerHTML = nickname;
-                    contentBox.innerHTML = content;
+                    contentBox.innerHTML = content.split('#')[0];
                     hitBox.innerHTML = `hit : ${hit}`;
+
+                    let template = '';
+                    for (let j = 0; j < tag.length; j++) template += '#' + tag[j].tag + ' ';
+                    tagBox.innerHTML = template;
+                    template = '';
                     private_chat.innerHTML = `<a href="http://localhost:3001/board/private_chat/${nickname}">1:1채팅</a>`;
 
                     whoami = response.data.user;
@@ -189,6 +194,9 @@
             </div>
             <div class="card-body">
                 내용 : <span id="content"></span>
+            </div>
+            <div class="card-body">
+                해시 태그 : <span id="tag"></span>
             </div>
         </div>
         <div id="delete-btn"></div>
