@@ -97,8 +97,13 @@ exports.write = async (req, res) => {
 exports.modify = async (req, res) => {
     try {
         const { subject, content, idx } = req.body;
-        const param = [subject, content, idx];
-        const data = await pool.query("UPDATE board SET subject=?, content=? WHERE idx =?", param);
+        let upload = '';
+        for (let i = 0; i < req.files.upload.length; i++) {
+            upload += req.files.upload[i].filename;
+            if (i !== req.files.upload.length - 1) upload += ',';
+        }
+        const param = [subject, content, upload, idx];
+        const data = await pool.query("UPDATE board SET subject=?, content=?, imageName=? WHERE idx =?", param);
         await pool.query("DELETE FROM tag WHERE idx=?", [idx]);
         await getHashTag(content).then(async (arr) => {
             await arr.forEach(async (tag) => {
