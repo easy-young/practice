@@ -9,10 +9,13 @@ exports.list = async (req, res) => {
             const posts = [];
             for (let i = 0; i < array.length; i++) {
                 const post = array[i];
-                const [tag] = await pool.query(`SELECT * FROM tag where idx=?`, [post.idx,]);
+                const [[userdata]] = await pool.query(`SELECT * FROM user where userid=?`, [post.userid]);
+                const [tag] = await pool.query(`SELECT * FROM tag where idx=?`, [post.idx]);
+             
                 await posts.push({
                     ...post,
-                    tag: tag,
+                    tag: await tag,
+                    userimage:await userdata.userimage,
                     date: await setDateChanger(post.date),
                 });
             }
@@ -190,27 +193,46 @@ exports.commentDelete = async (req, res) => {
 
 exports.good = async (req, res) => {
     try {
+     
         const data = await pool.query("SELECT * FROM board WHERE idx=?", req.params.idx);
         const responseData = data[0][0];
-        const goodUsers = data[0][0].goodUsers.split(",");
-        const isGood = goodUsers.findIndex((f) => f === req.user.userid) === -1 ? false : true;
-        if (isGood) {res.status(200).json({
-                                            reqName: "board_view",
-                                            status: false,
-                                            message: "이미 좋아요를 클릭하셨어요!",
-                                        });
-        } else {
-            const goodUSersString = data[0][0].goodUsers + req.user.userid;
+        if( data[0][0].goodUsers !==null){
+            const goodUsers = data[0][0].goodUsers.split(",");
+            const isGood = goodUsers.findIndex((f) => f === req.user.userid) === -1 ? false : true;
+           
+            if (isGood) {res.status(200).json({
+                                                reqName: "board_view",
+                                                status: false,
+                                                message: "이미 좋아요를 클릭하셨어요!",
+                                            });
+            } else {
+                const goodUSersString = data[0][0].goodUsers +','+ req.user.userid;
+                responseData.good = responseData.good + 1;
+              
+                const getData=  await pool.query(`UPDATE board SET goodUsers=?, good =? WHERE idx =?` ,[goodUSersString,responseData.good,req.params.idx]);
+                console.log(getData)
+                res.status(200).json({
+                    reqName: "board_view",
+                    status: true,
+                    data: responseData,
+                   goodUsers:goodUSersString.split(","), //array
+                });
+            }
+        }else{
+            const goodUSersString =  req.user.userid+',';
             responseData.good = responseData.good + 1;
-            await pool.query(`UPDATE board SET goodUsers='${goodUSersString}' good = '${responseData.good}' WHERE idx = '${req.params.idx}'`);
+            const getData=  await pool.query(`UPDATE board SET goodUsers=?, good =? WHERE idx =?` ,[goodUSersString,responseData.good,req.params.idx]);
+            console.log(getData)
             res.status(200).json({
                 reqName: "board_view",
                 status: true,
                 data: responseData,
-                goodUsers: data[0][0].goodUsers.split(","), //array
+               goodUsers:goodUSersString.split(","), //array
             });
         }
+     
     } catch (error) {
+        console.log( error)
         res.status(200).json({ reqName: "board_view", status: false });
     }
 };

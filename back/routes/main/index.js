@@ -47,4 +47,8 @@ router.post('/loginCheck', async (req, res) => {
     }
 });
 
+router.post('/userdata',(req,res)=>{
+    res.json(req.user)
+})
+
 module.exports = router;

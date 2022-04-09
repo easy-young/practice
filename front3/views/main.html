@@ -7,9 +7,13 @@
     <title>오이마켓</title>
     <link rel="shortcut icon" href="favicon.png">
     <link type="text/css" rel="stylesheet" href="http://localhost:3001/css/main.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    
     <script type="text/javascript">
+     
         document.addEventListener('DOMContentLoaded', async ()=>{
+       
             const option = {withCredentials:true};
             const ul = document.querySelector('header > ul');
             const beforeLogin = document.querySelector('#beforeLogin').innerHTML;
@@ -21,10 +25,16 @@
             const searchInput = document.querySelector('#search-input');
             const searchBtn = document.querySelector('#search-button');
 
-            const response = await axios.post('http://localhost:3000/loginCheck', null, option);
-            const {errno} = response.data;
-            if (errno === 1) ul.innerHTML = beforeLogin;
+            // const response = await axios.post('http://localhost:3000/loginCheck', null, option);
+            const _userdata = await axios.post('http://localhost:3000/userdata', null, option);
+            // console.log(_userdata.data.isLogin)
+            // const {errno} = response.data;
+          
+         
+            if (_userdata.data.isLogin===false) ul.innerHTML = beforeLogin;
             else {
+                
+                // console.log(response)
                 ul.innerHTML = afterLogin;
                 const logout = document.querySelector('#logout');
                 logout.addEventListener('click', async (e)=>{
@@ -38,13 +48,20 @@
             let template = '';
             const response2 = await axios.post('http://localhost:3000/board/list', null, option);
             response2.data.data.forEach(v=>{
+                console.log(v)
+             
+                // console.log(v.goodUsers.split(',').findIndex(f=>f===userdata.userid)===-1?'':'fill')
                 template += contentBoxes.replace('{userid}', v.userid)
                                         .replace('{subject}', v.subject)
                                         .replace('{imageName}', v.imageName.split(',')[0])
                                         .replace('{date}', v.date.split('T')[0])
                                         .replace('{hit}', v.hit)
                                         .replace('{good}', v.good)
-                                        .replace('{idx}', v.idx);
+                                        .replace('{idx}', v.idx)
+                                        .replace('{userimage}' , v.userimage)
+                                        .replace('{idx}', v.idx)
+                                        .replace('{iconidx}', v.idx)
+                                        .replace('{fill}',v.goodUsers!==null?v.goodUsers.split(',').findIndex(f=>f===_userdata.data.userid)===-1?'':'-fill':'')
             });
             container.innerHTML = template;
             template = '';
@@ -74,13 +91,19 @@
                     alert('검색 결과가 없습니다.');
                 } else {
                     response3.data.data.forEach(v=>{
+                  
                         template += contentBoxes.replace('{userid}', v.userid)
                                                 .replace('{subject}', v.subject)
                                                 .replace('{imageName}', v.imageName.split(',')[0])
                                                 .replace('{date}', v.date.split('T')[0])
                                                 .replace('{hit}', v.hit)
                                                 .replace('{good}', v.good)
-                                                .replace('{idx}', v.idx);
+                                                .replace('{idx}', v.idx)
+                                                .replace('{userimage}' , v.userimage)
+                                                .replace('{idx}', v.idx)
+                                                .replace('{iconidx}', v.idx)
+                                                .replace('{fill}',v.goodUsers!==null?v.goodUsers.split(',').findIndex(f=>f===_userdata.data.userid)===-1?'':'-fill':'')
+                                                
                     });
                     container.innerHTML = template;
                     template = '';
@@ -179,6 +202,7 @@
 
     <div id="container">
         <template id="contentBoxes">
+
             <div id="contentBox">
                 <img src="http://localhost:3000/uploades/{imageName}" width="280px" height="200px">
                 <strong><a href="board/view/{idx}">{subject}</a></strong>
@@ -187,25 +211,54 @@
                 <div>조회수 : {hit}</div>
                 <div>좋아요 : {good}</div>
                 <div id="author">
-                    <img src="http://localhost:3000/uploadsUser/" width="25px" height="25px">
+                    <img src="{userimage}" width="25px" height="25px">
                     <span>
                         by <strong><a href="#">{userid}</a></strong>
                     </span>
-                    <button id="scrap">
+                    <button id="like" type="submit" onclick="goodClickHandler({idx})" style="cursor:pointer">
+                        <i id="heart-icon-{iconidx}" class="bi bi-suit-heart{fill}"></i>
+                        <!-- <i class="bi bi-suit-heart-fill"></i> -->
+                        
+                    </button>
+                    
+                    <!-- 
+
+                       
+
+                     -->
+                    <!-- <button id="scrap">
                         <img id="beforeScrap" src="/star.png" width="20px" height="20px">
                         <img id="afterScrap" src="/star2.png" width="20px" height="20px">
                     </button>
                     <button id="like">
                         <img id="beforeLike" src="/heart.png" width="20px" height="20px">
                         <img id="afterLike" src="/heart2.png" width="20px" height="20px">
-                    </button>
+                    </button> -->
                 </div>
             </div>
+
+
+
+
         </template>
     </div>
 
     <template id="tag">
         <span class="tag-item"># {tag}</span>
     </template>
+
+    <script>
+       async function goodClickHandler(_idx) {
+        const heartIcon = document.getElementById(`heart-icon-${_idx}`).classList
+        const option = {withCredentials:true};
+         const _goodResponse = await axios.post(`http://localhost:3000/board/good/${_idx}`, null, option);
+        if(_goodResponse.data.status){
+            heartIcon.remove('bi-suit-heart')
+            heartIcon.add('bi-suit-heart-fill')
+         }
+
+        }
+      
+    </script>
 </body>
 </html>
