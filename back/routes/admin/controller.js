@@ -2,9 +2,10 @@ const {pool} = require('../../db');
 const {sqls} = require('./stat.js');
 
 exports.admin = async (req, res) => {
-    if (req.headers.cookie !== undefined) {
+    try {
         if (req.headers.cookie.includes('connect.sid') === true) res.send('1');
-    } else {
+        else throw new Error();
+    } catch (e) {
         req.session.destroy(()=>{
             req.session
         });
@@ -256,7 +257,7 @@ exports.stats = async (req, res) => {
 };
 
 exports.hitNgood = async (req, res) => {
-    const sql = `SELECT sum(hit) AS hit, sum(good) AS good FROM board`;
+    const sql = `SELECT sum(hit) AS hit, sum(good) AS good, sum(scrap) AS scrap FROM board`;
     try {
         const [result] = await pool.execute(sql);
         res.send(result);

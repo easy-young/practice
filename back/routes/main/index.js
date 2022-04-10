@@ -17,6 +17,8 @@ router.post('/loginCheck', async (req, res) => {
                 result = await pool.execute(sql, prepare);
 
                 response = {
+                    userid: req.user.userid,
+                    nickname: req.user.nickname,
                     errno:0
                 };
                 res.json(response);
@@ -28,6 +30,8 @@ router.post('/loginCheck', async (req, res) => {
                 result = await pool.execute(sql, prepare);
 
                 response = {
+                    userid: req.user.userid,
+                    nickname: req.user.nickname,
                     errno:0
                 };
                 res.json(response);
