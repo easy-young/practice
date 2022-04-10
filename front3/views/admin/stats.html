@@ -18,6 +18,7 @@
             let dayCount = document.querySelector('#dayCount').innerHTML;
             const boards = document.querySelector('#boards');
             const board = document.querySelector('#board').innerHTML;
+            const tagBox = document.querySelector('#tagBox');
 
             const response = await axios.post('http://localhost:3000/api/admin/stats/hitNgood', null, option);
             const {hit, good, scrap} = response.data[0];
@@ -64,6 +65,39 @@
                 }
             }
             dayCounts.innerHTML = tmp;
+
+            const td = document.querySelectorAll('#dayCounts > tr > td');
+            for (let i = 0; i < 192; i++) {
+                if (i%8 === 0) {
+                    td[i].setAttribute('class', 'on0');
+                    continue;
+                }
+                if (td[i].innerHTML.split('>')[1].split('<')[0] == 1) {
+                    td[i].setAttribute('class', 'on1');
+                } else if (td[i].innerHTML.split('>')[1].split('<')[0] == 2) {
+                    td[i].setAttribute('class', 'on2');
+                } else if (td[i].innerHTML.split('>')[1].split('<')[0] == 3) {
+                    td[i].setAttribute('class', 'on3');
+                } else if (td[i].innerHTML.split('>')[1].split('<')[0] == 4) {
+                    td[i].setAttribute('class', 'on4');
+                } else if(td[i].innerHTML.split('>')[1].split('<')[0] == 5) {
+                    td[i].setAttribute('class', 'on5');
+                }
+            }
+
+            let tagTemplate = '';
+            const response3 = await axios.post('http://localhost:3000/api/admin/stats/tag', null, option);
+            tagTemplate = tagBox.innerHTML.replace('{tagFirst}', response3.data[0].tag)
+                                .replace('{one}', response3.data[0].cnt)
+                                .replace('{tagSecond}', response3.data[1].tag)
+                                .replace('{two}', response3.data[1].cnt)
+                                .replace('{tagThird}', response3.data[2].tag)
+                                .replace('{three}', response3.data[2].cnt)
+                                .replace('{tagFourth}', response3.data[3].tag)
+                                .replace('{four}', response3.data[3].cnt)
+                                .replace('{tagFifth}', response3.data[4].tag)
+                                .replace('{five}', response3.data[4].cnt);
+            tagBox.innerHTML = tagTemplate;
         });
     </script>
 </head>
@@ -87,12 +121,14 @@
     </table>
 
     <div id="tagBox">
-        <div>해시태그 순위</div>
-        <span>1위 : {tagFirst}</span>
-        <span>2위 : {tagSecond}</span>
-        <span>3위 : {tagThird}</span>
-        <span>4위 : {tagFourth}</span>
-        <span>5위 : {tagFifth}</span>
+        <div>👑해시태그 순위👑</div>
+        <div id="tags">
+            <span>🥇 : {tagFirst} ({one}회)</span>
+            <span>🥈 : {tagSecond} ({two}회)</span>
+            <span>🥉 : {tagThird} ({three}회)</span>
+            <span>4위 : {tagFourth} ({four}회)</span>
+            <span>5위 : {tagFifth} ({five}회)</span>
+        </div>
     </div>
 
     <template id="board">

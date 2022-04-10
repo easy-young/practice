@@ -11,9 +11,37 @@ a {
     color: black;
 }
 
-h1, #home, #menu {
+h1, #home {
     display: flex;
     justify-content: center;
+}
+
+#menu {
+    width: 40%;
+    display: flex;
+    justify-content: space-around;
+    margin: 12px auto;
+}
+
+#menu > a {
+    width: 60px;
+    height: 24px;
+    line-height: 24px;
+    border-radius: 6px;
+    background-color: rgb(190, 190, 190);
+}
+
+#menu > span, #menu > span > strong {
+    display: inline-block;
+    height: 24px;
+    line-height: 24px;
+    border-radius: 6px;
+    background-color: rgb(225, 225, 225);
+}
+
+#menu > span {
+    width: 114px;
+    padding: 0 auto;
 }
 
 span:nth-child(1) {
@@ -23,6 +51,7 @@ span:nth-child(1) {
 table {
     width: 50%;
     margin: 0 auto;
+    border: 3px solid black;
 }
 
 td, th {
@@ -31,7 +60,7 @@ td, th {
     text-align: center;
 }
 
-td, td > a {
+td {
     background-color: white;
 }
 
@@ -41,4 +70,51 @@ td:nth-child(1), th:nth-child(1) {
 
 th {
     background-color: rgb(253, 253, 120);
+}
+
+#tagBox > div:nth-child(1) {
+    width: 12%;
+    margin: 16px auto;
+    font-size: 20px;
+    font-weight: bolder;
+}
+
+#tags {
+    width: 60%;
+    display: flex;
+    justify-content: space-between;
+    margin: 0 auto 20px;
+}
+
+#tags > span {
+    font-weight: bolder;
+}
+
+.on0 {
+    background-color: rgb(255, 247, 230);
+    border-right: 2px solid black;
+}
+
+.on1 {
+    background-color: rgb(255, 221, 221);
+}
+
+.on2 {
+    background-color: rgb(255, 180, 180);
+}
+
+.on3 {
+    background-color: rgb(255, 145, 145);
+}
+
+.on4 {
+    background-color: rgb(255, 102, 102);
+}
+
+.on5 {
+    background-color: rgb(255, 81, 81);
+}
+
+td > a {
+    background: none;
 }
