@@ -20,6 +20,8 @@
             const searchType = document.querySelector('#search-type');
             const searchInput = document.querySelector('#search-input');
             const searchBtn = document.querySelector('#search-button');
+            let thisUserid = '';
+            let thisNickname = '';
 
             const response = await axios.post('http://localhost:3000/loginCheck', null, option);
             const {errno} = response.data;
@@ -34,6 +36,8 @@
                     location.href = 'http://localhost:3001/';
                 });
             }
+            thisUserid = response.data.userid;
+            thisNickname = response.data.nickname;
 
             let template = '';
             const response2 = await axios.post('http://localhost:3000/board/list', null, option);
@@ -44,7 +48,8 @@
                                         .replace('{date}', v.date.split('T')[0])
                                         .replace('{hit}', v.hit)
                                         .replace('{good}', v.good)
-                                        .replace('{idx}', v.idx);
+                                        .replace('{idx}', v.idx)
+                                        .replace('{userimage}', v.userimage);
             });
             container.innerHTML = template;
             template = '';
@@ -113,30 +118,59 @@
                 for (let i = 0; i < like.length; i++) {
                     afterLike[i].style.display = 'none';
                     afterScrap[i].style.display = 'none';
-                    cnt.push(1);
-                    cnt2.push(1);
+                    cnt.push(0);
+                    cnt2.push(0);
                 }
-                for (let j = 0; j < like.length; j++) {
-                    like[j].addEventListener('click', ()=>{
-                        if (cnt[j] % 2 === 1) {
-                            beforeLike[j].style.display = 'none';
-                            afterLike[j].style.display = 'block';
-                        } else {
-                            beforeLike[j].style.display = 'block';
-                            afterLike[j].style.display = 'none';
+                if (response.data.errno === 0) {
+                    for (let j = 0; j < like.length; j++) {
+                        if (response2.data.data[j].goodUsers !== null) {
+                            if (response2.data.data[j].goodUsers.includes(thisUserid)) {
+                                beforeLike[j].style.display = 'none';
+                                afterLike[j].style.display = 'block';
+                            }
                         }
-                        cnt[j]++;
-                    });
-                    scrap[j].addEventListener('click', ()=>{
-                        if (cnt2[j] % 2 === 1) {
-                            befoerScrap[j].style.display = 'none';
-                            afterScrap[j].style.display = 'block';
-                        } else {
-                            befoerScrap[j].style.display = 'block';
-                            afterScrap[j].style.display = 'none';
+                        if (response2.data.data[j].scrapUsers !== null) {
+                            if (response2.data.data[j].scrapUsers.includes(thisUserid)) {
+                                beforeScrap[j].style.display = 'none';
+                                afterScrap[j].style.display = 'block';
+                            }
                         }
-                        cnt2[j]++;
-                    });
+
+                        like[j].addEventListener('click', async ()=>{
+                            const idx = like.length - j;
+                            const body = {
+                                idx
+                            };
+                            const response = await axios.post(`http://localhost:3000/board/good/:idx`, body, option);
+                            if (response.data.status) {
+                                beforeLike[j].style.display = 'none';
+                                afterLike[j].style.display = 'block';
+                            }
+                            if (response.data.message !== undefined) alert('이미 좋아요를 클릭한 게시물입니다.');
+                        });
+
+                        scrap[j].addEventListener('click', async ()=>{
+                            const idx = scrap.length - j;
+                            const body = {
+                                idx
+                            };
+                            const response = await axios.post('http://localhost:3000/board/scrap/:idx', body, option);
+                            if (response.data.status) {
+                                beforeScrap[j].style.display = 'none';
+                                afterScrap[j].style.display = 'block';
+                            }
+                            if (response.data.message !== undefined) alert('이미 스크랩한 게시물입니다.');
+                        });
+                    }
+                } else {
+                    for (let j = 0; j < like.length; j++) {
+                        like[j].addEventListener('click', () => {
+                            alert('좋아요는 로그인 이후 가능합니다.');
+                        });
+                        scrap[j].addEventListener('click', () => {
+                            alert('스크랩은 로그인 이후 가능합니다.');
+                        });
+                    }
                 }
             }
             LikeScrap();
@@ -187,7 +221,7 @@
                 <div>조회수 : {hit}</div>
                 <div>좋아요 : {good}</div>
                 <div id="author">
-                    <img src="http://localhost:3000/uploadsUser/" width="25px" height="25px">
+                    <img src="{userimage}" width="25px" height="25px">
                     <span>
                         by <strong><a href="#">{userid}</a></strong>
                     </span>
