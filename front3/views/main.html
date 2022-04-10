@@ -137,9 +137,8 @@
                         }
 
                         like[j].addEventListener('click', async ()=>{
-                            const idx = like.length - j;
                             const body = {
-                                idx
+                                idx:j
                             };
                             const response = await axios.post(`http://localhost:3000/board/good/:idx`, body, option);
                             if (response.data.status) {
@@ -150,9 +149,8 @@
                         });
 
                         scrap[j].addEventListener('click', async ()=>{
-                            const idx = scrap.length - j;
                             const body = {
-                                idx
+                                idx:j
                             };
                             const response = await axios.post('http://localhost:3000/board/scrap/:idx', body, option);
                             if (response.data.status) {
