@@ -19,4 +19,6 @@ router.post('/comment-write/:idx', controller.commentWrite);
 router.post('/comment-delete/:uuid', controller.commentDelete);
 router.post('/comment-update/:uuid', controller.commentUpdate);
 
+router.post('/chat',controller.chat);
+
 module.exports = router;

@@ -360,3 +360,8 @@ const setDateChanger = async (time) => {
     else if (asDays < 365) return Math.floor(asDays * 30) + "달전";
     else return Math.floor(asDays * 365) + "년전";
 };
+
+exports.chat = (req,res)=>{
+    const {nickname} = req.user
+    res.json({nickname})
+}

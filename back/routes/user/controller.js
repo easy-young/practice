@@ -214,27 +214,9 @@ exports.profileUpdate = async (req,res)=>{
 
 exports.logout = (req,res) => {
     try{
-        const cookie = req.headers.cookie.split('=')[0]
-        // const cookiePayload = req.headers.cookie.split('=')[1].split('.')[1]
-        // const kakao = JSON.parse(Buffer.from(cookiePayload,'base64').toString('utf-8'))
-        // let access_token
-        
-        if(cookie == 'token'){
-            res.clearCookie(cookie)
-            res.json({})
-        } else if(cookie == 'kakaoToken') {
-            // access_token = kakao.access_token
-            
-            // let logout = await axios({
-            //     method:'post',
-            //     url:'https://kapi.kakao.com/v1/user/unlink',
-            //     headers:{
-            //       'Authorization': `Bearer ${access_token}`
-            //     }
-            // });
-            res.clearCookie(cookie)
-            res.json({})
-        }
+        res.clearCookie('token')
+        res.clearCookie('kakaoToken')
+        res.json({})
     } catch(e){
         console.log(e)
     }
