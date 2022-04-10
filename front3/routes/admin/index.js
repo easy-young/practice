@@ -2,9 +2,12 @@ const express = require('express');
 const router = express.Router();
 
 const isAdmin = (req, res, next) => {
-    if (req.headers.cookie !== undefined) {
-        if (req.headers.cookie.includes('connect.sid') === true) next();
-    } else res.render('admin.html');
+    try {
+        if (req.headers.cookie.includes('connect.sid')) next();
+        else throw new Error();
+    } catch (e) {
+        res.render('admin.html');
+    }
 };
 
 router.get('/', (req, res) => {
