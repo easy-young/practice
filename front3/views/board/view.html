@@ -181,6 +181,8 @@
             const response = await axios.post(`http://localhost:3000/board/delete/${idx}`, null, option);
             if (response.data.status) location.href = "/";
         }
+
+        
     </script>
 </head>
 <body>
@@ -188,7 +190,9 @@
         <div id="container">
             <div class="card">
                 <div class="card-body">
+                    <div id="left">왼쪽</div>
                     <div id="image" class="card-image"></div>
+                    <div id="right">오른쪽</div>
                 </div>
                 <div class="card-body">
                     <div>
@@ -256,7 +260,7 @@
                     <input type="text" name="comment-content-input" id="comment-content-input">
                 </li>
                 <li class="comment-date">{updatedAt}</li>
-                <button class="comment-update">수정하기</button>
+                <button class="comment-update">수정</button>
             </template>
 
             <template id="comment-modify">
