@@ -30,7 +30,9 @@ CREATE TABLE board(
     content TEXT NOT NULL,
     hit INT DEFAULT 0 NOT NULL,
     good INT DEFAULT 0 NOT NULL,
-    goodUsers TEXT NOT NULL,
+    goodUsers TEXT DEFAULT NULL,
+    scrap INT DEFAULT 0 NOT NULL,
+    scrapUsers TEXT DEFAULT NULL,
     imageName TEXT NOT NULL,
     active INT NOT NULL DEFAULT 1,
     PRIMARY KEY(idx)

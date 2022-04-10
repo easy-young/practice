@@ -12,6 +12,7 @@ router.post('/get-post/:idx', controller.getPost);
 
 router.post('/delete/:idx', controller.delete);
 router.post('/good/:idx', controller.good);
+router.post('/scrap/:idx', controller.scrap);
 
 router.post('/comment/:idx', controller.comment); //삭제 예정 이 기능을 view에서 생성.
 router.post('/comment-write/:idx', controller.commentWrite);
