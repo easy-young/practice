@@ -277,6 +277,17 @@ exports.dayCount = async (req, res) => {
     }
 };
 
+exports.tag = async (req, res) => {
+    const sql = `SELECT tag, count(tag) AS cnt from tag GROUP BY node.tag.tag ORDER BY count(tag) DESC LIMIT 5;`;
+    try {
+        const [result] = await pool.execute(sql);
+        res.send(result);
+    } catch (e) {
+        console.log(e.message);
+        res.send();
+    }
+}
+
 exports.statsView = async (req, res) => {
     const {idx} = req.params;
     let weekday;
