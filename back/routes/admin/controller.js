@@ -278,7 +278,7 @@ exports.dayCount = async (req, res) => {
 };
 
 exports.tag = async (req, res) => {
-    const sql = `SELECT tag, count(tag) AS cnt from tag GROUP BY node.tag.tag ORDER BY count(tag) DESC LIMIT 5;`;
+    const sql = `SELECT tag, count(tag) AS cnt from tag GROUP BY home.tag.tag ORDER BY count(tag) DESC LIMIT 5;`;
     try {
         const [result] = await pool.execute(sql);
         res.send(result);
