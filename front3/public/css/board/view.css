@@ -49,18 +49,16 @@ body {
     box-sizing: border-box;
 }
 
-.card-body > #image {
-    
-}
-
 .card >  .card-body > #image {
+    display: flex;
+    justify-content: space-evenly;
     width : 100%;
     margin-bottom: 30px;
 }
 
 .card >  .card-body > #image > span > img{
-    width : 400px;
-    height: 400px;
+    width : 150px;
+    height: 150px;
 }
 
 .card > div:nth-child(2) {

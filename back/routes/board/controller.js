@@ -26,6 +26,7 @@ exports.list = async (req, res) => {
             data: await dataFormat(data),
         });
     } catch (error) {
+        console.log(error.message)
         res.status(200).json({ reqName: "board_list", status: false });
     }
 };

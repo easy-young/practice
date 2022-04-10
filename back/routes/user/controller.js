@@ -250,7 +250,6 @@ exports.resign = async (req,res) => {
         const [result] = await pool.execute(sql,prepare)
 
         res.clearCookie('token')
-        res.clearCookie('userData')
         res.json({})
 
     } else if(token ==='kakaoToken'){
