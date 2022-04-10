@@ -26,6 +26,7 @@ exports.list = async (req, res) => {
             data: await dataFormat(data),
         });
     } catch (error) {
+        console.log(error.message)
         res.status(200).json({ reqName: "board_list", status: false });
     }
 };
@@ -209,9 +210,10 @@ exports.commentDelete = async (req, res) => {
 
 exports.good = async (req, res) => {
     try {
-        const {idx} = req.body;
-        const data = await pool.query("SELECT * FROM board WHERE idx=?", idx);
+        const {idx} = req.body
+        const data = await pool.query(`SELECT * FROM board ORDER BY idx DESC LIMIT ${idx},1`);
         const responseData = data[0][0];
+        const realIdx = responseData.idx
         if (responseData.goodUsers !== null) {
             const goodUsers = responseData.goodUsers.split(",");
             const isGood = goodUsers.findIndex((f) => f === req.user.userid) === -1 ? false : true;
@@ -223,7 +225,7 @@ exports.good = async (req, res) => {
             } else {
                 const goodUsersString = responseData.goodUsers + ',' + req.user.userid;
                 responseData.good = responseData.good + 1;
-                const getData = await pool.query(`UPDATE board SET goodUsers=?, good =? WHERE idx =?`, [goodUsersString, responseData.good, idx]);
+                const getData = await pool.query(`UPDATE board SET goodUsers=?, good =? WHERE idx =?`, [goodUsersString, responseData.good, realIdx]);
                 res.status(200).json({
                     reqName: "board_view",
                     status: true,
@@ -233,8 +235,9 @@ exports.good = async (req, res) => {
             }
         } else {
             const goodUsersString = req.user.userid + ',';
+
             responseData.good = responseData.good + 1;
-            const getData = await pool.query(`UPDATE board SET goodUsers=?, good=? WHERE idx=?`, [goodUsersString, responseData.good, idx]);
+            const getData = await pool.query(`UPDATE board SET goodUsers=?, good=? WHERE idx=?`, [goodUsersString, responseData.good, realIdx]);
             res.status(200).json({
                 reqName: "board_view",
                 status: true,
@@ -251,8 +254,9 @@ exports.good = async (req, res) => {
 exports.scrap = async (req, res) => {
     try {
         const {idx} = req.body;
-        const data = await pool.query("SELECT * FROM board WHERE idx=?", idx);
+        const data = await pool.query(`SELECT * FROM board ORDER BY idx DESC LIMIT ?,1`,[idx]);
         const responseData = data[0][0];
+        const realIdx = responseData.idx
         if (responseData.scrapUsers !== null) {
             const scrapUsers = responseData.scrapUsers.split(",");
             const isScrap = scrapUsers.findIndex((f) => f === req.user.userid) === -1 ? false : true;
@@ -264,7 +268,7 @@ exports.scrap = async (req, res) => {
             } else {
                 const scrapUsersString = responseData.scrapUsers + ',' + req.user.userid;
                 responseData.scrap = responseData.scrap + 1;
-                const getData = await pool.query(`UPDATE board SET scrapUsers=?, scrap=? WHERE idx =?`, [scrapUsersString, responseData.scrap, idx]);
+                const getData = await pool.query(`UPDATE board SET scrapUsers=?, scrap=? WHERE idx =?`, [scrapUsersString, responseData.scrap, realIdx]);
                 res.status(200).json({
                     reqName: "board_view",
                     status: true,
@@ -275,7 +279,7 @@ exports.scrap = async (req, res) => {
         } else {
             const scrapUsersString = req.user.userid + ',';
             responseData.scrap = responseData.scrap + 1;
-            const getData = await pool.query(`UPDATE board SET scrapUsers=?, scrap=? WHERE idx=?`, [scrapUsersString, responseData.scrap, idx]);
+            const getData = await pool.query(`UPDATE board SET scrapUsers=?, scrap=? WHERE idx=?`, [scrapUsersString, responseData.scrap, realIdx]);
             res.status(200).json({
                 reqName: "board_view",
                 status: true,
@@ -356,3 +360,8 @@ const setDateChanger = async (time) => {
     else if (asDays < 365) return Math.floor(asDays * 30) + "달전";
     else return Math.floor(asDays * 365) + "년전";
 };
+
+exports.chat = (req,res)=>{
+    const {nickname} = req.user
+    res.json({nickname})
+}

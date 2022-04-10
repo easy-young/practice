@@ -87,6 +87,7 @@
 
             let tagTemplate = '';
             const response3 = await axios.post('http://localhost:3000/api/admin/stats/tag', null, option);
+            console.log(response3.data)
             tagTemplate = tagBox.innerHTML.replace('{tagFirst}', response3.data[0].tag)
                                 .replace('{one}', response3.data[0].cnt)
                                 .replace('{tagSecond}', response3.data[1].tag)

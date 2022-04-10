@@ -17,4 +17,8 @@ router.get('/modify/:idx', (req, res) => {
     res.render('board/modify.html');
 });
 
+router.get('/chat',(req,res)=>{
+    res.render('board/chat.html')
+})
+
 module.exports = router;

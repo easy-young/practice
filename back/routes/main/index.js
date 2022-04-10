@@ -6,10 +6,9 @@ router.post('/loginCheck', async (req, res) => {
     let cookie, cookiePayload, user, userid, nickname, email, sql, prepare, result, response;
     try {
         if (req.headers.cookie !== undefined) {
-            cookie = req.headers.cookie.split('=')[0];
-            cookiePayload = req.headers.cookie.split('=')[1].split('.')[1];
-            user = JSON.parse(Buffer.from(cookiePayload,'base64').toString('utf-8'));
-            if(cookie === 'token'){
+            if(req.headers.cookie.includes('token')){
+                cookiePayload = req.headers.cookie.split('token=')[1].split('.')[1];
+                user = JSON.parse(Buffer.from(cookiePayload,'base64').toString('utf-8'));
                 userid = user.userid;
                 nickname = user.nickname;
                 sql = `SELECT * FROM user WHERE userid=? and nickname=?`;
@@ -22,7 +21,9 @@ router.post('/loginCheck', async (req, res) => {
                     errno:0
                 };
                 res.json(response);
-            } else if(cookie === 'kakaoToken'){
+            } else if(req.headers.cookie.includes('kakaoToken')){
+                cookiePayload = req.headers.cookie.split('kakaoToken=')[1].split('.')[1];
+                user = JSON.parse(Buffer.from(cookiePayload,'base64').toString('utf-8'));
                 nickname = user.nickname;
                 email = user.email;
                 sql = `SELECT * FROM user WHERE nickname=? and email=?`;
@@ -35,19 +36,11 @@ router.post('/loginCheck', async (req, res) => {
                     errno:0
                 };
                 res.json(response);
-            }
-        } else {
-            response = {
-                errno:1
-            };
-            res.json(response);
-        }
+            } else throw new Error
+        } else throw new Error
     } catch(e){
         console.log(e.message);
-        response = {
-            errno:1
-        };
-        res.json(response);
+        res.json({errno:1});
     }
 });
 

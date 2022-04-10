@@ -1,6 +1,7 @@
 const {createSignature} = require('../utils/jwt.js');
+const {pool} = require('../db.js')
 
-exports.Auth = (req, res, next) => {
+exports.Auth = async (req, res, next) => {
     const {token} = req.cookies;
     const {kakaoToken} = req.cookies;
 
@@ -20,8 +21,14 @@ exports.Auth = (req, res, next) => {
 
         if (sign !== signature) throw new Error('토큰 변조함 NaGa')
         const user = JSON.parse(Buffer.from(payload,'base64').toString('utf-8'))
+        
+        const sql = `SELECT userid FROM user WHERE nickname=?`
+        const prepare = [user.nickname]
+        const [[result]] = await pool.execute(sql,prepare)
+
         req.user = {
             ...user,
+            userid:result.userid,
             isLogin:true
         }
     } else {

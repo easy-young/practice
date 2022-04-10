@@ -50,9 +50,9 @@ body {
 }
 
 .card >  .card-body > #image {
-    width : 100%;
     display: flex;
     justify-content: space-evenly;
+    width : 100%;
     margin-bottom: 30px;
 }
 
@@ -152,7 +152,7 @@ body {
 }
 
 .btn {
-    width : 60px;
+    width : 80px;
     height: 30px;
     border:none;
     border : 2px solid #8e8b8b;
@@ -179,14 +179,12 @@ body {
 }
 
 .comment-row {
-    padding: 15px 0;
+    padding-top:15px;
     padding-left: 15px;
     margin-top: 20px;
     box-sizing: border-box;
     border-top: 2px solid #8e8b8b;
 }
-
-
 
 .comment-id {
     font-size: 30px;
@@ -199,4 +197,25 @@ body {
 
 .comment-date {
     color: #8e8b8b;
+}
+
+#comment-content-input {
+    width : 100%;
+    border: none;
+    border-bottom: 2px solid #8e8b8b;
+    box-sizing: border-box;
+}
+
+#comment-content-input:focus {
+    outline: none;
+}
+
+.comment-update {
+    width : 70px;
+    height: 30px;
+    margin-left: 20px;
+    border : 1px solid #8e8b8b;
+    border-radius: 20px;
+    padding-top: 5px;
+    box-sizing: border-box;
 }

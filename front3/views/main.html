@@ -137,9 +137,8 @@
                         }
 
                         like[j].addEventListener('click', async ()=>{
-                            const idx = like.length - j;
                             const body = {
-                                idx
+                                idx:j
                             };
                             const response = await axios.post(`http://localhost:3000/board/good/:idx`, body, option);
                             if (response.data.status) {
@@ -150,9 +149,8 @@
                         });
 
                         scrap[j].addEventListener('click', async ()=>{
-                            const idx = scrap.length - j;
                             const body = {
-                                idx
+                                idx:j
                             };
                             const response = await axios.post('http://localhost:3000/board/scrap/:idx', body, option);
                             if (response.data.status) {
@@ -198,6 +196,7 @@
                 <li><a href="user/login">로그인</a></li>
             </template>
             <template id="afterLogin">
+                <li><a href="board/chat">채팅</a></li>
                 <li><a href="user/profile">프로필</a></li>
                 <li><a href="board/write">글쓰기</a></li>
                 <li><button id="logout">로그아웃</button></li>

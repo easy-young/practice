@@ -167,6 +167,7 @@
                     const body = formData
 
                     const response2 = await axios.post('http://localhost:3000/user/profileUpdate', body, option)
+                    console.log(response2.data)
 
 
                     if(response2.data.errno == 1) alert('닉네임이 중복됩니다.')

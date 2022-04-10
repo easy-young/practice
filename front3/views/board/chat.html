@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <link type="text/css" rel="stylesheet" href="http://localhost:3001/css/board/chat.css">
+
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    
+    <script type="text/javascript">
+        document.addEventListener('DOMContentLoaded',async ()=>{
+
+            const option = {
+                "Content-type":"application/json",
+                withCredentials: true,
+            };
+
+            const response = await axios.post('http://localhost:3000/board/chat',null,option);
+            const {nickname} = response.data
+
+
+            localStorage.removeItem('current_page')
+            localStorage.setItem('current_page',document.location.href)
+
+            const webSocket = new WebSocket('ws://localhost:3006')
+            webSocket.onopen = () => {
+                console.log('웹소켓 Connection 성공 ( Handshake )')
+                let welcomMent = {
+                    type:'welcom',
+                    data:{
+                        nickname,
+                    }
+                }
+                webSocket.send(JSON.stringify(welcomMent))
+            }
+
+            webSocket.onclose = () => {
+                console.log('웹소켓 disconnection')
+            }
+
+            const form = document.querySelector('form')
+            form.addEventListener('submit', (e)=>{
+                e.preventDefault()
+               
+                const{ input } = e.target
+                let data = {
+                    type:'send_meg',
+                    data:{
+                        nickname,
+                        msg:input.value,
+                    }
+                }
+                webSocket.send(JSON.stringify(data))
+                input.value = ''
+                input.focus()
+            })
+
+            webSocket.onmessage = (event) => {
+
+                const chat = document.querySelector('#chat')
+                const liElement = document.createElement('li')
+                liElement.innerHTML = event.data
+                chat.appendChild(liElement)
+            }
+        })
+    </script>
+</head>
+<body>
+    <div id="wrap">
+        <div id="content">
+            <ul id="chat">
+            </ul>
+            <form action="/" method="get" id="form">
+                <input type="text" name="input" id="input" placeholder="채팅할래? -_-">
+                <input type="submit" id="submit" value="전송">
+            </form>
+        </div>
+    </div>
+</body>
+</html>
