@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>오이마켓</title>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <link rel="shortcut icon" href="../favicon.png">
+    <link type="text/css" rel="stylesheet" href="http://localhost:3001/css/board/view.css">
     <script type="text/javascript">
         const idx = location.pathname.split('/')[3];
         document.addEventListener('DOMContentLoaded', async ()=>{
@@ -182,83 +184,88 @@
     </script>
 </head>
 <body>
-    <div id="container">
-        <div class="card">
-            <div class="card-header">
-                제목 : <span id="subject"></span>
+    <div id="wrap">
+        <div id="container">
+            <div class="card">
+                <div class="card-body">
+                    <div id="image" class="card-image"></div>
+                </div>
+                <div class="card-body">
+                    <div>
+                        닉네임 : <span id="nickname"></span>
+                    </div>
+                    <div id="hit"></div>
+                </div>
+                <div class="card-header">
+                    <span id="subject"></span>
+                </div>
+                
+                <div class="card-body" id="story">
+                    <span id="content"></span>
+                </div>
+                <div class="card-body" id="hash">
+                    해시 태그 : <span id="tag"></span>
+                </div>
             </div>
-            <div class="card-body">
-                닉네임 : <span id="nickname"></span>
-                <div id="hit"></div>
+            <div id="delete-btn"></div>
+
+            <template id="deleteTem">
+                <div>
+                    <button onclick="postDeleteHandler(this)">삭제</button>
+                    <a href="http://localhost:3001/board/modify/{idx}"><button>수정</button></a>
+                </div>
+            </template>
+
+            <div id="comment">
+                <ul id="commentApp"></ul>
             </div>
-            <div class="card-body">
-                <div id="image" class="card-image"></div>
-            </div>
-            <div class="card-body">
-                내용 : <span id="content"></span>
-            </div>
-            <div class="card-body">
-                해시 태그 : <span id="tag"></span>
-            </div>
-        </div>
-        <div id="delete-btn"></div>
 
-        <template id="deleteTem">
-            <div>
-                <button onclick="postDeleteHandler(this)">삭제</button>
-                <a href="http://localhost:3001/board/modify/{idx}">수정</a>
-            </div>
-        </template>
+            <template id="commentForm">
+                <li class="comment-form">
+                    <form action="post" action="">
+                        <h4>댓글<span></span></h4>
+                        <span class="ps_box">
+                            <input type="text" placeholder="댓글을 남겨보세요." class="int" value="" name="input">
+                        </span>
+                        <input type="submit" class="btn" value="등록" />
+                    </form>
+                </li>
+            </template>
 
-        <div>
-            <ul id="commentApp"></ul>
-        </div>
+            <div id="commentList"></div>
 
-        <template id="commentForm">
-            <li class="comment-form">
-                <form action="post" action="">
-                    <h4>댓글쓰기<span></span></h4>
-                    <span class="ps_box">
-                        <input type="text" placeholder="댓글 내용을 입력해주세요." class="int" value="" name="input">
-                    </span>
-                    <input type="submit" class="btn" value="등록" />
-                </form>
-            </li>
-        </template>
+            <template id="commentInput">
+                <span>
+                    <input type="text" class="comment-update-input" value="">
+                </span>
+            </template>
 
-        <div id="commentList"></div>
+            <template id="comments">
+                <ul class="comment-row">
+                    <li class="comment-id">{nickname}</li>
+                    <li class="comment-content">{comment}<input type="hidden" name="uuid" value="{uuid}">
+                    </li>
+                    <li class="comment-date">{updatedAt}</li>
+                </ul>
+            </template>
 
-        <template id="commentInput">
-            <span>
-                <input type="text" class="comment-update-input" value="">
-            </span>
-        </template>
-
-        <template id="comments">
-            <ul class="comment-row">
+            <template id="comments-input">
                 <li class="comment-id">{nickname}</li>
-                <li class="comment-content">{comment}<input type="hidden" name="uuid" value="{uuid}">
+                <li class="comment-content">
+                    <input type="hidden" name="uuid" value="{uuid}">
+                    <input type="text" name="comment-content-input" id="comment-content-input">
                 </li>
                 <li class="comment-date">{updatedAt}</li>
-            </ul>
-        </template>
+                <button class="comment-update">수정하기</button>
+            </template>
 
-        <template id="comments-input">
-            <li class="comment-id">{nickname}</li>
-            <li class="comment-content">
-                <input type="hidden" name="uuid" value="{uuid}">
-                <input type="text" name="comment-content-input" id="comment-content-input">
-            </li>
-            <li class="comment-date">{updatedAt}</li>
-            <button class="comment-update">수정하기</button>
-        </template>
-
-        <template id="comment-modify">
-            <button class="comment-update-btn">수정</button>
-            <button class="comment-delete-btn">X</button>
-        </template>
-        
-        <div id="private_chat"></div>
+            <template id="comment-modify">
+                <button class="comment-update-btn">수정</button>
+                <button class="comment-delete-btn">삭제</button>
+            </template>
+            
+            <div id="private_chat"></div>
+        </div>
     </div>
 </body>
 </html>
