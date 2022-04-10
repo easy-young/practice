@@ -69,12 +69,13 @@ exports.write = async (req, res) => {
     try {
         const { userid, nickname, isLogin } = req.user;
         if (isLogin) {
-            let filename = JSON.stringify(req.files)==='{}'?'':JSON.stringify(req.files);
-            filename = filename.split('"')[25] + ',' + filename.split('"')[55]+ ',' 
-                        + filename.split('"')[85] + ',' + filename.split('"')[115] + ',' 
-                        + filename.split('"')[145];
+            let upload = '';
+            for (let i = 0; i < req.files.upload.length; i++) {
+                upload += req.files.upload[i].filename;
+                if (i !== req.files.upload.length - 1) upload += ',';
+            }
             const { content, subject, main, sub } = req.body;
-            const queryStr = `INSERT INTO board(userid,nickname,imageName,subject,content,hit,good,date,main,sub) VALUES('${userid}','${nickname}','${filename}','${subject}','${content}',0,0,NOW(),'${main}','${sub}' );`;
+            const queryStr = `INSERT INTO board(userid,nickname,imageName,subject,content,hit,good,date,main,sub) VALUES('${userid}','${nickname}','${upload}','${subject}','${content}',0,0,NOW(),'${main}','${sub}' );`;
             const [result] = await pool.query(queryStr);
 
             await getHashTag(content).then(async (arr) => {
@@ -100,12 +101,19 @@ exports.modify = async (req, res) => {
     try {
         const { subject, content, idx } = req.body;
         let upload = '';
-        for (let i = 0; i < req.files.upload.length; i++) {
-            upload += req.files.upload[i].filename;
-            if (i !== req.files.upload.length - 1) upload += ',';
+        let queryStr, param;
+        if (req.files.upload === undefined) {
+            queryStr = `UPDATE board SET subject=?, content=? WHERE idx =?`;
+            param = [subject, content, idx];
+        } else {
+            for (let i = 0; i < req.files.upload.length; i++) {
+                upload += req.files.upload[i].filename;
+                if (i !== req.files.upload.length - 1) upload += ',';
+            }
+            queryStr = `UPDATE board SET subject=?, content=?, imageName=? WHERE idx =?`;
+            param = [subject, content, upload, idx];
         }
-        const param = [subject, content, upload, idx];
-        const data = await pool.query("UPDATE board SET subject=?, content=?, imageName=? WHERE idx =?", param);
+        const data = await pool.query(queryStr, param);
         await pool.query("DELETE FROM tag WHERE idx=?", [idx]);
         await getHashTag(content).then(async (arr) => {
             await arr.forEach(async (tag) => {
